@@ -1,0 +1,257 @@
+<%- include('../layouts/userHeader') %> 
+
+
+<!-- breadcrumb-section -->
+<div class="breadcrumb-section breadcrumb-bg">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 offset-lg-2 text-center">
+                <div class="breadcrumb-text">
+                    <p>please verify your OTP</p>
+                    <h1>Verify OTP</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- end breadcrumb section -->
+<div class="container">
+    <h2>Verify OTP</h2>
+    <% if (Error) { %>
+        <div id="errorMessage" class="alert alert-danger">
+            <%= alert %>
+        </div>
+    <% } %>
+<form  method="post" >
+    <div class="mb-3">
+        <label for="email">Email</label>
+        <input type="email" id="email" name="email" class="form-control" required value="<%= email %>">
+    </div>
+    <div id="errorMessage" class="alert alert-danger" style="display: none;"></div>
+    <div class="mb-3">
+        <label for="otp">OTP</label>
+        <input type="text" id="otp" name="otp" class="form-control" required>
+    </div>
+    <button type="submit" class="btn btn-primary" id="verifyButton" >Verify OTP</button>
+    <button class="btn btn-secondary mt-3" id="resendButton" onclick="handleResendClick(event)" style="margin-left: 30px; margin-bottom: 15px;">Resend OTP</button>
+</form>
+</div>
+
+
+<!-- <script>
+    let timerOn = false;
+    let remainingTime = 30;
+
+    // Check if the timer should be started based on the query parameter
+    const urlParams = new URLSearchParams(window.location.search);
+    const fromSignUpPage = urlParams.get('fromSignUpPage');
+
+    if (fromSignUpPage === 'true') {
+        timerOn = true;
+        timer();
+    }
+
+    document.getElementById("resendButton").removeEventListener("click", handleResendClick);
+    document.getElementById("resendButton").addEventListener("click", handleResendClick);
+
+    let resendInProgress = false;
+
+function handleResendClick(event) {
+    event.preventDefault();
+
+    if (!timerOn && !resendInProgress) {
+        resendInProgress = true;
+        resendOTP();
+    }
+}
+
+
+    function updateResendButtonContent() {
+        const resendButton = document.getElementById("resendButton");
+        if (timerOn) {
+            resendButton.innerHTML = `Resend OTP (${remainingTime}s)`;
+            resendButton.disabled = true;
+        } else {
+            resendButton.innerHTML = `Resend OTP `;
+            resendButton.disabled = false;
+        }
+    }
+
+    function timer() {
+        if (remainingTime >= 0 && timerOn) {
+            updateResendButtonContent();
+            setTimeout(function () {
+                timer(remainingTime);
+                remainingTime--;
+            }, 1000);
+        } else {
+            timerOn = false;
+            updateResendButtonContent();
+        }
+    }
+    function resendOTP() {
+    console.log("inside resend otp function");
+    const email = document.getElementById("email").value;
+
+    $.ajax({
+        url: "/verifyOTP/resentOTP",
+        type: "POST",
+        data: { email: email },
+        success: function (res) {
+            if (res.resetTimer) {
+                timerOn = true;
+                remainingTime = 30;
+                timer();
+            }
+        },
+        error: function (error) {
+            console.log(error.message);
+        },
+        complete: function () {
+            resendInProgress = false; 
+        }
+    });
+}
+
+</script> -->
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const verifyButton = document.getElementById('verifyButton');
+        verifyButton.addEventListener('click', function (event) {
+            verifyOTP(event);
+        });
+    });
+
+    async function verifyOTP(event) {
+        console.log("verify otp function is called");
+        event.preventDefault(); // Prevent the default form submission
+
+        const email = document.getElementById("email").value;
+        const otp = document.getElementById("otp").value;
+        const verifyButton = document.getElementById('verifyButton');
+
+        try {
+            // Disable the button during the fetch request
+            verifyButton.disabled = true;
+
+            const response = await fetch("/verifyForgotOTP", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ email: email, otp: otp }),
+            });
+
+            if (!response.ok) {
+                throw new Error('Incorrect OTP. Please try again.');
+            }
+
+            const res = await response.json();
+            // Handle success response as needed
+            console.log(res);
+        } catch (error) {
+            // Handle error response and display error message
+            const errorMessage = document.getElementById('errorMessage');
+            errorMessage.innerText = error.message;
+            errorMessage.style.display = 'block';
+            console.error(error.message);
+        } finally {
+            // Enable the button after the fetch request completes
+            verifyButton.disabled = false;
+        }
+    }
+</script>
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const resendButton = document.getElementById('resendButton');
+        let timerOn = false;
+        let remainingTime = 30;
+
+        function updateResendButtonContent() {
+            if (timerOn) {
+                resendButton.innerHTML = `Resend OTP (${remainingTime}s)`;
+                resendButton.disabled = true;
+            } else {
+                resendButton.innerHTML = `Resend OTP `;
+                resendButton.disabled = false;
+            }
+        }
+
+        function startTimer() {
+            timerOn = true;
+            updateResendButtonContent();
+
+            const intervalId = setInterval(function () {
+                remainingTime--;
+
+                if (remainingTime <= 0) {
+                    clearInterval(intervalId);
+                    timerOn = false;
+                }
+
+                updateResendButtonContent();
+            }, 1000);
+        }
+
+        function resendOTP() {
+            console.log("inside resend otp function");
+            const email = document.getElementById("email").value;
+
+            // Disable the button during the resend request
+            resendButton.disabled = true;
+
+            $.ajax({
+                url: "/verifyOTP/resentOTP",
+                type: "POST",
+                data: { email: email },
+                success: function (res) {
+                    if (res.resetTimer) {
+                        startTimer();
+                    }
+                },
+                error: function (error) {
+                    console.log(error.message);
+                },
+                complete: function () {
+                    // Enable the button after the resend request completes
+                    resendButton.disabled = false;
+                }
+            });
+        }
+
+        // Check if the referrer URL contains "verifyEmail"
+        const referrer = document.referrer;
+        if (referrer.includes("verifyEmail")) {
+            startTimer();
+        }
+
+        // Add event listener for the "Resend OTP" button
+        resendButton.addEventListener('click', function (event) {
+            handleResendClick(event);
+        });
+
+        function handleResendClick(event) {
+            event.preventDefault();
+
+            if (!timerOn) {
+                // Start the timer and initiate the resend process
+                resendOTP();
+            }
+        }
+    });
+</script>
+
+
+
+
+
+
+ 
+
+    
+
+
+<%- include('../layouts/userfooter') %>

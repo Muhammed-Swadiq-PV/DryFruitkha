@@ -1,0 +1,180 @@
+<%- include('../layouts/userHeader') %>
+
+<!-- breadcrumb-section -->
+<div class="breadcrumb-section breadcrumb-bg">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 offset-lg-2 text-center">
+                <div class="breadcrumb-text">
+                    <p>Fresh and organic</p>
+                    <h1>Your Order Details</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- end breadcrumb section -->
+
+<body>
+    <div class="container mt-3">
+
+        <div class="row">
+            <!-- Left Column - Order Details -->
+            <div class="col-lg-6">
+                <h3> Order Details</h3>
+                <table class="order-details-table">
+                    <tr>
+                        <td>Order ID:</td>
+                        <td><%= order._id %></td>
+                    </tr>
+                    <tr>
+                        <td>Order Date:</td>
+                        <td><%= order.orderDate.toDateString() %></td>
+                    </tr>
+                    <tr>
+                        <td>Status:</td>
+                        <td><%= order.orderStatus %></td>
+                    </tr>
+                </table>
+            </div>
+
+            <!-- Right Column - Products and Order Totals -->
+            <div class="col-lg-6">
+                <h3>Products</h3>
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Product Name</th>
+                            <th>Price</th>
+                            <th>Quantity</th>
+                            <th>Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% order.products.forEach(product => { %>
+                            <tr>
+                                <td><%= product.name %></td>
+                                <td><%= product.price %></td>
+                                <td><%= product.quantity %></td>
+                                <td><%= product.price * product.quantity %></td>
+                            </tr>
+                        <% }) %>
+                    </tbody>
+                </table>
+
+                <h3>Order Totals</h3>
+                
+                <p>Total Amount:<%= order.total - 90%></p>
+                <p>Shipping Charge:<%= 90 %></p>
+                <p>Grand Total:<%= order.total%> </p>
+                <div class="actions">
+                    <% if (order.orderStatus === 'Delivered') { %>
+                        <!-- Show Return button if the order is delivered -->
+                        <button class="btn btn-primary" onclick="handleReturn()">Return</button>
+                    <% } else if (order.orderStatus == 'Pending') { %>
+                        <!-- Show Cancel Delivery button for other statuses -->
+                        <button class="btn btn-danger" id="cancelButton"  onclick="handleCancel()">Cancel Delivery</button>
+                    <% } %>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</body>
+
+
+
+<script>
+    // Function to handle cancel button click
+    function handleCancel() {
+        const confirmation = confirm('Are you sure you want to cancel the order?');
+        if (confirmation) {
+            updateOrderStatus('Canceled');
+        }
+    }
+
+    // Function to update order status
+    function updateOrderStatus(newStatus) {
+        const orderId = '<%= order._id %>';
+        console.log(orderId, "orderId");
+
+        fetch(`/updateOrderStatus/${orderId}`, {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                orderStatus: newStatus,
+            }),
+        })
+        .then(response => response.json())
+        .then(data => {
+            
+            console.log('Order status updated successfully:', data);
+
+            if (data.success) {
+                showSweetAlert('success', 'Order Cancelled Successfully!');
+            }
+            
+        })
+        .catch(error => {
+            console.error('Error updating order status:', error);
+        });
+    }
+    function showSweetAlert(icon, message) {
+        Swal.fire({
+            icon: icon,
+            title: message,
+            showConfirmButton: false,
+            timer: 1500, 
+        }).then(()=>{
+            window.location.reload()
+        })
+    }
+</script>
+
+
+<script>
+    // Function to handle return button click
+    function handleReturn() {
+        const confirmation = confirm('Are you sure you want to return the order?');
+        if (confirmation) {
+            updateReturnStatus('Returned');
+        }
+    }
+
+   
+    function updateReturnStatus(newStatus) {
+        const orderId = '<%= order._id %>';
+        console.log(orderId, "orderId");
+
+        fetch(`/returnOrder/${orderId}`, {
+            method: 'PATCH', // Assuming you handle returns with a PATCH request
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                orderStatus: newStatus,
+            }),
+        })
+        .then(response => response.json())
+        .then(data => {
+            
+            console.log('Order status updated successfully:', data);
+
+            // Show SweetAlert for successful return
+            if (data.success) {
+                showSweetAlert('success', 'Order Returned Successfully!');
+            }
+            // window.location.reload()
+
+        })
+        .catch(error => {
+            console.error('Error updating order status:', error);
+        });
+    }
+</script>
+
+
+
+<%- include('../layouts/userfooter') %>

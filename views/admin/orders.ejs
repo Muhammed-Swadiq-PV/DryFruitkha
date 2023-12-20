@@ -1,0 +1,100 @@
+<%- include('../layouts/adminHeader') %>
+
+<body>
+    <div class="container mt-3">
+        <h1>Admin Order Management</h1>
+
+        <div class="table-responsive">
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Order ID</th>
+                        <th>Customer ID</th>
+                        <th>Products</th>
+                        <th>Amount</th>
+                        <th>Order Date</th>
+                        <th>Payment Method</th>
+                        <th>Status</th>
+                         
+                    </tr>
+                </thead>
+                <tbody>
+                    <% orders.forEach((order, index) => { %>
+                        <tr>
+                            <td><%= index + 1 %></td>
+                            <td><%= order._id %></td>
+                            <td><%= order.userId %></td>
+                            <td>
+                                <% order.products.forEach(product => { %>
+                                    <%= product.name %> (Qty: <%= product.quantity %>)<br>
+                                <% }) %>
+                            </td>
+                            <td><%= order.total %></td>
+                            <td><%= order.orderDate.toDateString() %></td>
+                            <td><%= order.payment %></td>
+                            <td>
+                                <!-- Dropdown for order status -->
+                                <div class="input-group">
+                                    <select class="form-select status-select" data-order-id="<%= order._id %>">
+                                        <option value="<%= order.orderStatus %>"><%= order.orderStatus %></option>
+                                        <option value="Pending">Pending</option>
+                                        <option value="Order Confirmed">Order Confirmed</option>
+                                        <option value="Out for delivery">Out for delivery</option>
+                                        <option value="Shipped">Shipped</option>
+                                        <option value="Delivered">Delivered</option>
+                                        <option value="Canceled">Canceled</option>
+                                        <option value="Refunded">Refunded</option>
+                                        <option value="Returned">Returned</option>
+                                    </select>
+                                </div>
+                            </td>
+                           
+                        </tr>
+                    <% }) %>
+                </tbody>
+            </table>
+        </div>
+      
+    </div>
+
+ 
+
+</body>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        
+        document.querySelectorAll('.status-select').forEach(function (select) {
+            select.addEventListener('change', function () {
+                
+                const selectedStatus = this.value;
+                const orderId = this.getAttribute('data-order-id');
+                console.log(orderId, "orderId");
+                console.log(selectedStatus,"selectedstatus");
+                fetch('/admin/updateOrderStatus', {
+                    method: 'PATCH',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        orderStatus: selectedStatus,
+                        orderId: orderId
+                    }),
+                })
+                .then(response => response.json())
+                .then(data => {
+                    // Handle the response or update the UI accordingly
+                    console.log('Order status updated successfully:', data);
+                })
+                .catch(error => {
+                    console.error('Error updating order status:', error);
+                });
+            });
+        });
+    });
+</script>
+
+
+
+<%- include('../layouts/adminFooter') %>

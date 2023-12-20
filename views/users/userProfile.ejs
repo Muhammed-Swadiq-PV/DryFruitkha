@@ -1,0 +1,184 @@
+<%- include('../layouts/userHeader') %>
+
+<div class="breadcrumb-section breadcrumb-bg">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 offset-lg-2 text-center">
+                <div class="breadcrumb-text">
+                    <p>Fresh and Organic</p>
+                    <h1>User Profile</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <div class="row">
+        <!-- Sidebar -->
+        <div class="col-md-3" style="margin-top: 70px;">
+            <div class="list-group" style="width: 80%;">
+                <a href="/userProfile" class="list-group-item list-group-item-action">
+                    <i class="fas fa-user"></i> Account Details
+                </a>
+                <a href="/addressBook" class="list-group-item list-group-item-action">
+                    <i class="fas fa-address-card"></i> Delivery Addresses
+                </a>
+                <!-- Display order history -->
+                <a href="/orderDetails" class="list-group-item list-group-item-action">
+                    <i class="fas fa-shopping-cart"></i> My Orders
+                  </a>
+            </div>
+
+            <a href="/logout">
+                <button id="logoutBtn" class="btn btn-danger mt-4">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </button>
+            </a>
+        </div>
+
+        <div class="col-md-8"
+            style="border: solid 1px; padding-bottom: 20px; padding-left: 20px; margin-bottom: 2em;margin-top: 40px;"
+            id="userProfileSection">
+            <form id="profileForm">
+                <!-- Account Details -->
+                <div id="accountDetails" class="profile-section">
+                    <!-- First Name -->
+                    <div class="form-group">
+                        <label for="firstName">First Name</label>
+                        <input type="text" class="form-control" id="firstName" name="firstName"
+                            value="<%= user.Firstname || '' %>" required readonly>
+                    </div>
+                    <!-- Last Name -->
+                    <div class="form-group">
+                        <label for="lastName">Last Name</label>
+                        <input type="text" class="form-control" id="lastName" name="lastName"
+                            value="<%= user.Lastname || '' %>" required readonly>
+                    </div>
+                    <!-- Email -->
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" class="form-control" id="email" name="email"
+                            value="<%= user.email || '' %>" required readonly>
+                    </div>
+                    <!-- Phone Number -->
+                    <div class="form-group">
+                        <label for="phoneNumber">Phone Number</label>
+                        <input type="tel" class="form-control" id="phoneNumber" name="phoneNumber"
+                            value="<%= user.phone || '' %>" readonly>
+                    </div>
+                </div>
+                <!-- Edit and Update Buttons -->
+                <button type="button" id="editProfileBtn" class="btn btn-primary" data-toggle="modal"
+                    data-target="#editProfileModal">Edit Profile</button>
+                <button type="button" id="updateProfileBtn" class="btn btn-success" style="display: none;">Update
+                    Profile</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+<!------------------ Edit Profile Modal ------------------------>       
+<div class="modal fade" id="editProfileModal" tabindex="-1" role="dialog" aria-labelledby="editProfileModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editProfileModalLabel">Edit Profile</h5>
+               
+            </div>
+            <div class="modal-body">
+                <form id="profileForm" action="/updateProfile" method="POST">
+                    <div class="form-group">
+                        <label for="editFirstName">First Name</label>
+                        <div id="editFirstNameErrorMessage" class="alert alert-danger d-none" role="alert"></div>
+                    
+                        <input type="text" class="form-control" id="editFirstName" name="editFirstName" value="<%= user.Firstname || '' %>" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="editLastName">Last Name</label>
+                        <div id="editLastNameErrorMessage" class="alert alert-danger d-none" role="alert"></div>
+                    
+                        <input type="text" class="form-control" id="editLastName" name="editLastName" value="<%= user.Lastname || '' %>" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="editPhoneNumber">Phone Number</label>
+                        <div id="editPhoneNumberErrorMessage" class="alert alert-danger d-none" role="alert"></div>
+                    
+                        <input type="tel" class="form-control" id="editPhoneNumber" name="editPhoneNumber" value="<%= user.phone || '' %>" required>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="reloadPage()">Close</button>
+                <button type="button" id="saveChangesBtn" class="btn btn-primary">Save Changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<%- include('../layouts/userfooter') %>
+
+<script>
+
+    function reloadPage() {
+        location.reload();
+        
+    }
+
+    document.getElementById('editProfileBtn').addEventListener('click', function () {
+    $('#editProfileModal').modal({
+        backdrop: 'static',
+        keyboard: false
+    });
+});
+
+    document.getElementById('saveChangesBtn').addEventListener('click', function () {
+    // Validate the form fields
+    const editFirstName = document.getElementById('editFirstName').value.trim();
+    const editLastName = document.getElementById('editLastName').value.trim();
+    const editPhoneNumber = document.getElementById('editPhoneNumber').value.trim();
+
+    clearErrorMessages();
+    const nameRegex = /^[a-zA-Z]+$/;
+
+    // Validate each field
+    if (!nameRegex.test(editFirstName)) {
+        displayErrorMessage('editFirstNameErrorMessage', 'Please enter letters.');
+        return;
+    }
+
+    if (!nameRegex.test(editLastName)) {
+        displayErrorMessage('editLastNameErrorMessage', 'Please enter Letters.');
+        return;
+    }
+
+    if (!editPhoneNumber.match(/^\d{10}$/)) {
+        displayErrorMessage('editPhoneNumberErrorMessage', 'Please enter a valid 10-digit Phone Number.');
+        return;
+    }
+
+    // If everything is valid, submit the form
+    $('#editProfileModal form').submit();
+});
+
+function displayErrorMessage(elementId, message) {
+    const errorDiv = document.getElementById(elementId);
+    errorDiv.innerHTML += `<p>${message}</p>`;
+    errorDiv.classList.remove('d-none');
+}
+
+
+function clearErrorMessages() {
+    const errorDivs = document.querySelectorAll('.alert-danger');
+    errorDivs.forEach(div => {
+        div.innerText = '';
+        div.classList.add('d-none');
+    });
+}
+
+
+
+
+</script>
+

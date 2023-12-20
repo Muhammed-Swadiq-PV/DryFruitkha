@@ -1,0 +1,72 @@
+<%- include('../layouts/userHeader') %>
+
+<!-- breadcrumb-section -->
+<div class="breadcrumb-section breadcrumb-bg">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 offset-lg-2 text-center">
+                <div class="breadcrumb-text">
+                    <p>forgot password</p>
+                    <h1>verify your email</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- end breadcrumb section -->
+
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-lg-6">
+            <div class="card mt-5 mb-4">
+                <div class="card-body">
+                    <div id="alertDiv" class="mt-2"></div> <!-- Added margin-top to the alertDiv -->
+                    
+                    <form id="emailForm" action="/verifyEmail" method="post">
+                        <div class="mb-3">
+                            <label for="email" class="form-label">Email</label>
+                            <input type="email" id="email" name="email" class="form-control" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Verify Email</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<%- include('../layouts/userfooter') %>
+
+<script>
+    function showAlert(message, alertClass) {
+        const alertDiv = document.getElementById("alertDiv");
+        alertDiv.innerHTML = `<div class="alert ${alertClass}" role="alert">${message}</div>`;
+    }
+
+    // Function to handle form submission and display alerts
+    function handleFormSubmission(event) {
+        event.preventDefault();
+        
+        const email = document.getElementById("email").value;
+
+        $.ajax({
+            url: "/verifyEmail",
+            type: "POST",
+            data: { email: email },
+            success: function (res) {
+                if (res.status === 'not-found') {
+                    showAlert('Email not found', 'alert-danger');
+                } else {
+                    window.location.href = '/forgotOTP';
+                }
+            },
+            error: function (error) {
+                console.log(error.message);
+                showAlert('Email not exists please enter a valid email', 'alert-danger');
+            }
+        });
+    }
+
+    document.getElementById("alertDiv").innerHTML = ''; 
+    document.getElementById("emailForm").addEventListener("submit", handleFormSubmission);
+</script>

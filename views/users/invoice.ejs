@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dry Fruitkha Invoice</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.1/css/all.min.css" integrity="sha256-2XFplPlrFClt0bIdPgpz8H7ojnk10H69xRqd9+uTShA=" crossorigin="anonymous" />
+    <link rel="stylesheet" href="/css/invoice.css">
+    <link rel="icon" href="/public/img/logo.png">
+</head>
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="invoice-title">
+                            <div class="row">
+                                <!-- Left Column -->
+                                <div class="col-md-6">
+                                    <!-- <div class="mb-4">
+                                        <img src="../../public/img/logo.png" alt="" style="width: 100px; height: 100px;">
+                                    </div> -->
+                                    <div class="text-muted">
+                                        <p class="mb-1">San Francisco, California, USA</p>
+                                        <p class="mb-1">dryfruitkha@gmail.com</p>
+                                        <p>012-345-6789</p>
+                                    </div>
+                                </div>
+                        
+                                <!-- Right Column -->
+                                <div class="col-md-6 text-end">
+                                    <h4 class="font-size-15">InvoiceID#690204 <span class="badge bg-success font-size-12 ms-2">Paid</span></h4>
+                                    <!-- <div>
+                                        <img src="../../public/resized_images/1702206483071-banner offer.jpg" class="mt-4" alt="" style="width: 120px; height: 120px;">
+                                    </div> -->
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <hr class="my-4">
+    
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="text-muted">
+                                    <h5 class="font-size-16 mb-3">Billed To:</h5>
+                                    <h5 class="font-size-15 mb-2"><%= user.Firstname %> <%= user.Lastname %></h5>
+                                    <p class="mb-1"><%=order.address[0].firstName%> <%= order.address[0].LastName %></p>
+                                    <p><%=order.address[0].address %></p>
+                                    <p><%=order.address[0].Postcode %></p>
+                                    <p><%=order.address[0].city %></p>
+                                    <p><%=order.address[0].state %></p>
+                                    <p><%=order.address[0].district %></p>
+                                    <p>Mobile : <%=order.address[0].phones %></p>
+                                </div>
+                            </div>
+                            <!-- end col -->
+                            <div class="col-sm-6">
+                                <div class="text-muted text-sm-end">
+                                    <div>
+                                        <h5 class="font-size-15 mb-1">InvoiceID<span class="colon">:</span>#690204</h5>
+                                    </div>
+                                    <div class="mt-4">
+                                        <h5 class="font-size-15 mb-1">Invoice Date<span class="colon">:</span> <%=order.orderDate%> </h5>
+                                    </div>
+                                    <div class="mt-4">
+                                        <h5 class="font-size-15 mb-1">OrderID<span class="colon">:</span>#123456789</h5>                                          
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- end col -->
+                        </div>
+                        <!-- end row -->
+                        
+                        <div class="py-2">
+                            <h5 class="font-size-15">Order Summary</h5>
+    
+                            <div class="table-responsive">
+                                <table class="table align-middle table-nowrap table-centered mb-0">
+                                    <thead>
+                                        <tr>
+                                            <th>Product</th>
+                                            <th>Price</th>
+                                            <th>Quantity</th>
+                                            <th class="text-end" style="width: 120px;">Total</th>
+                                        </tr>
+                                    </thead><!-- end thead -->
+                                    <tbody>
+                                        <tr>
+                                            <td>
+                                                <div>
+                                                    <h5 class="text-truncate font-size-14 mb-1"><%=order.products[0].name%></h5>
+                                                </div>
+                                            </td>
+                                            <td>₹<%=order.products[0].price%></td>
+                                            <td><%=order.products[0].quantity%></td>
+                                            <% total = order.products[0].price * order.products[0].quantity %>
+                                            <td class="text-end">₹<%=order.products[0].price * order.products[0].quantity %></td>
+                                        </tr>
+                                    </tbody>
+                                </table>                                                                                                                                                 
+                            </div>
+                            <div class="text-end mt-3">
+                                <h4>Delivery charge <span class="colon">:</span> ₹90.00</h4>
+                                <h3>Total <span class="colon">:</span> ₹<%=total + 90.00%></h3>
+                            </div>          
+                            <div class="d-print-none mt-4">
+                                <div class="text-center">
+                                    <a href="#" class="btn btn-success me-1" onclick="window.print()">Print</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,80 @@
+<%- include('../layouts/userHeader') %>
+
+<!-- breadcrumb-section -->
+<div class="breadcrumb-section breadcrumb-bg">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 offset-lg-2 text-center">
+                <div class="breadcrumb-text">
+                    <p>please type your mail and OTP</p>
+                    <h1>Verify OTP</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- end breadcrumb section -->
+
+<div class="container">
+    
+    <form action="/verifyForgotOTP" method="post">
+        <div class="mb-3">
+            <div id="alertDiv"></div>
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" class="form-control" required value="<%= email %>">
+        </div>
+        <div class="mb-3">
+            <label for="otp">OTP</label>
+            <input type="text" id="otp" name="otp" class="form-control" required>
+        </div>
+      
+        <button type="submit" class="btn btn-primary" id="verifyButton" style="margin-left: 30px;">Verify OTP</button>
+        <button class="btn btn-secondary mt-3" id="resendButton" onclick="handleResendClick()" style="margin-left: 30px; margin-bottom: 15px;">Resend OTP</button>
+    </form>
+</div>
+
+
+<script>
+    function handleResendClick() {
+        const email = document.getElementById("email").value;
+        const resendButton = document.getElementById("resendButton");
+        
+        // Disable the button
+        resendButton.disabled = true;
+
+        let seconds = 30; // Set the countdown duration
+
+        // Update the button text with the countdown
+        const interval = setInterval(() => {
+            seconds--;
+            resendButton.innerText = `Resend OTP (${seconds}s)`;
+
+            if (seconds <= 0) {
+                // Enable the button after the countdown ends
+                clearInterval(interval);
+                resendButton.disabled = false;
+                resendButton.innerText = "Resend OTP";
+            }
+        }, 1000);
+
+        fetch("/resendForgotOTP", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ email: email }),
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (!data.success) {
+                console.error("Failed to resend OTP");
+            }
+        })
+        .catch(error => console.error("Error:", error));
+    }
+</script>
+
+
+
+
+<%- include('../layouts/userfooter') %>

@@ -1,0 +1,141 @@
+<%- include('../layouts/userHeader') %>
+
+
+
+    <!-- breadcrumb-section -->
+    <div class="breadcrumb-section breadcrumb-bg">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 offset-lg-2 text-center">
+                    <div class="breadcrumb-text">
+                        <p>See more Details</p>
+                        <h1>Single Product</h1>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- end breadcrumb section -->
+
+    <!-- single product -->
+    <div class="single-product mt-150 mb-150">
+        <div class="container">
+            <div class="row">
+                <div class=" d-flex md-5 col-md-6">
+                    <div class="single-product-img">
+                        <div class="big-image-container" id="bigImageContainer">
+                            <% if(product.image.length> 0) { %>
+                                <img src="<%= product.image[0] %>" alt="product images" style="width: 400px"
+                                    id="bigImage">
+                                <% } %>
+                                <div id="zoomedResult" class="img-zoom-result"></div>
+                        </div>
+                        <div class="small-images-container d-flex flex-raw mt-2">
+                            <% for(let i=1; i<product.image.length; i++) { %>
+                                <img src="<%= product.image[i] %>" alt="product images" class="small-image"
+                                    data-big-image="<%= product.image[i] %> " style="width:100px">
+                                <% } %>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="single col-md-6 ">
+                    <div class="single-product-content ml-auto">
+                        <div class="single-product-content">
+                            <h3>
+                                <%= product.name %>
+                            </h3>
+                            <p class="single-product-pricing"><span>Per Kg</span> ₹<%= product.price %>
+                            </p>
+                            <p><strong>Stock:</strong>
+                                <%= product.stock %> units
+                            </p>
+                            <p><strong>Category:</strong>
+                                <%= product.categoryDetails.name %>
+                            </p>
+
+                            <input type="hidden" name="price" id="price<%= product._id %>" value="<%=product.price %>">
+                            <p>
+                                <%= product.description %>
+                            </p>
+                            <div class="single-product-form">
+                               
+                                <a onclick="addToCart('<%= product._id %>')" class="cart-btn"><i
+                                        class="fas fa-shopping-cart"></i> Add to Cart</a>
+                              
+                            </div>
+                            <h4>Share:</h4>
+                            <ul class="product-share">
+                                <li><a href=""><i class="fab fa-facebook-f"></i></a></li>
+                                <li><a href=""><i class="fab fa-twitter"></i></a></li>
+                                <li><a href=""><i class="fab fa-google-plus-g"></i></a></li>
+                                <li><a href=""><i class="fab fa-linkedin"></i></a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- end single product -->
+
+
+
+
+
+
+
+
+
+    <!-- logo carousel -->
+    <div class="logo-carousel-section">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="logo-carousel-inner">
+                        <div class="single-logo-item">
+                            <img src="assets/img/company-logos/1.png" alt="">
+                        </div>
+                        <div class="single-logo-item">
+                            <img src="assets/img/company-logos/2.png" alt="">
+                        </div>
+                        <div class="single-logo-item">
+                            <img src="assets/img/company-logos/3.png" alt="">
+                        </div>
+                        <div class="single-logo-item">
+                            <img src="assets/img/company-logos/4.png" alt="">
+                        </div>
+                        <div class="single-logo-item">
+                            <img src="assets/img/company-logos/5.png" alt="">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- end logo carousel -->
+
+
+    <script>
+        document.querySelectorAll('.small-image').forEach(function (smallImage) {
+            smallImage.addEventListener('click', function () {
+                const bigImage = document.getElementById('bigImage');
+                bigImage.src = this.getAttribute('data-big-image');
+            });
+        });
+    </script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+    imageZoom("bigImage", "zoomedResult");
+});
+
+    </script>
+
+    
+
+    <script src="/js/script.js"> </script>
+
+   
+
+    <%- include('../layouts/userfooter') %>

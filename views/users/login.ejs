@@ -1,0 +1,123 @@
+<%- include('../layouts/userHeader') %>
+
+<div class="breadcrumb-section breadcrumb-bg">
+  <div class="container">
+      <div class="row">
+          <div class="col-lg-8 offset-lg-2 text-center">
+              <div class="breadcrumb-text">
+                  <!-- <p>Fresh and Organic</p> -->
+                  <p class="breadcrumbs"><span class="mr-2"><a href="/ ">Home</a></span></p>
+                  <h1>LOGIN TO YOUR ACCOUNT</h1>
+              </div>
+          </div>
+      </div>
+  </div>
+</div>
+
+
+  
+  <section class="ftco-section ftco-cart">
+    <div class="container">
+      <div class="row align-items-center justify-content-center"> <!-- Use justify-content-center to center-align the content -->
+        <div class="col-lg-6 col-md-6">
+          <div class="login_part_form custom-form-bg p-4 rounded">
+            <div class="login_part_form_iner text-center border p-4">
+              <h2>YOUR ACCOUNT FOR EVERYTHING</h2>
+  
+              <% if (error) { %>
+                <div class="alert alert-danger">
+                  <%= error %>
+                </div>
+              <% } %>
+  
+              <form class="row contact_form" action="/login" method="post">
+
+                <!-- user blocked error message while user logged in -->
+                <small style="color: red;" class="ml-5">
+                  <%=locals.blockError?blockError :'' %>
+                </small>
+
+                 <!-- user blocked error message -->
+                 <small style="color: red;" class="mt-3">
+                  <%=locals.blocked?blocked :'' %>
+                </small>
+               
+
+                <div class="col-md-12 form-group">
+                  <input type="email" class="form-control" id="email" name="email" value="" placeholder="Email">
+                </div>
+                <div class="col-md-12 form-group">
+                  <input type="password" class="form-control" id="password" name="password" value="" placeholder="Password">
+                </div>
+                <div class="col-md-12 form-group">
+                  <a href="/verifyEmail">Forgot Password?</a>
+                </div>
+                
+               
+
+                <div class="col-md-12 form-group">
+                  <button type="submit" value="submit" class="btn btn-primary">
+                    Login
+                  </button>
+                </div>
+                <div class="col-md-12 form-group">
+                  <p>Don't have an account? <a href="/signup">Sign Up</a></p>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const loginForm = document.querySelector('form');
+      const notification = document.querySelector('.alert'); // Existing notification, if any
+  
+      // Remove existing notifications
+      if (notification) {
+        notification.remove();
+      }
+  
+      // Check if there's a blockError message from the server
+      const blockError = '<%= locals.blockError %>';
+  
+      if (blockError) {
+        // Display the error message
+        const newNotification = document.createElement('div');
+        newNotification.className = 'alert alert-danger mt-3';
+        newNotification.innerHTML = blockError;
+  
+        // Add the notification after the form
+        loginForm.parentNode.insertBefore(newNotification, loginForm.nextSibling);
+      }
+  
+      loginForm.addEventListener('submit', function (event) {
+        const emailInput = document.querySelector('input[name="email"]');
+        const passwordInput = document.querySelector('input[name="password"]');
+        const notification = document.querySelector('.alert'); 
+  
+        // Remove existing notifications
+        if (notification) {
+          notification.remove();
+        }
+  
+        if (!emailInput.value.trim() || !passwordInput.value.trim()) {
+          event.preventDefault(); 
+  
+          const newNotification = document.createElement('div');
+          newNotification.className = 'alert alert-danger mt-3';
+          newNotification.innerHTML = 'Please enter both email and password.';
+  
+          // Add the notification after the form
+          loginForm.parentNode.insertBefore(newNotification, loginForm.nextSibling);
+        }
+      });
+    });
+  </script>
+  
+
+<%- include('../layouts/userfooter') %>

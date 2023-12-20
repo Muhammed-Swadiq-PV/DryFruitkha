@@ -1,0 +1,142 @@
+<%- include('../layouts/userHeader') %>
+
+<div class="search-area">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <span class="close-btn"><i class="fas fa-window-close"></i></span>
+                <div class="search-bar">
+                    <div class="search-bar-tablecell">
+                        <h3>Search For:</h3>
+                        <input type="text" placeholder="Keywords">
+                        <button type="submit">Search <i class="fas fa-search"></i></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- end search area -->
+
+<!-- breadcrumb-section -->
+<div class="breadcrumb-section breadcrumb-bg">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 offset-lg-2 text-center">
+                <div class="breadcrumb-text">
+                    <p>Fresh and Organic</p>
+                    <h1>Cart</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- end breadcrumb section -->
+
+<!-- cart -->
+<div class="cart-section mt-150 mb-150">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-md-12">
+                <div class="cart-table-wrap">
+                    <% if (user.cart.length> 0) { %>
+                    <table class="cart-table">
+                        <thead class="cart-table-head">
+                            <tr class="table-head-row">
+                                <th class="product-remove"></th>
+                                <th class="product-image">Product Image</th>
+                                <th class="product-name">Name</th>
+                                <th class="product-price">Price</th>
+                                <th class="product-quantity">Quantity</th>
+                                <th class="product-total">Total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% let total=0%>
+                            <% cartItem.forEach((cartItem)=> { %>
+                                <tr class="table-body-row">
+                                    <td class="product-remove">
+                                        <a href="#" class="remove-product-btn" style="width: 20px"
+                                            onclick="removeCartItem('<%= cartItem.product._id %>')">
+                                            <i class="far fa-window-close"></i>
+                                        </a>
+                                    </td>
+                                    <td class="product-image">
+                                        <img src="<%= cartItem.product.image[0] %>" alt="product-image"
+                                            class="img-fluid" width="100">
+                                    </td>
+                                    <td class="product-name">
+                                        <%= cartItem.product.name %>
+                                    </td>
+                                    <td class="product-price">₹<%= cartItem.product.price %></td>
+                                    <td class="product-quantity">
+                                        <% if (cartItem.product.stock > 0){ %>
+                                            <input type="number" min="1" data-product-id="<%= cartItem.product._id %>" value="<%= cartItem.quantity %>" onchange="handleQuantityChange(this)">
+                                        <% }else{ %>
+                                            <span class="out-of-stock-message">Out of Stock</span>
+                                        <% } %> 
+                                    </td>
+                                    <td class="product-total">₹<span class="item-total-price"><%= cartItem.totalPrice %></span></td>
+                                    <%total+=cartItem.totalPrice%>
+                                </tr>
+                            <% }); %>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="col-lg-4">
+                <div class="total-section">
+                    <table class="total-table">
+                        <thead class="total-table-head">
+                            <tr class="table-total-row">
+                                <th>Total</th>
+                                <th>Price</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="total-data" id="subtotal-row">
+                                <td><strong>Subtotal: </strong></td>
+                                <td>₹<span id="subtotal"><%=total%></span></td>
+                            </tr>
+                            <tr class="total-data" id="shipping-row">
+                                <td><strong>Shipping: </strong></td>
+                                <td>₹90</td>
+                            </tr>
+                            <tr class="total-data">
+                                <td><strong>Total: </strong></td>
+                                <td>₹<span id="total"><%=total+90%></span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="cart-buttons">
+                        <!-- <a href="cart.html" class="boxed-btn">Update Cart</a> -->
+                        <a href="/checkOut" class="boxed-btn black">Check Out</a>
+                    </div>
+                </div>
+
+                <div class="coupon-section">
+                    <h3>Apply Coupon</h3>
+                    <div class="coupon-form-wrap">
+                        <form action="index.html">
+                            <p><input type="text" placeholder="Coupon"></p>
+                            <p><input type="submit" value="Apply"></p>
+                        </form>
+                    </div>
+                </div>
+                <% } else { %>
+                    <div class="empty" style="height: 300px;">
+            
+                      <h3>Your cart is empty...</h3>
+            
+                    </div>
+                  <% } %>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- end cart -->
+
+<script src="/js/script.js"></script>
+
+<%- include('../layouts/userfooter') %>

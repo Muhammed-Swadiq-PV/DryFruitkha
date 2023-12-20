@@ -1,0 +1,529 @@
+<%- include('../layouts/userHeader') %>
+
+
+    <div class="search-area">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <span class="close-btn"><i class="fas fa-window-close"></i></span>
+                    <div class="search-bar">
+                        <div class="search-bar-tablecell">
+                            <h3>Search For:</h3>
+                            <input type="text" placeholder="Keywords">
+                            <button type="submit">Search <i class="fas fa-search"></i></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- end search area -->
+
+    <!-- breadcrumb-section -->
+    <div class="breadcrumb-section breadcrumb-bg">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 offset-lg-2 text-center">
+                    <div class="breadcrumb-text">
+                        <p>Fresh and Organic</p>
+                        <h1>User Profile</h1>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- end breadcrumb section -->
+
+    <!-- user address form -->
+    <form id="userAddressForm" action="/address" method="POST">
+
+        <div class="container">
+            <div class="row">
+                <!-- Sidebar -->
+                <div class="col-md-3" style="margin-top: 70px;">
+                    <div class="list-group" style="width: 80%;">
+                        <a href="/userprofile" class="list-group-item list-group-item-action">
+                            <i class="fas fa-user"></i> Account Details
+                        </a>
+                        <a href="/addressBook" class="list-group-item list-group-item-action">
+                            <i class="fas fa-address-card"></i> Delivery Addresses
+                        </a>
+                        <a href="/orders" class="list-group-item list-group-item-action">
+                            <i class="fas fa-shopping-cart"></i> My Orders
+                        </a>
+                    </div>
+
+                    <a href="/logout">
+                        <button id="logoutBtn" class="btn btn-danger mt-4">
+                            <i class="fas fa-sign-out-alt"></i> Logout
+                        </button>
+                    </a>
+                </div>
+
+
+
+                <div class="col-md-6" style="margin-top: 50px;">
+                    <div class="shipping-address">
+                        <h3>Add a new address</h3>
+                        <hr>
+
+                        <div class="w-100">
+                            <div class="w-100">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <!-- First Name -->
+                                        <div class="form-group">
+                                            <label for="billingFirstName">First Name</label>
+                                            <input type="text" class="form-control" id="billingFirstName"
+                                                name="firstName" placeholder="First Name">
+                                            <div id="billingFirstNameError" class="text-danger"></div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <!-- Last Name -->
+                                        <div class="form-group">
+                                            <label for="billingLastName">Last Name</label>
+                                            <input type="text" class="form-control" id="billingLastName" name="LastName"
+                                                placeholder="Last Name">
+                                            <div id="billingLastNameError" class="text-danger"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <!-- State -->
+                                        <div class="form-group">
+                                            <label for="billingState">State</label>
+                                            <input type="text" class="form-control" id="billingState" name="state"
+                                                placeholder="State">
+                                            <div id="billingStateError" class="text-danger"></div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <!-- Street Address -->
+                                        <div class="form-group">
+                                            <label for="billingStreetAddress">Street Address</label>
+                                            <input type="text" class="form-control" id="billingStreetAddress"
+                                                name="address" placeholder="House number and street name">
+                                            <div id="billingStreetAddressError" class="text-danger"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <!-- Town/City -->
+                                        <div class="form-group">
+                                            <label for="billingTownCity">Town / City</label>
+                                            <input type="text" class="form-control" id="billingTownCity" name="city"
+                                                placeholder="Town / City">
+                                            <div id="billingTownCityError" class="text-danger"></div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <!-- Postcode/ZIP -->
+                                        <div class="form-group">
+                                            <label for="billingPostcodeZip">Postcode / ZIP *</label>
+                                            <input type="text" class="form-control" id="billingPostcodeZip"
+                                                name="Postcode" placeholder="Postcode / ZIP">
+                                            <div id="billingPostcodeZipError" class="text-danger"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <!-- District -->
+                                        <div class="form-group">
+                                            <label for="billingDistrict">District</label>
+                                            <input type="text" class="form-control" id="billingDistrict" name="district"
+                                                placeholder="District">
+                                            <div id="billingDistrictError" class="text-danger"></div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <!-- Phone -->
+                                        <div class="form-group">
+                                            <label for="billingPhone">Phone</label>
+                                            <input type="text" class="form-control" id="billingPhone" name="phones"
+                                                placeholder="Phone" pattern="[0-9]{10}">
+                                            <div id="billingPhoneError" class="text-danger"></div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <button type="submit" class="btn btn-primary btn-orange">Add Address</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+
+    <!-- end user address form -->
+    <div class="editAddresscard" style="margin-left: 20em;">
+        <h3>Your Addresses</h3>
+        <div class="existing-addresses-container" style="display: flex; ">
+            <% addresses.forEach(address=> { %>
+                <div class="address-container mb-3 p-3 border" style="width: 17%;margin-left: 10px;">
+                    <div>
+                        <strong>
+                            <%= address.firstName %>
+                                <%= address.LastName %>
+                        </strong><br>
+                        <%= address.address %><br>
+                            <%= address.city %>, <%= address.state %>
+                                    <%= address.Postcode %><br>
+                                        District: <%= address.district %><br>
+                                            Phone: <%= address.phones %>
+                    </div>
+                    <div class="mt-2">
+                        <label class="mr-2">
+                            <input type="radio" name="defaultAddress" data-address-id="<%= address._id %>"
+                                onclick="setDefaultAsDefault(this)">
+                            Set as Default
+                        </label>
+
+                        <!-- Add a data attribute to store the address ID in the Edit button -->
+                        <button type="button" class="btn btn-primary btn-sm mr-2" data-bs-toggle="modal"
+                            data-bs-target="#editAddressModal"
+                            onclick="editAddressModal('<%= address._id %>', '<%= JSON.stringify(address) %>')">
+                            Edit
+                        </button>
+                        <!-- <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                                Launch demo modal
+                              </button> -->
+                        <button class="btn btn-danger btn-sm" data-bs-toggle="modal"
+                            data-bs-target="#deleteConfirmationModal<%= address._id %>">Delete</button>
+                    </div>
+                </div>
+
+
+
+
+
+                <!-------------------------- Modal for Delete Confirmation ----------------->
+
+                <div class="modal fade" id="deleteConfirmationModal<%= address._id %>" tabindex="-1"
+                    aria-labelledby="deleteConfirmationModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="deleteConfirmationModalLabel">Confirm Deletion</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                    aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                Are you sure you want to delete this address?
+                            </div>
+
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                <button type="button" class="btn btn-danger"
+                                    onclick="confirmDelete('<%= address._id %>')">Delete</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <% }) %>
+        </div>
+    </div>
+
+    <!--      sakjkhdsf -->
+
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    ...
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Save changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Edit Address Modal -->
+    <div class="modal" id="editAddressModal" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document" style="width: 80%;">
+            <div class="modal-content" style="overflow-y: auto;">
+                <div class="modal-header">
+                    <h5 class="modal-title">Edit Address</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form id="editAddressForm" onsubmit="submitEditAddressForm(event)">
+
+                    <input type="hidden" id="addressToUpdate" value="<%= addresses.id %>" />
+                    <div class="form-group">
+                        <label for="editFirstName">First Name</label>
+                        <input type="text" class="form-control" id="editFirstName" name="editFirstName"
+                            placeholder="First Name" value="<%=  %>" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="editLastName">Last Name</label>
+                        <input type="text" class="form-control" id="editLastName" name="editLastName"
+                            placeholder="Last Name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="editState">State</label>
+                        <input type="text" class="form-control" id="editState" name="editState" placeholder="State"
+                            required>
+                    </div>
+                    <div class="form-group">
+                        <label for="editStreetAddress">Street Address</label>
+                        <input type="text" class="form-control" id="editStreetAddress" name="editAddress"
+                            placeholder="House number and street name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="editTownCity">Town / City</label>
+                        <input type="text" class="form-control" id="editTownCity" name="editCity"
+                            placeholder="Town / City" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="editPostcodeZip">Postcode / ZIP</label>
+                        <input type="text" class="form-control" id="editPostcodeZip" name="editPostCode"
+                            placeholder="Postcode / ZIP" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="editDistrict">District</label>
+                        <input type="text" class="form-control" id="editDistrict" name="editDistrict"
+                            placeholder="District" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="editPhone">Phone</label>
+                        <input type="text" class="form-control" id="editPhone" name="editPhoneNumber"
+                            placeholder="Phone" pattern="[0-9]{10}" required>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary btn-orange">Save Changes</button>
+                </form>
+
+            </div>
+          
+        </div>
+
+
+
+
+
+
+
+
+
+
+        <!-- --------------------make the address as default -------------------------------- -->
+        <script>
+            function setDefaultAsDefault(element) {
+                try {
+                    const addressId = element.getAttribute('data-address-id');
+
+
+                    fetch('/setDefaultAddress/' + addressId, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                    })
+                        .then((response) => response.json())
+                        .then((data) => {
+
+                            console.log(data);
+
+                            if (data.success) {
+                                console.log('Default address set successfully');
+                            } else {
+                                console.error('Error setting default address:', data.message);
+                            }
+                        })
+                        .catch((error) => {
+                            console.error('Fetch error:', error);
+                        });
+                } catch (error) {
+                    console.error('Error:', error);
+                }
+            }
+
+        </script>
+
+        <!-- ------------------add address validation ------------------------>
+        <script>
+            document.addEventListener('DOMContentLoaded', () => {
+                const form = document.getElementById('userAddressForm');
+
+                form.addEventListener('submit', (event) => {
+                    event.preventDefault();
+
+                    const firstName = document.getElementById('billingFirstName');
+                    const lastName = document.getElementById('billingLastName');
+                    const state = document.getElementById('billingState');
+                    const streetAddress = document.getElementById('billingStreetAddress');
+                    const townCity = document.getElementById('billingTownCity');
+                    const postcodeZip = document.getElementById('billingPostcodeZip');
+                    const district = document.getElementById('billingDistrict');
+                    const phone = document.getElementById('billingPhone');
+
+                    const validateField = (field, errorMessage) => {
+                        const value = field.value.trim();
+                        const errorElement = document.getElementById(`${field.id}Error`);
+
+                        if (!value) {
+                            errorElement.textContent = errorMessage;
+                        } else {
+                            errorElement.textContent = '';
+                        }
+
+                        return value;
+                    };
+
+                    const validatedFirstName = validateField(firstName, 'First Name is required');
+                    const validatedLastName = validateField(lastName, 'Last Name is required');
+                    const validatedState = validateField(state, 'State is required');
+                    const validatedStreetAddress = validateField(streetAddress, 'Street Address is required');
+                    const validatedTownCity = validateField(townCity, 'Town / City is required');
+                    const validatedPostcodeZip = validateField(postcodeZip, 'Postcode / ZIP is required');
+                    const validatedDistrict = validateField(district, 'District is required');
+                    const validatedPhone = validateField(phone, 'Phone number must be 10 digits');
+
+                    if (
+                        validatedFirstName &&
+                        validatedLastName &&
+                        validatedState &&
+                        validatedStreetAddress &&
+                        validatedTownCity &&
+                        validatedPostcodeZip &&
+                        validatedDistrict &&
+                        validatedPhone
+                    ) {
+                        form.submit();
+                    }
+                });
+            });
+        </script>
+
+
+        <!------------------------------ delete address function -------------------------------->
+
+        <script>
+            function confirmDelete(id) {
+                console.log("delelte modal");
+                fetch('/deleteAddress/' + id, {
+                    method: 'DELETE',
+                })
+                    .then((response) => response.json())
+                    .then((data) => {
+                        if (data.success) {
+                            console.log('Address deleted successfully');
+                            window.location.href = window.location.href;
+                        } else {
+                            console.error('Error deleting address:', data.message);
+                        }
+                    })
+                    .catch((error) => {
+                        console.error('Fetch error:', error);
+                    });
+            }
+        </script>
+
+
+
+
+
+
+
+
+
+
+
+        <!---------------------------- edit address function -------------------------------->
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                const urlParams = new URLSearchParams(window.location.search);
+        
+                if (urlParams.has('success') && urlParams.get('success') === 'true') {
+                    // Display SweetAlert success message
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Updated address successfully',
+                        showConfirmButton: false,
+                        timer: 2000,
+                    }).then(() => {
+                        // Reload the page after the SweetAlert is closed
+                        console.log("sweet alert success message displayed");
+                        location.reload();
+                    });
+                }
+            });
+        
+            function editAddressModal(addressId, address) {
+                const editAddressModal = document.getElementById('editAddressModal');
+                const addressToUpdate = document.getElementById('addressToUpdate');
+        
+                const selectedAddress = typeof address === 'string' ? JSON.parse(address) : address;
+                console.log('Selected Address:', selectedAddress);
+        
+                addressToUpdate.value = addressId;
+        
+                document.getElementById('editFirstName').value = selectedAddress.firstName;
+                document.getElementById('editLastName').value = selectedAddress.LastName;
+                document.getElementById('editState').value = selectedAddress.state;
+                document.getElementById('editStreetAddress').value = selectedAddress.address;
+                document.getElementById('editTownCity').value = selectedAddress.city;
+                document.getElementById('editPostcodeZip').value = selectedAddress.Postcode;
+                document.getElementById('editDistrict').value = selectedAddress.district;
+                document.getElementById('editPhone').value = selectedAddress.phones;
+        
+                editAddressModal.style.display = 'block';
+            }
+        
+            function submitEditAddressForm(event) {
+                console.log("inside submit edit address form");
+                event.preventDefault();
+        
+                const updatedAddressData = {
+                    firstName: document.getElementById('editFirstName').value,
+                    LastName: document.getElementById('editLastName').value,
+                    state: document.getElementById('editState').value,
+                    address: document.getElementById('editStreetAddress').value,
+                    city: document.getElementById('editTownCity').value,
+                    Postcode: document.getElementById('editPostcodeZip').value,
+                    district: document.getElementById('editDistrict').value,
+                    phones: document.getElementById('editPhone').value,
+                };
+        
+                const addressId = document.getElementById('addressToUpdate').value;
+        
+                fetch('/update-address', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ addressId, updatedAddressData }),
+                    redirect: 'follow',
+                })
+                .then(response =>{
+
+                    // console.log(data.message);
+                    window.location.reload()
+
+                   
+                 response.json()})
+                
+                .catch(error => {
+                    console.error(error);
+                });
+            }
+        </script>
+        
+        
+
+
+        <%- include('../layouts/userfooter') %>

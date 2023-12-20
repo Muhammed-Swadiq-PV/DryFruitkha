@@ -1,0 +1,618 @@
+<%- include('../layouts/userHeader') %>
+
+    <div class="search-area">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <span class="close-btn"><i class="fas fa-window-close"></i></span>
+                    <div class="search-bar">
+                        <div class="search-bar-tablecell">
+                            <h3>Search For:</h3>
+                            <input type="text" placeholder="Keywords">
+                            <button type="submit">Search <i class="fas fa-search"></i></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- end search area -->
+
+    <!-- breadcrumb-section -->
+    <div class="breadcrumb-section breadcrumb-bg">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 offset-lg-2 text-center">
+                    <div class="breadcrumb-text">
+                        <p>Fresh and Organic</p>
+                        <h1>Check Out</h1>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- end breadcrumb section -->
+
+    <!-- user address form -->
+    <form id="userAddressForm" action="/address" method="POST">
+        <% if(defaultAddress){ %>
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="shipping-address">
+                            <h2>Billing details</h2>
+                            <hr>
+
+                            <div class="w-100">
+                                <div class="w-100">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <!-- First Name -->
+                                            <div class="form-group">
+                                                <label for="billingFirstName">First Name</label>
+                                                <input type=" " class="form-control" id="billingFirstName"
+                                                    name="firstName" placeholder="First Name"
+                                                    value="<%=defaultAddress.firstName%>">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <!-- Last Name -->
+                                            <div class="form-group">
+                                                <label for="billingLastName">Last Name</label>
+                                                <input type=" " class="form-control" id="billingLastName"
+                                                    name="LastName" placeholder="Last Name"
+                                                    value="<%= defaultAddress.LastName %>">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <!-- State -->
+                                            <div class="form-group">
+                                                <label for="billingState">State</label>
+                                                <input type=" " class="form-control" id="billingState" name="state"
+                                                    placeholder="State" value="<%= defaultAddress.state %>">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <!-- Street Address -->
+                                            <div class="form-group">
+                                                <label for="billingStreetAddress">Street Address</label>
+                                                <input type="   " class="form-control" id="billingStreetAddress"
+                                                    name="address" placeholder="House number and street name"
+                                                    value="<%= defaultAddress.address %>">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <!-- Town/City -->
+                                            <div class="form-group">
+                                                <label for="billingTownCity">Town / City</label>
+                                                <input type=" " class="form-control" id="billingTownCity" name="city"
+                                                    placeholder="Town / City" value="<%= defaultAddress.city %>">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <!-- Postcode/ZIP -->
+                                            <div class="form-group">
+                                                <label for="billingPostcodeZip">Postcode / ZIP *</label>
+                                                <input type=" " class="form-control" id="billingPostcodeZip"
+                                                    name="Postcode" placeholder="Postcode / ZIP"
+                                                    value="<%= defaultAddress.Postcode %>">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <!-- District -->
+                                            <div class="form-group">
+                                                <label for="billingDistrict">District</label>
+                                                <input type=" " class="form-control" id="billingDistrict"
+                                                    name="district" placeholder="District"
+                                                    value="<%= defaultAddress.district %>">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <!-- Phone -->
+                                            <div class="form-group">
+                                                <label for="billingPhone">Phone</label>
+                                                <input type=" " class="form-control" id="billingPhone" name="phones"
+                                                    placeholder="Phone" value="<%= defaultAddress.phones %>">
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <!-- <a href="/userProfile" class="btn btn-link">Create a new address</a> -->
+                                            <div class="form-group">
+                                                <a href="#" class="btn btn-link" onclick="showAddAddressModal()">Create
+                                                    a new address</a>
+                                            </div>
+                                        </div>
+
+                                        <!-- Add link to ship to a different address -->
+                                        <div class="form-group">
+                                            <a href="/userProfile" class="btn btn-link">Ship to a different address</a>
+                                        </div>
+
+
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <%}else{%>
+                <div class="form-group">
+                    <!-- <a href="/userProfile" class="btn btn-link">Create a new address</a> -->
+                    <div class="form-group">
+                        <a href="#" class="btn btn-link" onclick="showAddAddressModal()">Create a new address</a>
+                    </div>
+                </div>
+
+                <!-- Add link to ship to a different address -->
+                <div class="form-group">
+                    <a href="/userProfile" class="btn btn-link">Ship to a different address</a>
+                </div>
+                <%}%>
+    </form>
+    <!-- end user address form -->
+
+
+
+    <div class="col-md-6">
+        <div class="order-summary">
+            <h2>Order Summary</h2>
+            <hr>
+
+            <div class="container">
+                <table class="order-summary-table">
+                    <thead>
+                        <tr>
+                            <th>Product</th>
+                            <th>Quantity</th>
+                            <th>Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% cartItem.forEach((cartItem)=> { %>
+                            <tr>
+                                <td>
+                                    <%= cartItem.product.name %>
+                                </td>
+                                <td>
+                                    <%= cartItem.quantity %>
+                                </td>
+                                <td>₹<%= cartItem.totalPrice %>
+                                </td>
+                            </tr>
+                            <% }); %>
+                    </tbody>
+                </table>
+
+                <div class="order-total">
+                    <div class="order-total-border">
+                        <p><strong>Subtotal:</strong> ₹<%= cartItem.reduce((sum, item)=> sum + item.totalPrice, 0) %>
+                        </p>
+                        <p><strong>Shipping:</strong> ₹90</p>
+                        <p><strong>Total:</strong> ₹<%= cartItem.reduce((sum, item)=> sum + item.totalPrice, 0) + 90 %>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- modal that works when clicking the cashondelivery button -->
+    <div class="modal fade" id="orderConfirmationModal" tabindex="-1" role="dialog"
+        aria-labelledby="orderConfirmationModalLabel" aria-hidden="true" data-backdrop="static">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="orderConfirmationModalLabel">Order Confirmation</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <!-- Display the order confirmation message -->
+                    <p id="orderConfirmationMessage"></p>
+                </div>
+                <div class="modal-footer">
+                    <!-- Button to go back to the shop -->
+                    <button type="button" class="btn btn-secondary" onclick="redirectToShop()">Back to Shop</button>
+
+                    <!-- Button to view order details (you can replace the href with the actual order details page) -->
+                    <a href="/orderDetails" class="btn btn-primary">View Order Details</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Cash on delivery button form -->
+    <div class="line-payment" style="display: flex;flex-direction: row;">
+    <div class="button-for">
+        <form id="cashOnDeliveryForm" action="/placeOrder" method="POST">
+            <input type="hidden" name="paymentMethod" value="CashOnDelivery">
+            <input type="hidden" name="totalPrice"
+                value="<%= cartItem.reduce((sum, item) => sum + item.totalPrice, 0) + 90 %>">
+
+            <% if (defaultAddress) { %>
+
+                <button type="submit" class="btn-orange" onclick="showOrderConfirmation('CashOnDelivery')">Cash on Delivery</button>
+                <% } else { %>
+                    <div class="alert alert-danger" role="alert">
+                        You don't have a default address. Please create a new address.
+                    </div>
+                    <!-- Disable the button if there is no default address -->
+                    <button type="button" class=" btn-orange" disabled>
+                        Cash on Delivery
+                    </button>
+
+
+                    <% } %>
+        </form>
+        <% if (cartItem.length > 0) { %>
+            <!-- Razorpay Form -->
+            <form id="razorpayForm" action="/razorpayOrder" method="POST">
+                <input type="hidden" name="paymentMethod" value="Razorpay">
+                <input type="hidden" name="totalPrice" value="<%= cartItem.reduce((sum, item) => sum + item.totalPrice, 0) + 90 %>">
+                <!-- Add other necessary fields for Razorpay -->
+    
+                <button type="submit" class="btn-orange" id="rzp-button1" >Pay with Razorpay</button>
+            </form>
+        <% } %>
+    </div>
+
+    </div>
+
+
+
+
+
+    <div class="modal" id="addAddressModal">
+        <div class="modal-dialog" style="width: 50%;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" aria-label="Close" onclick="hideAddAddressModal()">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body" style="max-height: 400px; overflow-y: auto;">
+            <form id="addAddressForm">
+                <!-- Add address form fields go here -->
+                <div class="form-group">
+                    <label for="addFirstName">First Name</label>
+                    <input type="text" class="form-control" id="addFirstName" name="addFirstName"
+                        placeholder="First Name" required>
+                    <div class="text-danger" id="addFirstNameError"></div>
+                </div>
+                <div class="form-group">
+                    <label for="addLastName">Last Name</label>
+                    <input type="text" class="form-control" id="addLastName" name="addLastName" placeholder="Last Name"
+                        required>
+                    <div class="text-danger" id="addLastNameError"></div>
+                </div>
+                <div class="form-group">
+                    <label for="addState">State</label>
+                    <input type="text" class="form-control" id="addState" name="addState" placeholder="State" required>
+                    <div class="text-danger" id="addStateError"></div>
+                </div>
+                <div class="form-group">
+                    <label for="addStreetAddress">Street Address</label>
+                    <input type="text" class="form-control" id="addStreetAddress" name="addStreetAddress"
+                        placeholder="House number and street name" required>
+                    <div class="text-danger" id="addStreetAddressError"></div>
+                </div>
+                <div class="form-group">
+                    <label for="addTownCity">Town / City</label>
+                    <input type="text" class="form-control" id="addTownCity" name="addTownCity"
+                        placeholder="Town / City" required>
+                    <div class="text-danger" id="addTownCityError"></div>
+                </div>
+                <div class="form-group">
+                    <label for="addPostcodeZip">Postcode / ZIP</label>
+                    <input type="text" class="form-control" id="addPostcodeZip" name="addPostcodeZip"
+                        placeholder="Postcode / ZIP" required>
+                    <div class="text-danger" id="addPostcodeZipError"></div>
+                </div>
+                <div class="form-group">
+                    <label for="addDistrict">District</label>
+                    <input type="text" class="form-control" id="addDistrict" name="addDistrict" placeholder="District"
+                        required>
+                    <div class="text-danger" id="addDistrictError"></div>
+                </div>
+                <div class="form-group">
+                    <label for="addPhone">Phone</label>
+                    <input type="text" class="form-control" id="addPhone" name="addPhoneNumber" placeholder="Phone"
+                        pattern="[0-9]{10}" required>
+                    <div class="text-danger" id="addPhoneError"></div>
+                </div>
+
+                <button type="button" class="btn-orange" onclick="validateAndSaveAddress()">Add Address</button>
+            </form>
+            </div>
+            </div>   
+        </div>
+    </div>
+
+
+
+    <!----------------- script for razorpay -------------------->
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+    <!--------------------------- scripts from here ------------------------------->
+    <!--====== ============================================================================ ====== -->
+    
+
+    <script>
+        function showOrderConfirmation(paymentMethod) {
+            const orderConfirmationMessage = 'Your order has been confirmed!';
+
+            // Display the order confirmation message in the modal
+            $('#orderConfirmationMessage').text(orderConfirmationMessage);
+
+            $('#orderConfirmationModal').modal('show');
+        }
+
+        function redirectToShop() {
+            window.location.href = '/shop';
+        }
+    </script>
+
+
+    <script>
+        $(document).ready(function () {
+            // Add an event listener for the click event on the "Add Address" button
+            $('#addAddressButton').click(function () {
+                $('#addAddressModal').modal('show');
+            });
+        });
+
+
+        function validateAndSaveAddress() {
+            const form = document.getElementById('addAddressForm');
+            const firstName = document.getElementById('addFirstName');
+            const lastName = document.getElementById('addLastName');
+            const streetAddress = document.getElementById('addStreetAddress');
+            const state = document.getElementById('addState');
+            const townCity = document.getElementById('addTownCity');
+            const postcodeZip = document.getElementById('addPostcodeZip');
+            const district = document.getElementById('addDistrict');
+            const phone = document.getElementById('addPhone');
+
+            // Reset error messages
+            document.querySelectorAll('.text-danger').forEach(element => {
+                element.textContent = '';
+            });
+
+            // Trim all field values
+            firstName.value = firstName.value.trim();
+            lastName.value = lastName.value.trim();
+            streetAddress.value = streetAddress.value.trim();
+            state.value = state.value.trim();
+            townCity.value = townCity.value.trim();
+            postcodeZip.value = postcodeZip.value.trim();
+            district.value = district.value.trim();
+            phone.value = phone.value.trim();
+
+            if (form.checkValidity()) {
+                // If the form is valid, save the address
+                saveAddress();
+            } else {
+                // If the form is not valid, show validation feedback
+                form.classList.add('was-validated');
+
+                // Show specific error messages
+                if (!firstName.checkValidity()) {
+                    document.getElementById('addFirstNameError').textContent = 'Please enter a valid first name.';
+                }
+                if (!lastName.checkValidity()) {
+                    document.getElementById('addLastNameError').textContent = 'Please enter a valid last name.';
+                }
+                if (!streetAddress.checkValidity()) {
+                    document.getElementById('addStreetAddressError').textContent = 'Please enter a valid street address.';
+                }
+                if (!state.checkValidity()) {
+                    document.getElementById('addStateError').textContent = 'Please enter a valid state.';
+                }
+                if (!townCity.checkValidity()) {
+                    document.getElementById('addTownCityError').textContent = 'Please enter a valid town or city.';
+                }
+                if (!postcodeZip.checkValidity()) {
+                    document.getElementById('addPostcodeZipError').textContent = 'Please enter a valid postcode or ZIP.';
+                }
+                if (!district.checkValidity()) {
+                    document.getElementById('addDistrictError').textContent = 'Please enter a valid district.';
+                }
+                if (!phone.checkValidity()) {
+                    document.getElementById('addPhoneError').textContent = 'Please enter a valid phone number.';
+                }
+            }
+        }
+
+
+
+
+        
+        async function saveAddress() {
+    // Extract form data
+    const addressData = {
+        firstName: document.getElementById('addFirstName').value,
+        LastName: document.getElementById('addLastName').value,
+        address: document.getElementById('addStreetAddress').value,
+        Postcode: document.getElementById('addPostcodeZip').value,
+        city: document.getElementById('addTownCity').value,
+        state: document.getElementById('addState').value,
+        district: document.getElementById('addDistrict').value,
+        phones: document.getElementById('addPhone').value
+    };
+
+    try {
+        // Send the data to the server using fetch
+        const response = await fetch('/addAddressCheckout', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(addressData)
+        });
+
+        // Handle the response from the server
+        const data = await response.json();
+        if (data.success) {
+            // Check if the response contains defaultAddress information
+            const defaultAddress = data.defaultAddress;
+
+            if (defaultAddress) {
+                // Handle defaultAddress (e.g., display a message or update UI)
+                console.log('Default Address:', defaultAddress);
+            }
+
+            showSuccessAlert();
+            console.log('Address added successfully');
+            hideAddAddressModal();
+        } else {
+            showErrorAlert(data.message);
+            console.error('Error adding address:', data.message);
+        }
+    } catch (error) {
+        console.error('An error occurred:', error);
+    }
+}
+
+
+    function showSuccessAlert() {
+        Swal.fire({
+            title: 'Success!',
+            text: 'Address added successfully!',
+            icon: 'success',
+            confirmButtonText: 'OK'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                hideAddAddressModal();
+            }
+        });
+    }
+
+    function showErrorAlert(errorMessage) {
+        Swal.fire({
+            title: 'Error!',
+            text: errorMessage || 'An error occurred.',
+            icon: 'error',
+            confirmButtonText: 'OK'
+        });
+    }
+
+    function showAddAddressModal() {
+        const modal = document.getElementById('addAddressModal');
+        modal.style.display = 'block';
+        document.body.style.overflow = 'hidden';
+    }
+
+    function hideAddAddressModal() {
+        const modal = document.getElementById('addAddressModal');
+        modal.style.display = 'none';
+        document.body.style.overflow = 'auto';
+    }
+</script>
+
+<script>
+    
+    document.getElementById('rzp-button1').addEventListener('click', function (e) {
+
+        e.preventDefault();
+        console.log("razorpay button clicked")
+        fetch('/razorpayOrder', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            // Add other headers if needed
+            body: JSON.stringify({
+                
+            }),
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log('ghfgh',data);
+
+          
+            var options = {
+                            "key": "" + data.key + "",
+                            "amount": "" + data.order.amount + "",
+                            "currency": "INR",
+                            "image": "",
+                            "order_id": data.order.id,
+                            "handler": function (response) {
+                                console.log('response', response);
+                                createOrder();
+                            },
+                            "theme": {
+                                "color": "#003F62"
+                            },
+                            "prefill": {
+                                "name": "",
+                                "email": "",
+                                "contact": ""
+                            },
+                            "notes": {
+                                "address": "Razorpay Corporate Office"
+                            },
+                            "theme": {
+                                "color": "#3399cc"
+                            }
+
+                        };
+
+            const rzp1 = new Razorpay(options);
+
+            // rzp1.on('payment.success', function (response) {
+            //     console.log('Payment successful:', response);
+            //     showOrderConfirmation('razorpay');
+                
+            // });
+
+            rzp1.open();
+        })
+        .catch(error => {
+            // Handle error
+            console.error('Error:', error);
+        });
+    });
+
+    function createOrder() {
+            
+            fetch('/orderOnline', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                
+                }),
+            })
+                .then((response) => response.json())
+                .then((data) => {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Order Placed Successfully',
+                        text: 'Keep shopping!',
+                        showConfirmButton: false,
+                        timer: 2000,
+                    }).then(() => {
+                        // Redirect to another page or perform other actions
+                        window.location.href = '/lastpage';
+
+
+
+                    });
+                })}
+</script>
+
+
+
+
+
+    <%- include('../layouts/userfooter') %>

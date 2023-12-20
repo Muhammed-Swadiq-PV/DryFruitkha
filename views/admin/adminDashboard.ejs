@@ -1,0 +1,262 @@
+<%- include('../layouts/adminHeader') %>
+
+<div class="container" style="overflow-x: hidden;box-sizing: border-box;">
+    <div class="row flex-nowrap">
+        <div class="col-xl-3 col-md-6 mb-4" style="padding-top: 100px; margin-top: 100px;">
+            <div class="card border-left-primary shadow py-2 hover-card" style="width: 228px;height: 97px;">
+              <!-- Adjust width and height -->
+              <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                  <div class="col mr-2">
+                    <div class="text-xs font-weight-bold text-success text-uppercase mb-1 text-center  d-flex justify-content-center align-items-cente">
+                      TOTAL ORDERS</div>
+                    <div class="h5 mb-0 font-weight-bold text-gray-800 text-center  d-flex justify-content-center align-items-cente">
+                        <%= totalOrders %>
+                    </div>
+                  </div>
+                  <div class="col-auto">
+                    <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+      
+          <!-- Earnings (Monthly) Card Example -->
+          <div class="col-xl-3 col-md-6 mb-4" style="padding-top: 100px; margin-top: 100px;">
+            <div class="card border-left-primary shadow py-2 hover-card" style="width: 228px;height: 97px;">
+              <!-- Adjust width and height -->
+              <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                  <div class="col mr-2">
+                    <div class="text-xs font-weight-bold text-success text-uppercase mb-1 text-center  d-flex justify-content-center align-items-cente">
+                      TOTAL REVENUE</div>
+                    <div class="h5 mb-0 font-weight-bold text-gray-800 text-center  d-flex justify-content-center align-items-cente">
+                        ₹<%= totalRevenue %>
+                    </div>
+                  </div>
+                  <div class="col-auto">
+                    <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+      
+          <!-- Pending Requests Card Example -->
+          <div class="col-xl-3 col-md-6 mb-4" style="padding-top: 100px; margin-top: 100px;">
+            <div class="card border-left-primary shadow py-2 hover-card" style="width: 228px;height: 97px;">
+              <!-- Adjust width and height -->
+              <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                  <div class="col mr-2">
+                    <div class="text-xs font-weight-bold text-success text-uppercase mb-1 text-center  d-flex justify-content-center align-items-cente">
+                      TOTAL USERS</div>
+                    <div class="h5 mb-0 font-weight-bold text-gray-800 text-center  d-flex justify-content-center align-items-cente"><%= totalUsers %>
+                    </div>
+                  </div>
+                  <div class="col-auto">
+                    <i class="fas fa-comments fa-2x text-gray-300"></i>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+      
+      
+      
+          <!-- Pending Requests Card Example -->
+          <div class="col-xl-3 col-md-6 mb-4" style="padding-top: 100px; margin-top: 100px;">
+            <div class="card border-left-primary shadow py-2 hover-card" style="width: 228px;height: 97px;">
+              <!-- Adjust width and height -->
+              <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                  <div class="col mr-2">
+                    <a href="/admin/adminsales" style="text-decoration: none;"><div  class="text-xs font-weight-bold text-danger text-uppercase text-center mt-2 d-flex justify-content-center align-items-center">SALES REPORTS</div></a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+    </div>
+
+
+
+
+
+
+
+    <div class="date-filter mt-4">
+        <div class="d-flex justify-content-center mt-4">
+            <div class="mr-2">
+                <div class="form-group">
+                    <input class="with-box-shadow" type="date" id="startDate" name="startDate" style="height: 20px; margin-right: 20px;" placeholder="Start Date">
+                </div>
+            </div>
+            <div class="ml-2">
+                <div class="form-group">
+                    <input class="with-box-shadow" type="date" id="endDate" name="endDate" style="height: 20px;" placeholder="End Date">
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12 text-center">
+                <button class="btn btn-dark" id="fetchRevenueBtn">Revenue</button>
+            </div>
+        </div>
+    </div>
+    
+    <div class="charts" style="display: flex;justify-content: space-around;">
+    <div class="" style="width: 350px; margin-top: 100px;">
+        <canvas id="myChart1"></canvas>
+    </div>
+
+    <div class="ml-5 mt-5" style="width: 700px; height: 30rem;">
+        <canvas id="myChart2"></canvas>
+    </div>
+</div>
+
+    
+</div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', async function () {
+            const response = await fetch('/admin/payment-method');
+            const data = await response.json();
+
+            const labels = ['Online Payment', 'Cash on Delivery'];
+            const values = [data.onlinePayment, data.cashOnDelivery];
+            const colors = ['#36A2EB', '#FFCE56'];
+
+            // Get the context of the canvas element we want to select
+            const first = document.getElementById('myChart1').getContext('2d');
+
+
+            new Chart(first, {
+                type: 'doughnut',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        data: values,
+                        backgroundColor: colors,
+                    }],
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                },
+            });
+        });
+    </script>
+
+    
+<script>
+    // Script for myChart2
+    document.addEventListener('DOMContentLoaded', async function () {
+        const response = await fetch('/admin/total-revenue');
+        const data = await response.json();
+
+        const labels = [];
+        const values = [];
+
+        const currentYear = new Date().getFullYear();
+
+        for (let year = 2023; year <= currentYear; year++) {
+            for (let month = 1; month <= 12; month++) {
+                const label = new Date(year, month - 1, 1).toLocaleString('default', { month: 'long' });
+                labels.push(label);
+
+                const value = data[year] && data[year][month] ? data[year][month] : 0;
+                values.push(value);
+            }
+        }
+
+        const ctx = document.getElementById('myChart2').getContext('2d');
+
+        let myChart2 = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Total Revenue',
+                    data: values,
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    borderWidth: 1,
+                }],
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    x: {
+                        title: {
+                            display: true,
+                            text: `Total Revenue for Year ${new Date().getFullYear()}`,
+                        },
+                    },
+                    y: {
+                        title: {
+                            display: true,
+                            text: 'Total Revenue (in currency)',
+                        },
+                    },
+                },
+                plugins: {
+                    tooltip: {
+                        callbacks: {
+                            label: (context) => {
+                                const label = context.dataset.label || '';
+                                const value = context.parsed.y || 0;
+                                return `${label}: ₹${value}`;
+                            },
+                        },
+                    },
+                },
+            },
+        });
+
+        const fetchRevenueBtn = document.getElementById('fetchRevenueBtn');
+
+        fetchRevenueBtn.addEventListener('click', function () {
+            const startDate = document.getElementById('startDate').value;
+            const endDate = document.getElementById('endDate').value;
+
+            fetch('/admin/show-revenue', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ startDate: startDate, endDate: endDate })
+            })
+            .then((response) => response.json())
+            
+            .then((data) => {
+                // console.log(data,"djfkdkfdfkd");
+                myChart2.data.datasets[0].data = [];
+                for (const year in data) {
+                    for (let month = 0; month < 12; month++) {
+                        const revenue = data[year][month] || 0;
+                        myChart2.data.datasets[0].data.push(revenue);
+                    }
+                }
+                myChart2.update();
+            })
+            .catch((error) => {
+                console.error('Error fetching revenue data:', error);
+            });
+            // console.log(response,"response");
+            // console.log(data,"data");
+        });
+    });
+</script>
+
+
+
+
+
+
+    <%- include('../layouts/adminFooter') %>

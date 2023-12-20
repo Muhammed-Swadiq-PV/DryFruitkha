@@ -1,0 +1,108 @@
+<%- include('../layouts/adminHeader') %>
+
+<div class="container-fluid pt-4 px-4">
+    <div class="row g-4">
+        <div class="col-12">
+            <div class="bg-light rounded h-100 p-4">
+                <h6 class="mb-4">Add Product</h6>
+                <small id="productError" style="color: red;"></small>
+
+                <form id="productForm" action="/admin/product" method="post" enctype="multipart/form-data">
+                    <div class="mb-3">
+                        <label for="productImage" class="form-label">Product Image</label>
+                        <input type="file" class="form-control" id="productImage" name="image" accept="image/*" multiple required>
+                        
+                    </div>
+                    <div class="mb-3">
+                        <label for="productName" class="form-label">Product Name</label>
+                        <input type="text" class="form-control" id="productName" name="name" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="category" class="form-label">Category</label>
+                        <select class="form-control" id="category" name="category" required>
+                            <option value="">Select category</option>
+                            <% Categories.forEach(category => { %>
+                                <option value="<%= category._id %>"><%= category.name %></option>
+                            <% }) %>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="price" class="form-label">Price</label>
+                        <input type="number" class="form-control" id="price" name="price" step="0.01" required>
+
+                    </div>
+                    <div class="mb-3">
+                        <label for="description" class="form-label">Description</label>
+                        <textarea class="form-control" id="description" name="description" rows="4" required></textarea>
+
+                    </div>
+                    <div class="mb-3">
+                        <label for="stock" class="form-label">Stock</label>
+                        <input type="number" class="form-control" id="stock" name="stock" required>
+
+                    </div>
+                    <button type="submit" class="btn btn-primary" onclick="return validateForm()">Add Product</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+
+function validateForm() {
+    const productName = document.getElementById("productName").value.trim();
+    const category = document.getElementById("category").value.trim();
+    const price = document.getElementById("price").value.trim();
+    const stock = document.getElementById("stock").value.trim();
+    const description = document.getElementById("description").value.trim();
+    const imageCount = document.getElementById("productImage").files.length;
+
+    const errorElement = document.getElementById("productError");
+
+    if (!imageCount) {
+        errorElement.textContent = "Please select any images";
+        return false;
+    }
+
+    if (productName === "") {
+        errorElement.textContent = "Product name cannot be empty";
+        return false;
+    }
+
+    if (category === "") {
+        errorElement.textContent = "Please select a category";
+        return false;
+    }
+
+   
+
+    if (!/^\d+(\.\d{1,2})?$/.test(price) || price =='') {
+        errorElement.textContent = "please enter valid price";
+        return false;
+    }
+
+   
+
+   
+
+    if (description === "") {
+        errorElement.textContent = "Product description cannot be empty";
+        return false;
+    }
+
+    if (!/^\d+(\.\d{1,2})?$/.test(stock)) {
+        errorElement.textContent = "please enter stock";
+        return false;
+    }
+
+    return true;
+}
+
+   
+</script>
+
+  
+  
+
+<%- include('../layouts/adminFooter') %>

@@ -1,0 +1,244 @@
+<%- include('../layouts/adminHeader') %>
+
+<div class="container-fluid pt-4 px-4">
+    <div class="row g-4">
+        <div class="col-12">
+            <div class="bg-light rounded h-100 p-4 edit-product-form">
+               
+                <h6 class="mb-4">Edit Product</h6>
+                <form enctype="multipart/form-data">
+                    <input type="hidden" id="productId" name="productId" value="<%= productData.id %>">
+                    <!-- Display existing images for the product -->
+                    <% for (let i = 0; i < productData.image.length; i++) { %>
+                        <img src="<%= productData.image[i] %>" alt="Product Image" style="width: 230px;">
+                    <%}%>
+                    <div class="mb-3">
+                        <label for="productImage" class="form-label">Add/Replace Images</label>
+                        <input type="file" class="form-control" id="productImage" name="image" accept="image/*" multiple>
+                    </div>
+                    <div id="validationMessages" class="mb-3 text-danger"></div>
+                    <div class="mb-3">
+                        <label for="productName" class="form-label">Product Name</label>
+                        <input type="text" class="form-control" id="productName" name="name" value="<%= productData.name %>" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="category" class="form-label">Category</label>
+                        <select class="form-control" id="category" name="category" required>
+                            <option value="">Select category</option>
+                            <% Categories.forEach(cat => { %>
+                                <option value="<%= cat %>" <%= productData.category === cat ? 'selected' : '' %>><%= cat %></option>
+                            <% }) %>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="description" class="form-label">Description</label>
+                        <textarea class="form-control" id="description" name="description" rows="4" required><%= productData.description %></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="stock" class="form-label">Stock</label>
+                        <input type="number" class="form-control" id="stock" name="stock" value="<%= productData.stock %>" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="price" class="form-label">Price</label>
+                        <input type="number" class="form-control" id="price" name="price" value="<%= productData.price %>" required>
+                    </div>
+                    <!-- Button to open Bootstrap modal -->
+                    <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#imageModal">
+                        Open Image Modal
+                    </button>
+                    <!-- Add styling for other form elements -->
+                    <button type="submit" class="btn btn-primary">Edit Product</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+    <!-- Modal for managing images -->
+    <div class="modal fade" id="imageModal" tabindex="-1" aria-labelledby="imageModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="imageModalLabel">Manage Images</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <!-- Display existing images -->
+                    <% for (let i = 0; i < productData.image.length; i++) { %>
+                        <div class="d-flex align-items-center mb-2">
+                            <img src="<%= productData.image[i] %>" alt="Product Image" style="width: 100px;" class="me-2">
+                            <button type="button" class="btn btn-danger" onclick="deleteImage('<%= i %>', '<%= productData.image[i] %>')">Delete</button>
+                        </div>
+                    <% } %>
+
+                    <!-- Add input for adding a new image -->
+                    <div class="mb-3">
+                        <label for="newImage" class="form-label">Add New Image</label>
+                        <input type="file" class="form-control" id="newImage" accept="image/*" data-product-id="<%= productData.id %>">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" onclick="addNewImage()">Add Image</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+<!-- // for sweet alert -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+
+<script>
+   document.querySelector('form').addEventListener('submit', async function (event) {
+    event.preventDefault();
+
+    // Create FormData object
+    const formDataObject = new FormData();
+
+    // Append the necessary data to the formDataObject
+    formDataObject.append('id', document.getElementById('productId').value);
+
+    const fileInput = document.getElementById('productImage');
+    for (const file of fileInput.files) {
+        formDataObject.append('image', file);
+    }
+
+    formDataObject.append('price', document.getElementById('price').value);
+    formDataObject.append('name', document.getElementById('productName').value);
+    formDataObject.append('category', document.getElementById('category').value);
+    formDataObject.append('description', document.getElementById('description').value);
+    formDataObject.append('stock', document.getElementById('stock').value);
+
+    try {
+        const response = await fetch('/admin/edit-product/', {
+            method: 'POST',
+            body: formDataObject,
+        });
+
+        if (response.ok) {
+            console.log('Data successfully sent to the backend!');
+
+            // Display SweetAlert success message
+            Swal.fire({
+                icon: 'success',
+                title: 'Success!',
+                text: 'Product details updated successfully',
+            });
+
+            window.setTimeout(() => {
+                // Redirect to the product list page
+                window.location.href = '/admin/product';
+            }, 1000);
+        } else {
+            console.error('Failed to send data to the backend.');
+
+            // Display SweetAlert error message
+            Swal.fire({
+                icon: 'error',
+                title: 'Error!',
+                text: 'Failed to update product details',
+            });
+        }
+    } catch (error) {
+        console.error('Error:', error);
+
+        // Display SweetAlert error message
+        Swal.fire({
+            icon: 'error',
+            title: 'Error!',
+            text: 'An error occurred while updating product details',
+        });
+    }
+});
+
+
+</script>
+
+<script>
+    document.querySelector('form').addEventListener('submit', async function (event) {
+    event.preventDefault();
+
+    // Clear previous validation messages
+    document.getElementById('validationMessages').textContent = '';
+
+    // Add validation for product name (letters only)
+    const productName = document.getElementById('productName').value.trim();
+    if (!/^[a-zA-Z\s]+$/.test(productName)) {
+        document.getElementById('validationMessages').textContent = 'Product name should contain letters only';
+        return;
+    }
+
+    // Add validation for product quantity (greater than 0)
+    const stock = parseInt(document.getElementById('stock').value, 10);
+    if (isNaN(stock) || stock <= 0) {
+        document.getElementById('validationMessages').textContent = 'Product quantity should be greater than 0';
+        return;
+    }
+
+   
+});
+
+</script>
+
+<!-- add and delete images in modal -->
+<script>
+  function addNewImage() {
+    const productId = document.getElementById('productId').value;
+    const newImageInput = document.getElementById('newImage');
+    
+    const formData = new FormData();
+    formData.append('productId', productId);
+    formData.append('image', newImageInput.files[0]);
+
+    fetch('/admin/add-image', {
+        method: 'POST',
+        body: formData,
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log(data);
+        location.reload()
+        const imageModal = document.getElementById('imageModal');
+        const bootstrapModal = new bootstrap.Modal(imageModal);
+        bootstrapModal.hide();
+       
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    });
+}
+
+
+
+
+
+
+function deleteImage(index, imageUrl) {
+    const productId = document.getElementById('productId').value;
+     console.log(productId,"delete image id");
+
+    fetch(`/admin/delete-image/${productId}`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ productId, imageIndex: index }),
+    })
+    .then(response => response.json())
+    .then(data => {
+        // Handle success, e.g., update the modal content
+        console.log(data);
+        location.reload()
+    })
+    .catch(error => {
+        // Handle error
+        console.error('Error:', error);
+    });
+}
+
+
+</script>
+
+
+<%- include('../layouts/adminFooter') %>
