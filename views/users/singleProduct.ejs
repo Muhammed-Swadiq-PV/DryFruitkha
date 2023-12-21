@@ -58,12 +58,24 @@
                             <p>
                                 <%= product.description %>
                             </p>
-                            <div class="single-product-form">
+                            <div style="display: flex;">
+                            
+                                <div class="single-product-form mx-3">
                                
-                                <a onclick="addToCart('<%= product._id %>')" class="cart-btn"><i
-                                        class="fas fa-shopping-cart"></i> Add to Cart</a>
-                              
+                                    <a onclick="addToCart('<%= product._id %>')" class="cart-btn"><i
+                                            class="fas fa-shopping-cart"></i> Add to Cart</a>
+                                  
+                                </div>
+                                <div class="single-product-form">
+                               
+                                    <a onclick="addToWishlist('<%= product._id %>')" class="cart-btn"><i
+                                        class="fas fa-heart"></i> Add to Wishlist</a>
+                                  
+                                </div>
+                            
+                            
                             </div>
+                           
                             <h4>Share:</h4>
                             <ul class="product-share">
                                 <li><a href=""><i class="fab fa-facebook-f"></i></a></li>

@@ -232,38 +232,40 @@
 
     <!-- Cash on delivery button form -->
     <div class="line-payment" style="display: flex;flex-direction: row;">
-    <div class="button-for">
-        <form id="cashOnDeliveryForm" action="/placeOrder" method="POST">
-            <input type="hidden" name="paymentMethod" value="CashOnDelivery">
-            <input type="hidden" name="totalPrice"
-                value="<%= cartItem.reduce((sum, item) => sum + item.totalPrice, 0) + 90 %>">
+        <div class="button-for">
+            <form id="cashOnDeliveryForm" action="/placeOrder" method="POST">
+                <input type="hidden" name="paymentMethod" value="CashOnDelivery">
+                <input type="hidden" name="totalPrice"
+                    value="<%= cartItem.reduce((sum, item) => sum + item.totalPrice, 0) + 90 %>">
 
-            <% if (defaultAddress) { %>
+                <% if (defaultAddress) { %>
 
-                <button type="submit" class="btn-orange" onclick="showOrderConfirmation('CashOnDelivery')">Cash on Delivery</button>
-                <% } else { %>
-                    <div class="alert alert-danger" role="alert">
-                        You don't have a default address. Please create a new address.
-                    </div>
-                    <!-- Disable the button if there is no default address -->
-                    <button type="button" class=" btn-orange" disabled>
-                        Cash on Delivery
-                    </button>
+                    <button type="submit" class="btn-orange" onclick="showOrderConfirmation('CashOnDelivery')">Cash on
+                        Delivery</button>
+                    <% } else { %>
+                        <div class="alert alert-danger" role="alert">
+                            You don't have a default address. Please create a new address.
+                        </div>
+                        <!-- Disable the button if there is no default address -->
+                        <button type="button" class=" btn-orange" disabled>
+                            Cash on Delivery
+                        </button>
 
 
-                    <% } %>
-        </form>
-        <% if (cartItem.length > 0) { %>
-            <!-- Razorpay Form -->
-            <form id="razorpayForm" action="/razorpayOrder" method="POST">
-                <input type="hidden" name="paymentMethod" value="Razorpay">
-                <input type="hidden" name="totalPrice" value="<%= cartItem.reduce((sum, item) => sum + item.totalPrice, 0) + 90 %>">
-                <!-- Add other necessary fields for Razorpay -->
-    
-                <button type="submit" class="btn-orange" id="rzp-button1" >Pay with Razorpay</button>
+                        <% } %>
             </form>
-        <% } %>
-    </div>
+            <% if (cartItem.length> 0) { %>
+                <!-- Razorpay Form -->
+                <form id="razorpayForm" action="/razorpayOrder" method="POST">
+                    <input type="hidden" name="paymentMethod" value="Razorpay">
+                    <input type="hidden" name="totalPrice"
+                        value="<%= cartItem.reduce((sum, item) => sum + item.totalPrice, 0) + 90 %>">
+                    <!-- Add other necessary fields for Razorpay -->
+
+                    <button type="submit" class="btn-orange" id="rzp-button1">Pay with Razorpay</button>
+                </form>
+                <% } %>
+        </div>
 
     </div>
 
@@ -280,63 +282,91 @@
                     </button>
                 </div>
                 <div class="modal-body" style="max-height: 400px; overflow-y: auto;">
-            <form id="addAddressForm">
-                <!-- Add address form fields go here -->
-                <div class="form-group">
-                    <label for="addFirstName">First Name</label>
-                    <input type="text" class="form-control" id="addFirstName" name="addFirstName"
-                        placeholder="First Name" required>
-                    <div class="text-danger" id="addFirstNameError"></div>
-                </div>
-                <div class="form-group">
-                    <label for="addLastName">Last Name</label>
-                    <input type="text" class="form-control" id="addLastName" name="addLastName" placeholder="Last Name"
-                        required>
-                    <div class="text-danger" id="addLastNameError"></div>
-                </div>
-                <div class="form-group">
-                    <label for="addState">State</label>
-                    <input type="text" class="form-control" id="addState" name="addState" placeholder="State" required>
-                    <div class="text-danger" id="addStateError"></div>
-                </div>
-                <div class="form-group">
-                    <label for="addStreetAddress">Street Address</label>
-                    <input type="text" class="form-control" id="addStreetAddress" name="addStreetAddress"
-                        placeholder="House number and street name" required>
-                    <div class="text-danger" id="addStreetAddressError"></div>
-                </div>
-                <div class="form-group">
-                    <label for="addTownCity">Town / City</label>
-                    <input type="text" class="form-control" id="addTownCity" name="addTownCity"
-                        placeholder="Town / City" required>
-                    <div class="text-danger" id="addTownCityError"></div>
-                </div>
-                <div class="form-group">
-                    <label for="addPostcodeZip">Postcode / ZIP</label>
-                    <input type="text" class="form-control" id="addPostcodeZip" name="addPostcodeZip"
-                        placeholder="Postcode / ZIP" required>
-                    <div class="text-danger" id="addPostcodeZipError"></div>
-                </div>
-                <div class="form-group">
-                    <label for="addDistrict">District</label>
-                    <input type="text" class="form-control" id="addDistrict" name="addDistrict" placeholder="District"
-                        required>
-                    <div class="text-danger" id="addDistrictError"></div>
-                </div>
-                <div class="form-group">
-                    <label for="addPhone">Phone</label>
-                    <input type="text" class="form-control" id="addPhone" name="addPhoneNumber" placeholder="Phone"
-                        pattern="[0-9]{10}" required>
-                    <div class="text-danger" id="addPhoneError"></div>
-                </div>
+                    <form id="addAddressForm">
+                        <!-- Add address form fields go here -->
+                        <div class="form-group">
+                            <label for="addFirstName">First Name</label>
+                            <input type="text" class="form-control" id="addFirstName" name="addFirstName"
+                                placeholder="First Name" required>
+                            <div class="text-danger" id="addFirstNameError"></div>
+                        </div>
+                        <div class="form-group">
+                            <label for="addLastName">Last Name</label>
+                            <input type="text" class="form-control" id="addLastName" name="addLastName"
+                                placeholder="Last Name" required>
+                            <div class="text-danger" id="addLastNameError"></div>
+                        </div>
+                        <div class="form-group">
+                            <label for="addState">State</label>
+                            <input type="text" class="form-control" id="addState" name="addState" placeholder="State"
+                                required>
+                            <div class="text-danger" id="addStateError"></div>
+                        </div>
+                        <div class="form-group">
+                            <label for="addStreetAddress">Street Address</label>
+                            <input type="text" class="form-control" id="addStreetAddress" name="addStreetAddress"
+                                placeholder="House number and street name" required>
+                            <div class="text-danger" id="addStreetAddressError"></div>
+                        </div>
+                        <div class="form-group">
+                            <label for="addTownCity">Town / City</label>
+                            <input type="text" class="form-control" id="addTownCity" name="addTownCity"
+                                placeholder="Town / City" required>
+                            <div class="text-danger" id="addTownCityError"></div>
+                        </div>
+                        <div class="form-group">
+                            <label for="addPostcodeZip">Postcode / ZIP</label>
+                            <input type="text" class="form-control" id="addPostcodeZip" name="addPostcodeZip"
+                                placeholder="Postcode / ZIP" required>
+                            <div class="text-danger" id="addPostcodeZipError"></div>
+                        </div>
+                        <div class="form-group">
+                            <label for="addDistrict">District</label>
+                            <input type="text" class="form-control" id="addDistrict" name="addDistrict"
+                                placeholder="District" required>
+                            <div class="text-danger" id="addDistrictError"></div>
+                        </div>
+                        <div class="form-group">
+                            <label for="addPhone">Phone</label>
+                            <input type="text" class="form-control" id="addPhone" name="addPhoneNumber"
+                                placeholder="Phone" pattern="[0-9]{10}" required>
+                            <div class="text-danger" id="addPhoneError"></div>
+                        </div>
 
-                <button type="button" class="btn-orange" onclick="validateAndSaveAddress()">Add Address</button>
-            </form>
+                        <button type="button" class="btn-orange" onclick="validateAndSaveAddress()">Add Address</button>
+                    </form>
+                </div>
             </div>
-            </div>   
         </div>
     </div>
 
+    <div class="editAddresscard" style="margin-left: 20em;">
+        <h3>Your Addresses</h3>
+        <div class="existing-addresses-container" style="display: flex; ">
+            <% addresses.forEach(address=> { %>
+                <div class="address-container mb-3 p-3 border" style="width: 17%;margin-left: 10px;">
+                    <div>
+                        <strong>
+                            <%= address.firstName %>
+                                <%= address.LastName %>
+                        </strong><br>
+                        <%= address.address %><br>
+                            <%= address.city %>, <%= address.state %>
+                                    <%= address.Postcode %><br>
+                                        District: <%= address.district %><br>
+                                            Phone: <%= address.phones %>
+                    </div>
+                    <div class="mt-2">
+                        <label class="mr-2">
+                            <input type="radio" name="defaultAddress" data-address-id="<%= address._id %>"
+                                onclick="setDefaultAsDefault(this)">
+                            Set as Default
+                        </label>
+                    </div>
+                </div>
+                <% }) %>
+        </div>
+    </div>
 
 
     <!----------------- script for razorpay -------------------->
@@ -344,7 +374,7 @@
 
     <!--------------------------- scripts from here ------------------------------->
     <!--====== ============================================================================ ====== -->
-    
+
 
     <script>
         function showOrderConfirmation(paymentMethod) {
@@ -435,162 +465,162 @@
 
 
 
-        
+
         async function saveAddress() {
-    // Extract form data
-    const addressData = {
-        firstName: document.getElementById('addFirstName').value,
-        LastName: document.getElementById('addLastName').value,
-        address: document.getElementById('addStreetAddress').value,
-        Postcode: document.getElementById('addPostcodeZip').value,
-        city: document.getElementById('addTownCity').value,
-        state: document.getElementById('addState').value,
-        district: document.getElementById('addDistrict').value,
-        phones: document.getElementById('addPhone').value
-    };
+            // Extract form data
+            const addressData = {
+                firstName: document.getElementById('addFirstName').value,
+                LastName: document.getElementById('addLastName').value,
+                address: document.getElementById('addStreetAddress').value,
+                Postcode: document.getElementById('addPostcodeZip').value,
+                city: document.getElementById('addTownCity').value,
+                state: document.getElementById('addState').value,
+                district: document.getElementById('addDistrict').value,
+                phones: document.getElementById('addPhone').value
+            };
 
-    try {
-        // Send the data to the server using fetch
-        const response = await fetch('/addAddressCheckout', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(addressData)
-        });
+            try {
+                // Send the data to the server using fetch
+                const response = await fetch('/addAddressCheckout', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(addressData)
+                });
 
-        // Handle the response from the server
-        const data = await response.json();
-        if (data.success) {
-            // Check if the response contains defaultAddress information
-            const defaultAddress = data.defaultAddress;
+                // Handle the response from the server
+                const data = await response.json();
+                if (data.success) {
+                    // Check if the response contains defaultAddress information
+                    const defaultAddress = data.defaultAddress;
 
-            if (defaultAddress) {
-                // Handle defaultAddress (e.g., display a message or update UI)
-                console.log('Default Address:', defaultAddress);
+                    if (defaultAddress) {
+                        // Handle defaultAddress (e.g., display a message or update UI)
+                        console.log('Default Address:', defaultAddress);
+                    }
+
+                    showSuccessAlert();
+                    console.log('Address added successfully');
+                    hideAddAddressModal();
+                } else {
+                    showErrorAlert(data.message);
+                    console.error('Error adding address:', data.message);
+                }
+            } catch (error) {
+                console.error('An error occurred:', error);
             }
-
-            showSuccessAlert();
-            console.log('Address added successfully');
-            hideAddAddressModal();
-        } else {
-            showErrorAlert(data.message);
-            console.error('Error adding address:', data.message);
         }
-    } catch (error) {
-        console.error('An error occurred:', error);
-    }
-}
 
 
-    function showSuccessAlert() {
-        Swal.fire({
-            title: 'Success!',
-            text: 'Address added successfully!',
-            icon: 'success',
-            confirmButtonText: 'OK'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                hideAddAddressModal();
-            }
+        function showSuccessAlert() {
+            Swal.fire({
+                title: 'Success!',
+                text: 'Address added successfully!',
+                icon: 'success',
+                confirmButtonText: 'OK'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    hideAddAddressModal();
+                }
+            });
+        }
+
+        function showErrorAlert(errorMessage) {
+            Swal.fire({
+                title: 'Error!',
+                text: errorMessage || 'An error occurred.',
+                icon: 'error',
+                confirmButtonText: 'OK'
+            });
+        }
+
+        function showAddAddressModal() {
+            const modal = document.getElementById('addAddressModal');
+            modal.style.display = 'block';
+            document.body.style.overflow = 'hidden';
+        }
+
+        function hideAddAddressModal() {
+            const modal = document.getElementById('addAddressModal');
+            modal.style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+    </script>
+
+    <script>
+
+        document.getElementById('rzp-button1').addEventListener('click', function (e) {
+
+            e.preventDefault();
+            console.log("razorpay button clicked")
+            fetch('/razorpayOrder', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                // Add other headers if needed
+                body: JSON.stringify({
+
+                }),
+            })
+                .then(response => response.json())
+                .then(data => {
+                    console.log('ghfgh', data);
+
+
+                    var options = {
+                        "key": "" + data.key + "",
+                        "amount": "" + data.order.amount + "",
+                        "currency": "INR",
+                        "image": "",
+                        "order_id": data.order.id,
+                        "handler": function (response) {
+                            console.log('response', response);
+                            createOrder();
+                        },
+                        "theme": {
+                            "color": "#003F62"
+                        },
+                        "prefill": {
+                            "name": "",
+                            "email": "",
+                            "contact": ""
+                        },
+                        "notes": {
+                            "address": "Razorpay Corporate Office"
+                        },
+                        "theme": {
+                            "color": "#3399cc"
+                        }
+
+                    };
+
+                    const rzp1 = new Razorpay(options);
+
+                    // rzp1.on('payment.success', function (response) {
+                    //     console.log('Payment successful:', response);
+                    //     showOrderConfirmation('razorpay');
+
+                    // });
+
+                    rzp1.open();
+                })
+                .catch(error => {
+                    // Handle error
+                    console.error('Error:', error);
+                });
         });
-    }
 
-    function showErrorAlert(errorMessage) {
-        Swal.fire({
-            title: 'Error!',
-            text: errorMessage || 'An error occurred.',
-            icon: 'error',
-            confirmButtonText: 'OK'
-        });
-    }
+        function createOrder() {
 
-    function showAddAddressModal() {
-        const modal = document.getElementById('addAddressModal');
-        modal.style.display = 'block';
-        document.body.style.overflow = 'hidden';
-    }
-
-    function hideAddAddressModal() {
-        const modal = document.getElementById('addAddressModal');
-        modal.style.display = 'none';
-        document.body.style.overflow = 'auto';
-    }
-</script>
-
-<script>
-    
-    document.getElementById('rzp-button1').addEventListener('click', function (e) {
-
-        e.preventDefault();
-        console.log("razorpay button clicked")
-        fetch('/razorpayOrder', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            // Add other headers if needed
-            body: JSON.stringify({
-                
-            }),
-        })
-        .then(response => response.json())
-        .then(data => {
-            console.log('ghfgh',data);
-
-          
-            var options = {
-                            "key": "" + data.key + "",
-                            "amount": "" + data.order.amount + "",
-                            "currency": "INR",
-                            "image": "",
-                            "order_id": data.order.id,
-                            "handler": function (response) {
-                                console.log('response', response);
-                                createOrder();
-                            },
-                            "theme": {
-                                "color": "#003F62"
-                            },
-                            "prefill": {
-                                "name": "",
-                                "email": "",
-                                "contact": ""
-                            },
-                            "notes": {
-                                "address": "Razorpay Corporate Office"
-                            },
-                            "theme": {
-                                "color": "#3399cc"
-                            }
-
-                        };
-
-            const rzp1 = new Razorpay(options);
-
-            // rzp1.on('payment.success', function (response) {
-            //     console.log('Payment successful:', response);
-            //     showOrderConfirmation('razorpay');
-                
-            // });
-
-            rzp1.open();
-        })
-        .catch(error => {
-            // Handle error
-            console.error('Error:', error);
-        });
-    });
-
-    function createOrder() {
-            
             fetch('/orderOnline', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                
+
                 }),
             })
                 .then((response) => response.json())
@@ -608,11 +638,44 @@
 
 
                     });
-                })}
-</script>
+                })
+        }
+    </script>
 
 
 
+    <script>
+        function setDefaultAsDefault(element) {
+            try {
+                const addressId = element.getAttribute('data-address-id');
 
+
+                fetch('/setDefaultAddress/' + addressId, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                })
+                    .then((response) => response.json())
+                    .then((data) => {
+
+                        console.log(data);
+
+                        if (data.success) {
+                            location.reload();
+                            console.log('Default address set successfully');
+                        } else {
+                            console.error('Error setting default address:', data.message);
+                        }
+                    })
+                    .catch((error) => {
+                        console.error('Fetch error:', error);
+                    });
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        }
+
+    </script>
 
     <%- include('../layouts/userfooter') %>

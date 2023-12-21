@@ -1,0 +1,140 @@
+<%- include('../layouts/userHeader') %>
+
+<!-- breadcrumb-section -->
+<div class="breadcrumb-section breadcrumb-bg">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 offset-lg-2 text-center">
+                <div class="breadcrumb-text">
+                    <p>buy your best choices</p>
+                    <h1>wishlist</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+  </div>
+  <!-- end breadcrumb section -->
+<div class="cart-section mt-150 mb-150">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-md-12">
+                <div class="cart-table-wrap">
+                    <% if (user.wishlist.length > 0) { %>
+                        <table class="cart-table">
+                            <thead class="cart-table-head">
+                                <tr class="table-head-row">
+                                    <th class="product-remove"></th>
+                                    <th class="product-image">Product Image</th>
+                                    <th class="product-name">Name</th>
+                                    <th class="product-price">Price</th>
+                                    <th class="product-total">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% for (let i = 0; i < user.wishlist.length; i++) { %>
+                                    <% const product = user.wishlist[i].product; %>
+                                    <script>console.log('Product:', '<%= JSON.stringify(product) %>');</script>
+                                    <tr class="table-body-row">
+                                        <td class="product-remove">
+                                            <a href="#" class="remove-product-btn" style="width: 20px"
+                                              onclick="event.preventDefault(); removeWishlistItem('<%=product._id%>')">
+                                              <i class="far fa-window-close"></i>
+                                            </a>
+                                          </td>
+                                          <script>console.log('ProductId:', '<%= product.productId %>');</script>
+                                        <td class="product-image">
+                                            <img src="<%= product.image[0] %>" alt="product-image" class="img-fluid" width="100">
+                                        </td>
+                                        <td class="product-name">
+                                            <%= product.name %>
+                                        </td>
+                                        <td class="product-price">₹<%= product.price %></td>
+                                        <td class="product-total">
+                                            <button onclick="event.preventDefault(); addToCartFromWishlist('<%= product._id %>', '<%= product.price %>')">Add to Cart</button>
+
+                                        </td>
+                                    </tr>
+                                <% } %>
+                            </tbody>
+                        </table>
+                    <% } else { %>
+                        <p>Your wishlist is empty.</p>
+                    <% } %>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<script>
+    function removeWishlistItem(productId) {
+     
+      
+      console.log(productId,"recieved product id");
+      
+      fetch(`/wishlist/remove/${productId}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ productId: productId }),
+      })
+        .then(response => {
+          if (response.ok) {
+            // Remove the row from the UI
+            const row = document.querySelector(`#wishlist-item-${productId}`);
+            if (row) {
+              row.remove();
+            }
+            window.location.reload()
+          } else {
+            console.error('Error removing wishlist item');
+          }
+        })
+        .catch(error => {
+          console.error('Error removing wishlist item:', error);
+        });
+    }
+  </script>
+
+<script>
+    function addToCartFromWishlist(productId, price) {
+        console.log("Adding product to cart with productId:", productId, "and price:", price);
+
+        // Make a POST request to addToCart route
+        fetch(`/addToCart/${productId}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ price: parseFloat(price) }),
+        })
+        .then(response => {
+            if (response.ok) {
+                // console.log('Product added to cart successfully!');
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Product Added to Cart!',
+                    showConfirmButton: false,
+                    timer: 1500 // Automatically close after 1.5 seconds
+                });
+            } else {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error Adding Product',
+                    text: 'Something went wrong. Please try again.',
+                });
+                console.error('Error adding product to cart');
+            }
+        })
+        .catch(error => {
+            console.error('Error adding product to cart:', error);
+        });
+    }
+</script>
+
+
+
+<%- include('../layouts/userfooter') %>

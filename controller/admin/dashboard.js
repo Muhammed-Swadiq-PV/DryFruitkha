@@ -2,7 +2,7 @@ const products = require('../../model/productModel');
 const Category = require('../../model/categoryModel');
 const user = require('../../model/userModel');
 const Order = require('../../model/orderModel');
-
+const { Parser } = require('json2csv')
 
 
 
@@ -185,11 +185,34 @@ const filterSales = async (req, res) => {
 };
 
 
+
+const downloadSalesReport=async(req,res)=>{
+    try {
+        const { startDate,endDate }=req.query
+        console.log(req.query);
+        const orders=await Order.find({orderStatus:'Delivered',orderDate:{$gte:startDate,$lte:endDate}}).populate('userId').sort({ orderDate: -1 });
+        // Extract the necessary data fields
+    const data = orders.map((order) => ({
+        DATE: order.orderDate ? order.orderDate.toISOString().split('T')[0] : '',
+        'ORDER ID': `#${order._id.toString().slice(0, 9)}`,
+        USERNAME: order.userId.firstName,
+        'PAYMENT METHOD': order.payment,
+        'TOTAL AMOUNT': `${order.total}`,
+      }));
+        res.json(data)
+    } catch (error) {
+        console.error(error)
+        // res.redirect('/error?err=' + encodeURIComponent(error.message));
+    }
+}
+
+
 module.exports = {
     getDashboard,
     paymentMethod,
     totalRevenueGraph,
     showRevenue,
     salesReportPage,
-    filterSales
+    filterSales,
+    downloadSalesReport
 };

@@ -122,6 +122,43 @@
             });
         }
     </script>
-
+    <script>
+        // JavaScript code
+        document.addEventListener('DOMContentLoaded', function () {
+            console.log("inside the function for downloading");
+        const downloadSalesReport = document.getElementById('downloadSalesReport');
+        downloadSalesReport.addEventListener('click', function () {
+          const startDate = document.getElementById('startDate').value;
+          const endDate = document.getElementById('endDate').value;
+          fetch(`/admin/download-salesReport?startDate=${startDate}&endDate=${endDate}`)
+            .then((response) => response.json())
+            .then((data) => {
+              generateCSV(data);
+            })
+            .catch((error) => {
+              console.error('Error:', error);   
+            });
+         });
+       });
+      
+      
+        // Updated generateCSV function
+        function generateCSV(data) {
+        const fields = ["DATE", "ORDER ID", "USERNAME", "PAYMENT METHOD", "TOTAL AMOUNT"];
+        const opts = { fields };
+        const json2csvParser = new json2csv.Parser(opts);
+      
+        try {
+          const csv = json2csvParser.parse(data);
+          const blob = new Blob([csv], { type: "text/csv" });
+          const link = document.createElement("a");
+          link.href = window.URL.createObjectURL(blob);
+          link.download = "sales_report.csv";
+          link.click();
+        } catch (error) {
+          console.error("Error generating CSV: " + error);
+        }
+      }
+      </script>
 
     <%- include('../layouts/adminFooter') %>

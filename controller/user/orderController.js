@@ -32,13 +32,14 @@ const Razorpay = require('razorpay');
         };
       });
       
+      const addresses = user.address;
       
       const subtotal = cartItem.reduce((sum,item) => sum + item.totalPrice,0)
       const shippingCharge = 90;
       const total = subtotal + shippingCharge;
   
       // console.log(subtotal,"subtotal",total,"total");
-      res.render('./users/checkout', { cartItem, user, defaultAddress, subtotal, total });
+      res.render('./users/checkout', { cartItem, user, defaultAddress, subtotal, total , addresses});
   
     } catch (error) {
       console.error(error);

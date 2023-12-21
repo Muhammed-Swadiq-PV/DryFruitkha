@@ -51,6 +51,37 @@ const AddAdminCategoryPage = async(req , res)=>{
 
 
 
+const editCategory = async (req, res) => {
+    try {
+       
+        const categoryId = req.params.id; 
+        console.log(categoryId, "category Id");
+        const updatedCategoryName = req.body.updatedCategoryName.trim();
+        const updatedCategoryDescription = req.body.updatedCategoryDescription.trim();
+
+        const formattedUpdatedCategoryName = updatedCategoryName.charAt(0).toUpperCase() + updatedCategoryName.slice(1).toLowerCase();
+
+        const existingCategory = await category.findById(categoryId);
+
+        if (!existingCategory) {
+            // If category doesn't exist, send an error response
+            return res.json({ message: 'Category not found' });
+        }
+
+        // Update the category properties
+        existingCategory.name = formattedUpdatedCategoryName;
+        existingCategory.description = updatedCategoryDescription;
+
+        // Save the changes
+        await existingCategory.save();
+
+        res.json({ message: 'Category updated successfully' });
+
+    } catch (error) {
+        console.log(error.message);
+        res.status(500).json({ message: 'Internal Server Error' });
+    }
+};
 
 
 
@@ -83,5 +114,6 @@ const getStatusCategory = async (req , res) =>{
 module.exports = {
     getAdminCategoryPage,
     AddAdminCategoryPage,
-    getStatusCategory
+    getStatusCategory,
+    editCategory
 }

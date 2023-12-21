@@ -53,6 +53,14 @@ const userSchema=mongoose.Schema({
             default: false, 
           },
   }],
+  wishlist:[{
+    product:{
+        type:mongoose.Schema.Types.ObjectId,
+        ref:'products',
+       
+    },
+    
+  }]
        
 })
 

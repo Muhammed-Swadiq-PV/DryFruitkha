@@ -39,8 +39,10 @@ const getCart = async (req, res) => {
   const addToCart = async (req, res) => {
     try {
       const productId = req.params.id;
+      // console.log(productId,"productid");
       const email = req.session.user;
       const price = parseInt(req.body.price);
+      // console.log(price,"addtocart price");
       const totalPrice = price;
   
       // console.log(productId, email, price, totalPrice);

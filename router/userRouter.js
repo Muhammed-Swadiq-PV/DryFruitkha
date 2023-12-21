@@ -6,6 +6,7 @@ const userProductController = require('../controller/user/userProductController'
 const cartController = require('../controller/user/cartController')
 const addressController = require('../controller/user/addressController')
 const orderController = require('../controller/user/orderController');
+const wishlistController = require('../controller/user/wishlistController');
 
 
 router.get('/',userMiddleware.blockStatus,usercontroller.gethome)
@@ -40,6 +41,10 @@ router.get('/shop',userMiddleware.blockStatus,userProductController.getShop)
 // singleProduct
 router.get('/singleProduct',userMiddleware.blockStatus,userProductController.getSingleProduct);
 
+//wishlist
+router.get('/wishlist',userMiddleware.blockStatus,wishlistController.getWishlist)
+router.post('/addToWishlist/:id',wishlistController.postWishlist);
+router.post('/wishlist/remove/:id',wishlistController.removeWishlist);
 
 //cart
 router.get('/cart',userMiddleware.blockStatus,cartController.getCart);

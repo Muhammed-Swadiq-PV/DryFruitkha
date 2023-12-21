@@ -197,3 +197,76 @@ function updateCartUI(cartData) {
 
 
 
+
+    // function addToWishlist(id) {
+    //     const price = document.querySelector(`#price${id}`).value;
+    //     const data = {
+    //         productid: id,
+    //         price: price,
+    //     };
+
+    //     fetch('/addToWishlist', {
+    //         method: 'POST',
+    //         headers: {
+    //             'Content-Type': 'application/json',
+    //         },
+    //         body: JSON.stringify(data),
+    //     })
+    //     .then(response => {
+    //         if (response.ok) {
+    //             return response.json();
+    //         } else {
+    //             if (response.status === 401) {
+    //                 window.location.href = '/login';
+    //             } else {
+    //                 throw new Error('Failed to add product to wishlist');
+    //             }
+    //         }
+    //     })
+    //     .then(data => {
+    //         Swal.fire({
+    //             position: 'top-end',
+    //             icon: 'success',
+    //             title: 'Added to Wishlist',
+    //             showConfirmButton: false,
+    //             timer: 1500,
+    //         });
+    //     })
+    //     .catch(error => {
+    //         console.error('Error adding product to wishlist:', error);
+    //         Swal.fire({
+    //             position: 'top-end',
+    //             icon: 'error',
+    //             title: 'Failed to add to Wishlist',
+    //             showConfirmButton: false,
+    //             timer: 1500,
+    //         });
+    //     });
+    // }
+
+    function addToWishlist(productId) {
+      fetch(`/addToWishlist/${productId}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+        .then(function (response) {
+          if (response.ok) {
+            console.log("Product added to wishlist.");
+          } else {
+            console.error("Error adding product to wishlist. Status:", response.status);
+          }
+        })
+        .catch(function (error) {
+          console.error("Network error:", error);
+        });
+  
+        Swal.fire({
+          position: 'top-end',
+          icon: 'success',
+          title: 'Added to Wishlist',
+          showConfirmButton: false,
+          timer: 1500
+        });
+    }

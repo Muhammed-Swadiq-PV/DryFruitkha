@@ -32,13 +32,13 @@
         <label for="otp">OTP</label>
         <input type="text" id="otp" name="otp" class="form-control" required>
     </div>
-    <button type="submit" class="btn btn-primary" id="verifyButton" >Verify OTP</button>
+    <button type="submit" class="btn btn-primary" id="verifyButton" onclick="verifyOTP()">Verify OTP</button>
     <button class="btn btn-secondary mt-3" id="resendButton" onclick="handleResendClick(event)" style="margin-left: 30px; margin-bottom: 15px;">Resend OTP</button>
 </form>
 </div>
 
 
-<!-- <script>
+<script>
     let timerOn = false;
     let remainingTime = 30;
 
@@ -113,9 +113,9 @@ function handleResendClick(event) {
     });
 }
 
-</script> -->
+</script>
 
-<script>
+<!-- <script>
     document.addEventListener('DOMContentLoaded', function () {
         const verifyButton = document.getElementById('verifyButton');
         verifyButton.addEventListener('click', function (event) {
@@ -161,7 +161,7 @@ function handleResendClick(event) {
             verifyButton.disabled = false;
         }
     }
-</script>
+</script> -->
 
 
 <script>
