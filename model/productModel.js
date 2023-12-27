@@ -27,6 +27,22 @@ const productSchema = new mongoose.Schema({
       type: Boolean,
       default: true,
     },
+    offer:{
+      type: Number,
+      default: 0,
+  },
+  expiryDate:{
+      type : Date ,
+      required : true
+  },
+  discountPrice:{
+      type:Number,
+      default : 0
+  },
+  orginalPrice:{
+      type:Number,
+      default:0
+  }
   });
 
   productSchema.virtual('categoryDetails', {

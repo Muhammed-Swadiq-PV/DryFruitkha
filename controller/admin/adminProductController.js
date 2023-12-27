@@ -27,15 +27,21 @@ const getAddProduct = async (req, res) => {
   }
 }
 
+
+
+
 const resizeImage = async (inputPath, outputPath, width, height) => {
   const image = await Jimp.read(inputPath);
 
   // Resize the image to fit within the specified dimensions
-  await image.cover(width, height);
+  await image.coverAsync(width, height);
 
   // Save the cropped and resized image
   await image.writeAsync(outputPath);
 };
+
+
+
 
 // Controller for adding a new product
 const postAddProduct = async (req, res) => {
@@ -116,7 +122,7 @@ const getEditProduct = async (req, res) => {
     }
     const categories = await Category.find();
     const uniqueCategories = Array.from(new Set(categories.map(cat => cat.name)));
-    console.log('productData-->', productData);
+    // console.log('productData-->', productData);
     res.render('admin/editProduct', { productData, Categories: uniqueCategories });
 
   } catch (error) {
@@ -128,7 +134,9 @@ const getEditProduct = async (req, res) => {
 const postEditProduct = async (req, res) => {
   try {
     const productId = req.body.id;
-    const { name, category, price, description, stock } = req.body;
+    console.log('coming heree ',productId);
+    const { name, category, price, description, stock ,offer, expiryDate} = req.body;
+    // console.log('coming heree ',name, category, );
 
     const updatedProduct = await products.findById(productId);
 
@@ -138,15 +146,19 @@ const postEditProduct = async (req, res) => {
       updatedProduct.image = updatedProduct.image;
     }
 
-    const categoryObj = await Category.findOne({ name: category }); // Rename this variable to avoid conflict
-    updatedProduct.categoryId = categoryObj._id; // Use the renamed variable
+    const categoryObj = await Category.findOne({ name: category }); 
+    updatedProduct.categoryId = categoryObj._id;
 
     updatedProduct.name = name.trim();
     updatedProduct.description = description.trim();
+   
 
     if (price > 0 && stock > 0) {
       updatedProduct.price = price;
       updatedProduct.stock = stock;
+      updatedProduct.offer = offer;
+      updatedProduct.expiryDate = expiryDate;
+      updatedProduct.discountPrice = price - offer;
 
       await updatedProduct.save();
 
@@ -168,7 +180,7 @@ const postAddImage = async (req, res) => {
     const productId = req.body.productId;
 
     // Process the added image
-    const processedImage = req.files[0]; // Assuming only one image is added at a time
+    const processedImage = req.files[0]; 
 
     // Resize and crop the image using the shared function
     const resizedImagesDirectory = path.join(__dirname, '../../public/resized_images');
@@ -191,12 +203,10 @@ const postAddImage = async (req, res) => {
 const postDeleteImage = async (req, res) => {
   try {
     const productId = req.body.productId;
-    const imageIndex = req.body.imageIndex; // Assuming you pass the index of the image to delete
+    const imageIndex = req.body.imageIndex; 
     console.log(imageIndex, "post delete image ile image index");
     // Find the product by ID
     const product = await products.findById(productId);
-
-    // Ensure the index is within the bounds of the images array
     if (imageIndex >= 0 && imageIndex < product.image.length) {
       // Delete the corresponding image file
       const imagePath = path.join(__dirname, '../../public', product.image[imageIndex].substring(1));

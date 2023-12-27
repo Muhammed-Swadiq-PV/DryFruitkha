@@ -27,9 +27,11 @@
             <label for="otp">OTP</label>
             <input type="text" id="otp" name="otp" class="form-control" required>
         </div>
-      
+        <div id="errorMessage" class="alert alert-danger" style="display: none;"></div>
         <button type="submit" class="btn btn-primary" id="verifyButton" style="margin-left: 30px;">Verify OTP</button>
+        
         <button class="btn btn-secondary mt-3" id="resendButton" onclick="handleResendClick()" style="margin-left: 30px; margin-bottom: 15px;">Resend OTP</button>
+        
     </form>
 </div>
 

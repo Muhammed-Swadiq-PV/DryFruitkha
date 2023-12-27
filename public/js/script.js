@@ -1,11 +1,10 @@
 function addToCart(id) {
-  const price = document.querySelector(`#price${id}`).value;
-  // console.log(price, "add to cart price fetch");
+
   const data = {
-    productid: id,
-    price: price,
+    productId: id,
   };
-  console.log(data);
+
+  console.log(data , "product id");
 
   fetch(`/addToCart/${id}`, {
     method: 'POST',
@@ -43,6 +42,7 @@ function addToCart(id) {
         position: 'top-end',
         icon: 'error',
         title: 'Failed to add to Cart',
+        text: error.message,
         showConfirmButton: false,
         timer: 1500,
       });
@@ -198,51 +198,7 @@ function updateCartUI(cartData) {
 
 
 
-    // function addToWishlist(id) {
-    //     const price = document.querySelector(`#price${id}`).value;
-    //     const data = {
-    //         productid: id,
-    //         price: price,
-    //     };
-
-    //     fetch('/addToWishlist', {
-    //         method: 'POST',
-    //         headers: {
-    //             'Content-Type': 'application/json',
-    //         },
-    //         body: JSON.stringify(data),
-    //     })
-    //     .then(response => {
-    //         if (response.ok) {
-    //             return response.json();
-    //         } else {
-    //             if (response.status === 401) {
-    //                 window.location.href = '/login';
-    //             } else {
-    //                 throw new Error('Failed to add product to wishlist');
-    //             }
-    //         }
-    //     })
-    //     .then(data => {
-    //         Swal.fire({
-    //             position: 'top-end',
-    //             icon: 'success',
-    //             title: 'Added to Wishlist',
-    //             showConfirmButton: false,
-    //             timer: 1500,
-    //         });
-    //     })
-    //     .catch(error => {
-    //         console.error('Error adding product to wishlist:', error);
-    //         Swal.fire({
-    //             position: 'top-end',
-    //             icon: 'error',
-    //             title: 'Failed to add to Wishlist',
-    //             showConfirmButton: false,
-    //             timer: 1500,
-    //         });
-    //     });
-    // }
+    
 
     function addToWishlist(productId) {
       fetch(`/addToWishlist/${productId}`, {
@@ -252,21 +208,29 @@ function updateCartUI(cartData) {
         },
       })
         .then(function (response) {
-          if (response.ok) {
-            console.log("Product added to wishlist.");
-          } else {
-            console.error("Error adding product to wishlist. Status:", response.status);
-          }
-        })
-        .catch(function (error) {
-          console.error("Network error:", error);
-        });
-  
+           if (response.ok) {
+        console.log("Product added to wishlist.");
         Swal.fire({
-          position: 'top-end',
+          position: 'center',
           icon: 'success',
           title: 'Added to Wishlist',
           showConfirmButton: false,
           timer: 1500
         });
-    }
+      } else if (response.status === 409) { 
+        console.warn("Product already exists in wishlist.");
+        Swal.fire({
+          position: 'center',
+          icon: 'error',
+          title: 'Product already in Wishlist',
+          showConfirmButton: false,
+          timer: 2500
+        });
+      } else {
+        console.error("Error adding product to wishlist. Status:", response.status);
+      }
+    })
+    .catch(function (error) {
+      console.error("Network error:", error);
+    });
+}

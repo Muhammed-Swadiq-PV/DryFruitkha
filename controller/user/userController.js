@@ -351,7 +351,7 @@ const postVerifyForgotOTP = async (req, res) => {
 const postResendForgotOTP = async (req, res) => {
   try {
       const newOTP = generateOTP();
-
+      console.log(newOTP, "resend otp yile otp");
       const email = req.body.email;
       await userOTP(email, newOTP);
 
@@ -403,7 +403,40 @@ const postResetPassword = async (req, res) => {
 };
 
 
+const changePassword = async(req,res)=>{
+  try {
+    const userId = req.session.user;
+        const user = await userModel.findById(userId);
 
+        const oldPassword = req.body.oldPassword;
+        const newPassword = req.body.newPassword;
+        const confirmNewPassword = req.body.confirmPassword;
+        console.log(oldPassword,newPassword,confirmNewPassword,"old, new, confirm");
+
+        const isPasswordValid = await bcrypt.compare(oldPassword, user.password);
+
+        if (!isPasswordValid) {
+            return res.render('users/changePassword', { error: 'Incorrect old password.' });
+        }
+
+        if (newPassword !== confirmNewPassword) {
+            return res.render('users/changePassword', { error: 'New passwords do not match.' });
+        }
+
+        // Hash the new password
+        const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+        // Update the user's password in the database
+        await userModel.findByIdAndUpdate(userId, { password: hashedPassword });
+
+        res.redirect('/userProfile'); 
+       
+  } catch (error) {
+    res.status(500).json({ success: false, message: 'Internal Server Error' });
+    console.error('Error in postChangePassword:', error);
+        res.render('./users/404');
+  }
+}
 
 
 
@@ -424,6 +457,6 @@ module.exports = {
         postResendForgotOTP,
         postResetPassword,
         getResetPassword,
-        
+        changePassword
 }
 

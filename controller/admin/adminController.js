@@ -13,34 +13,26 @@ const getlogin = async(req,res) =>{
     }
 }
 
-const postlogin = async(req, res) => {
+const postlogin = async (req, res) => {
     try {
-        
         const email = req.body.email;
-        const Password = req.body.Password;
+        const password = req.body.Password;
 
-        
+        const adminData = await adminModel.findOne({ email });
 
-    const adminData=await adminModel.findOne({email})
-
-        console.log(adminData,"admindetails");
-        if (adminData) {
-            const passwordCheck=bcrypt.compare(adminData.password,Password)
-            if (passwordCheck) {
-                req.session.admin = adminData.email;
-                res.redirect('/admin/adminDashboard');
-            } else {
-                console.log('password incorrect');
-                res.redirect('/admin/login', { error: "incorrect password or email" });
-            }
+        if (adminData && adminData.password === password) {
+            req.session.admin = adminData.email;
+            res.redirect('/admin/adminDashboard');
         } else {
-            console.log('not found');
-            res.redirect('/admin/login');
+            console.log('Password incorrect');
+            res.status(400).redirect('/admin/login');
         }
     } catch (error) {
         console.log(error);
     }
 }
+
+
 
 
 const postLogout = async(req , res)=>{

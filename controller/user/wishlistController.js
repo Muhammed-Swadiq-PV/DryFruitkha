@@ -71,7 +71,7 @@ const getWishlist = async (req, res) => {
 const postWishlist = async (req, res) => {
     try {
       const productId = req.params.id;
-      console.log(productId);
+      // console.log(productId);
       const email = req.session.user;
   
       // Find the user by email
@@ -80,7 +80,9 @@ const postWishlist = async (req, res) => {
       if (!user) {
         return res.status(404).json({ message: "User not found" });
       }
-  
+      if (user.wishlist.some(item => item.product.toString() === productId)) {
+        return res.status(409).json({ message: "Product already exists in wishlist" });
+      }
       
       user.wishlist.push({ product: productId });
   
@@ -97,10 +99,10 @@ const postWishlist = async (req, res) => {
 
   const removeWishlist = async(req,res)=>{
     try {
-      console.log("inside the remove wishlist");
+      // console.log("inside the remove wishlist");
       const email = req.session.user;
       const productIdToRemove = req.body.productId;
-      console.log(productIdToRemove,"product id to remove");
+      // console.log(productIdToRemove,"product id to remove");
   
       // Remove the wishlist item with the specified productId
       await userModel.updateOne(

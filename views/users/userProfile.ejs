@@ -24,10 +24,18 @@
                 <a href="/addressBook" class="list-group-item list-group-item-action">
                     <i class="fas fa-address-card"></i> Delivery Addresses
                 </a>
+            </a>
+            <a href='/wallet' class="list-group-item list-group-item-action">
+                <i class="fas fa-wallet"></i> Wallet
+            </a>
                 <!-- Display order history -->
                 <a href="/orderDetails" class="list-group-item list-group-item-action">
                     <i class="fas fa-shopping-cart"></i> My Orders
                   </a>
+                  <a href="#" id="changePasswordLink" class="list-group-item list-group-item-action">
+                    <i class="fas fa-key"></i> Change Password
+                </a>
+                
             </div>
 
             <a href="/logout">
@@ -117,6 +125,49 @@
     </div>
 </div>
 
+
+
+
+<!-- Change Password Modal -->
+<div class="modal fade" id="changePasswordModal" tabindex="-1" role="dialog" aria-labelledby="changePasswordModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="changePasswordModalLabel">Change Password</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form id="changePasswordForm">
+                <div class="modal-body">
+                    <!-- Change Password Section -->
+                    <div id="changePasswordSection">
+                        <!-- Old Password -->
+                        <div class="form-group">
+                            <label for="oldPassword">Old Password</label>
+                            <input type="password" class="form-control" id="oldPassword" name="oldPassword" required>
+                        </div>
+                        <!-- New Password -->
+                        <div class="form-group">
+                            <label for="newPassword">New Password</label>
+                            <input type="password" class="form-control" id="newPassword" name="newPassword" required>
+                        </div>
+                        <!-- Confirm New Password -->
+                        <div class="form-group">
+                            <label for="confirmPassword">Confirm New Password</label>
+                            <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" required>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Change Password</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+
 <%- include('../layouts/userfooter') %>
 
 <script>
@@ -182,3 +233,60 @@ function clearErrorMessages() {
 
 </script>
 
+<script>
+    document.getElementById('changePasswordLink').addEventListener('click', function () {
+        $('#changePasswordModal').modal('show');
+    });
+
+    document.getElementById('changePasswordForm').addEventListener('submit', async function (event) {
+        event.preventDefault(); // Prevent the default form submission behavior
+
+        // Your logic for handling the form data and making the change password request
+        const oldPassword = document.getElementById('oldPassword').value;
+        const newPassword = document.getElementById('newPassword').value;
+        const confirmPassword = document.getElementById('confirmPassword').value;
+        console.log(oldPassword,newPassword,confirmPassword, "old new, confirm");
+
+        try {
+            // Make a fetch request to your server endpoint
+            const response = await fetch('/changePassword', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    oldPassword: oldPassword,
+                    newPassword: newPassword,
+                    confirmPassword: confirmPassword,
+                }),
+            });
+
+           
+            if (response.ok) {
+                const result = await response.json();
+                if (result.success) {
+                    Swal.fire({
+                    icon: 'success',
+                    title: 'Password Changed!',
+                    text: 'Your password has been changed successfully.',
+                });
+
+                    
+                } else {
+                    console.error('Failed to change password:', result.message);
+                    
+                }
+            } else {
+                
+                console.error('Failed to change password. Server returned:', response.status, response.statusText);
+                
+            }
+        } catch (error) {
+            console.error('Error during fetch:', error);
+           
+        }
+
+        
+        $('#changePasswordModal').modal('hide');
+    });
+</script>

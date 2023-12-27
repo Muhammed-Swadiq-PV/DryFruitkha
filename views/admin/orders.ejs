@@ -10,7 +10,7 @@
                     <tr>
                         <th>#</th>
                         <th>Order ID</th>
-                        <th>Customer ID</th>
+                        <th>Customer name</th>
                         <th>Products</th>
                         <th>Amount</th>
                         <th>Order Date</th>
@@ -24,7 +24,7 @@
                         <tr>
                             <td><%= index + 1 %></td>
                             <td><%= order._id %></td>
-                            <td><%= order.userId %></td>
+                            <td><%= order.address[0].firstName %> <%= order.address[0].LastName %></td>
                             <td>
                                 <% order.products.forEach(product => { %>
                                     <%= product.name %> (Qty: <%= product.quantity %>)<br>

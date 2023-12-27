@@ -70,6 +70,7 @@
                 <th scope="col">#</th>
                 <th scope="col">Name</th>
                 <th scope="col">Description</th>
+                <th scope="col">List</th>
                 <th scope="col">Edit</th>
               </tr>
             </thead>
@@ -86,18 +87,28 @@
                     <td>
                       <%= categoryData[i].description.trim() %>
                     </td>
-                    <% if(categoryData[i].status === true) { %>
-                      <td>
-                        <a href="#confirmationPopUp" class="btn rounded-0 block-btn modalbtn" data-bs-toggle="modal"
-                          data-id="<%= categoryData[i]._id %>" style="color:green; border: 1px solid green;">Listed</a>
-                      </td>
-                    <% } else { %>
-                      <td>
-                        <a href="#confirmationPopUp" data-id="<%= categoryData[i]._id %>" data-bs-toggle="modal"
-                          class="btn rounded-0 unBlock-btn modalbtn" style="color:red; border: 1px solid red;">Delisted</a>
-                      </td>
-                    <% } %>
-                    <td>
+                   
+                      <% if (categoryData[i].status) { %>
+  <td>
+    <a href="#" class="btn rounded-0 block-btn modalbtn"
+       data-bs-toggle="modal"
+       data-target="#confirmationPopUp"
+       data-id="<%= categoryData[i]._id %>"
+       data-status="false"
+       style="color:green; border: 1px solid green;">Listed</a>
+  </td>
+<% } else { %>
+  <td>
+    <a href="#" class="btn rounded-0 unBlock-btn modalbtn"
+       data-bs-toggle="modal"
+       data-target="#confirmationPopUp"
+       data-id="<%= categoryData[i]._id %>"
+       data-status="true"
+       style="color:red; border: 1px solid red;">Delisted</a>
+  </td>
+<% } %>
+
+                    <td>  
                       <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#editCategoryModal_<%= categoryData[i]._id %>">Edit Category</button>
                     </td>
                   </tr>
@@ -149,46 +160,80 @@
   </div>
 </div>
 
+<!-- Confirmation Modal -->
+<div class="modal fade" id="confirmationPopUp" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Confirmation</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        Are you sure you want to change the status?
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <a href="#" id="confirmStatusChange" class="btn btn-primary">Confirm</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+
 
     
 
     
 <script>
   const addCategory = async () => {
-    const categoryName = document.getElementById('categoryName').value.trim();
-    const categoryDescription = document.getElementById('categoryDescription').value.trim();
-    const errorMessageDiv = document.getElementById('errorMessageDiv'); 
+  const categoryName = document.getElementById('categoryName').value.trim();
+  const categoryDescription = document.getElementById('categoryDescription').value.trim();
+  const errorMessageDiv = document.getElementById('errorMessageDiv');
 
-    var isError 
-
-    try {
-        const response = await fetch('/admin/add-category', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ categoryName, categoryDescription }),
-        });
-
-        const data = await response.json();
-
-        if (response.ok) {
-            
-            window.location.href = '/admin/category';
-        }else if(data.message) {
-           
-            errorMessageDiv.textContent = 'Already exist'
-        }
-    } catch (error) {
-        console.error('Error:', error);
+  try {
+    // Validate if the category name is blank
+    if (!categoryName || !categoryDescription) {
+      errorMessageDiv.textContent = 'Name and description cannot be blank.';
+      return;
     }
+
+    const response = await fetch('/admin/add-category', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ categoryName, categoryDescription }),
+    });
+
+    if (response.ok) {
+      window.location.href = '/admin/category';
+    } else {
+      const data = await response.json().catch(() => null);
+
+      if (data && data.error) {
+        // Show the error message in the modal
+        errorMessageDiv.textContent = data.error;
+        errorMessageDiv.style.color = 'red';
+
+        // Display the modal with the error message
+        $('#addCategoryModal').modal('show');
+      } else {
+        errorMessageDiv.textContent = 'An unexpected error occurred.';
+        errorMessageDiv.style.color = 'red';
+      }
+    }
+  } catch (error) {
+    console.error('Error:', error);
+    errorMessageDiv.textContent = 'An unexpected error occurred.';
+    errorMessageDiv.style.color = 'red';
+  }
 };
 
 </script>
 
 <script>
   function saveChanges(categoryId) {
-  console.log("inside the saveChanges");
+  // console.log("inside the saveChanges");
   const categoryNameInput = document.getElementById(`edit-category-name_${categoryId}`);
   const categoryDescriptionInput = document.getElementById(`edit-category-description_${categoryId}`);
   const editCategoryErrorDiv = document.getElementById('editCategoryErrorDiv');
@@ -230,6 +275,10 @@ $('.modal-backdrop').remove();
 setTimeout(() => {
         window.location.reload();
       }, 500);
+    } else if (data && data.message === 'Category with updated name already exists') {
+      // console.log('Category name already exists.');
+      editCategoryErrorDiv.textContent = 'Category name already exists.';
+      editCategoryErrorDiv.style.color = 'red';
     } else {
       console.error('Error: Save operation failed');
     }
@@ -240,6 +289,29 @@ setTimeout(() => {
 }
 
 </script>
+
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    // Show confirmation modal when "Listed" or "Delisted" button is clicked
+    $('.modalbtn').on('click', function (event) {
+      event.preventDefault(); // Prevent default behavior of the anchor element
+
+      const button = $(this);
+      const categoryId = button.data('id');
+      const currentStatus = button.data('status');
+      const confirmLink = $('#confirmStatusChange');
+      const newStatus = currentStatus === 'true' ? 'false' : 'true'; // Toggle the status
+
+      // Set the href of the confirmation link dynamically
+      confirmLink.attr('href', `/admin/category-status/${categoryId}?status=${newStatus}`);
+
+      // Trigger the modal
+      $('#confirmationPopUp').modal('show');
+    });
+  });
+</script>
+
 
 
 

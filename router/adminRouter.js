@@ -69,7 +69,7 @@ router.get('/total-revenue' ,dashboard.totalRevenueGraph);
 router.post('/show-revenue',dashboard.showRevenue);
 router.get('/adminsales',dashboard.salesReportPage);
 router.post('/adminsales', dashboard.filterSales);
-router.get('/download-salesReport',dashboard.downloadSalesReport);
+router.get('/download-salesReport',loggedIn,dashboard.downloadSalesReport);
 
 
 

@@ -43,7 +43,8 @@ const getStatusUsers = async (req , res)=>{
 const getOrders = async(req,res)=>{
     try {
 
-        const orders = await Order.find()
+        const orders = await Order.find().sort({ orderDate: -1 });
+        
         res.render('./admin/orders', {orders});
     } catch (error) {
         console.error(error.message);

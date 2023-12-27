@@ -7,7 +7,7 @@ const cartController = require('../controller/user/cartController')
 const addressController = require('../controller/user/addressController')
 const orderController = require('../controller/user/orderController');
 const wishlistController = require('../controller/user/wishlistController');
-
+const walletController = require('../controller/user/walletController')
 
 router.get('/',userMiddleware.blockStatus,usercontroller.gethome)
 router.get('/login',usercontroller.getLogin);
@@ -24,7 +24,7 @@ router.post('/verifyOTP/resentOTP', usercontroller.resentOTP);
 router.post('/verifyOTP', usercontroller.postOTPverification);
 
 router.post('/login',usercontroller.postLogin)
-
+router.post('/changePassword',usercontroller.changePassword);
 
 router.get('/verifyEmail',userMiddleware.blockStatus,usercontroller.getVerifyEmail);
 router.post('/verifyEmail', usercontroller.verifyEmail);
@@ -43,14 +43,14 @@ router.get('/singleProduct',userMiddleware.blockStatus,userProductController.get
 
 //wishlist
 router.get('/wishlist',userMiddleware.blockStatus,wishlistController.getWishlist)
-router.post('/addToWishlist/:id',wishlistController.postWishlist);
-router.post('/wishlist/remove/:id',wishlistController.removeWishlist);
+router.post('/addToWishlist/:id',userMiddleware.blockStatus,wishlistController.postWishlist);
+router.post('/wishlist/remove/:id',userMiddleware.blockStatus,wishlistController.removeWishlist);
 
 //cart
 router.get('/cart',userMiddleware.blockStatus,cartController.getCart);
-router.post('/addToCart/:id',cartController.addToCart);
-router.delete('/removeFromCart/:id',cartController.removeFromCart);
-router.patch('/updateCartItemQuantity/:id',cartController.updateQuantityCart);
+router.post('/addToCart/:id',userMiddleware.blockStatus,cartController.addToCart);
+router.delete('/removeFromCart/:id',userMiddleware.blockStatus,cartController.removeFromCart);
+router.patch('/updateCartItemQuantity/:id',userMiddleware.blockStatus,cartController.updateQuantityCart);
 
 
 //checkOut
@@ -65,10 +65,10 @@ router.get('/lastpage',orderController.getLastPage);
 //userProfile and address
 router.get('/userProfile',userMiddleware.blockStatus,addressController.getUserProfile);
 router.post('/address',addressController.addAddress);
-router.post('/setDefaultAddress/:addressId', addressController.setDefaultAddress);
+router.post('/setDefaultAddress/:addressId',userMiddleware.blockStatus, addressController.setDefaultAddress);
 router.delete('/deleteAddress/:addressId',userMiddleware.blockStatus, addressController.deleteAddress);
-router.post('/update-address', addressController.updateAddress);
-router.post('/updateProfile', addressController.updateUserProfile);
+router.post('/update-address',userMiddleware.blockStatus, addressController.updateAddress);
+router.post('/updateProfile',userMiddleware.blockStatus, addressController.updateUserProfile);
 
 
 //addressBook
@@ -79,8 +79,10 @@ router.get('/orderDetails',userMiddleware.blockStatus,orderController.getOrderDe
 router.get('/viewDtailsOrder/:orderId',userMiddleware.blockStatus,orderController.getReturnOrder);
 router.get('/OrderInvoice/:orderId',userMiddleware.blockStatus,orderController.orderInvoice);
 router.patch('/updateOrderStatus/:orderId',orderController.cancelOrder);
-router.patch('/returnOrder/:orderId',orderController.returnOrder);
+router.patch('/returnOrder/:orderId',userMiddleware.blockStatus,orderController.returnOrder);
 
+router.get('/wallet',userMiddleware.blockStatus,walletController.getwalletPage);
+router.post('/walletOrder',userMiddleware.blockStatus,walletController.orderWithWalletAmount)
 
 
 

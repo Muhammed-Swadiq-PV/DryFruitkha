@@ -17,18 +17,27 @@ const getCart = async (req, res) => {
       }
   
       const user = await userModel.findById(userId).populate('cart.productId');
-      const cartItem = user.cart.map(item => {
+      const cartItem = user.cart.map(async(item) => {
+        const product = await products.findOne({ _id: item.productId });
+
+        let price;
+
+        if (product.offer && product.expiryDate && new Date() <= product.expiryDate) {
+          price = product.discountPrice;
+        } else {
+          price = product.price;
+        }
         return {
           product: item.productId,
           totalPrice: item.totalPrice,
           quantity: item.quantity,
+          price: price,
         };
       });
+
+      const resolvedCartItem = await Promise.all(cartItem);
       // console.log(cartItem);
-  
-      
-  
-      res.render('./users/cart', { cartItem , user , });
+      res.render('./users/cart', {  cartItem: resolvedCartItem, user });
     } catch (error) {
       console.error(error);
       res.redirect('/error?err=' + encodeURIComponent(error.message));
@@ -41,15 +50,31 @@ const getCart = async (req, res) => {
       const productId = req.params.id;
       // console.log(productId,"productid");
       const email = req.session.user;
-      const price = parseInt(req.body.price);
+      // const price = parseInt(req.body.price);
       // console.log(price,"addtocart price");
-      const totalPrice = price;
+      // const totalPrice = price;
   
       // console.log(productId, email, price, totalPrice);
       if(!email){
         return res.status(401).json({ error: 'User not logged in' });
       }
-      const user = await userModel.findOne({ _id : email });
+      const user = await userModel.findOne({ _id: email });
+    const product = await products.findOne({ _id: productId });
+
+    if (!product) {
+      return res.status(404).json({ error: 'Product not found' });
+    }
+
+    let price;
+
+    if (product.offer && product.expiryDate && new Date() <= product.expiryDate) {
+      price = product.discountPrice;
+    } else {
+      price = product.price;
+    }
+
+    const totalPrice = price;
+    console.log(totalPrice, "addtototal");
   
       if (user && user.cart) {
         // Check if the product is already in the cart

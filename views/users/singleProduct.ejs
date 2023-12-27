@@ -45,7 +45,38 @@
                             <h3>
                                 <%= product.name %>
                             </h3>
-                            <p class="single-product-pricing"><span>Per Kg</span> ₹<%= product.price %>
+                            <% if (product.offer && product.expiryDate) { %>    
+                                <% const currentDateObj = new Date(currentDate); %>
+                                <% const expiryDateObj = new Date(product.expiryDate); %>
+
+                                <% expiryDateObj.setHours(23, 59, 59, 999); %>
+                                
+                                <% if (currentDateObj <= expiryDateObj) { %>
+                                    <!-- Display your badge or logo here -->
+                                    <div class="p-2">
+                                        <span>Original price :</span><span class="font-weight-semi-bold  mt-5"
+                                            style="font-size: 22px;"> &#8377 <del>
+                                                <%= product.price %>
+                                            </del> </span><br>
+                                    </div>
+                                    <div id="offerPrice<%= product._id %>" class="p-2">
+                                        <span>Discount price :</span><span class="font-weight-semi-bold text-dark p-2 mt-5"
+                                            style="font-size: 26px;"> &#8377 <%= product.discountPrice %> </span>
+        
+                                    </div>
+        
+                                    <div class=" d-flex align-items-center justify-content-center"><i
+                                            class="lni lni-offer p-1  " style="color: rgb(234, 9, 16); font-size: 22px;"></i>
+                                        <span  class="pl-2" style="color: rgb(255, 0, 17); font-size: 24px;">Special discount now of ₹<%=
+                                                product.offer %> </span>
+                                    </div>
+        
+                                    <% } else{ %>
+                                        <h3 class="font-weight-semi-bold mb-4 mt-5">&#8377 <%= product.price %>
+                                                <% } %>
+                                                    <% }else{ %>
+                                                        <h3 id="regularPrice<%= product._id %>"  class="font-weight-semi-bold mb-4 mt-5">&#8377 <%= product.price %>
+                                                                <% } %>
                             </p>
                             <p><strong>Stock:</strong>
                                 <%= product.stock %> units
@@ -54,10 +85,10 @@
                                 <%= product.categoryDetails.name %>
                             </p>
 
-                            <input type="hidden" name="price" id="price<%= product._id %>" value="<%=product.price %>">
                             <p>
                                 <%= product.description %>
                             </p>
+                            <% if(user){ %>
                             <div style="display: flex;">
                             
                                 <div class="single-product-form mx-3">
@@ -75,7 +106,25 @@
                             
                             
                             </div>
-                           
+                           <% } else { %>
+                            <div style="display: flex;">
+                            
+                                <div class="single-product-form mx-3">
+                               
+                                    <a href="/login" class="cart-btn"><i
+                                            class="fas fa-shopping-cart"></i> Add to Cart</a>
+                                  
+                                </div>
+                                <div class="single-product-form">
+                               
+                                    <a href="/login" class="cart-btn"><i
+                                         class="fas fa-heart"></i> Add to Wishlist</a>
+                                  
+                                </div>
+                            
+                            
+                            </div>
+                          <% } %>
                             <h4>Share:</h4>
                             <ul class="product-share">
                                 <li><a href=""><i class="fab fa-facebook-f"></i></a></li>

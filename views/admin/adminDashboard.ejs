@@ -127,9 +127,9 @@
             const response = await fetch('/admin/payment-method');
             const data = await response.json();
 
-            const labels = ['Online Payment', 'Cash on Delivery'];
-            const values = [data.onlinePayment, data.cashOnDelivery];
-            const colors = ['#36A2EB', '#FFCE56'];
+            const labels = ['Online Payment', 'Cash on Delivery', 'Wallet Payment'];
+            const values = [data.onlinePayment, data.cashOnDelivery, data.walletPayment];
+            const colors = ['#36A2EB', '#FFCE56', '#4CAF50'];
 
             // Get the context of the canvas element we want to select
             const first = document.getElementById('myChart1').getContext('2d');

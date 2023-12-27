@@ -60,7 +60,26 @@ const userSchema=mongoose.Schema({
        
     },
     
-  }]
+  }],
+  wallet:[{
+    balance:{
+        type:Number,
+        default:0
+    },
+    date:{
+        type:Date
+    },
+    creditAmount:{
+        type:Number
+    },
+    debitAmount: {
+        type: Number
+    },
+    transactionType:{
+        type:String
+    }
+}]
+
        
 })
 

@@ -32,10 +32,12 @@ try {
     const user = await userModel.findOne({_id:userId})
     const productId = req.query.productId;
     const product = await products.findOne({_id:productId}).populate('categoryDetails');
-     console.log(product.image, "get single product ile image");
+
+    const currentDate = new Date();
+    //  console.log(product.image, "get single product ile image");
     // console.log(product.categoryModel, "get single product ile category model");
 
-    res.render('users/singleProduct',{product , user:user||false})
+    res.render('users/singleProduct',{product , user:user||false , currentDate})
 } catch (error) {
     console.log(error.message)
 }

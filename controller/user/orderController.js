@@ -3,7 +3,7 @@ const category = require('../../model/categoryModel');
 const userModel = require('../../model/userModel');
 const Order = require('../../model/orderModel');
 const Razorpay = require('razorpay');
-
+require('dotenv').config();
 
 
 
@@ -49,7 +49,7 @@ const Razorpay = require('razorpay');
   }
   
   
-  //------------------------- place order -----------------------------
+  //------------------------- Cash on delivery -----------------------------
   //=====================================================================
   
   
@@ -114,7 +114,8 @@ const Razorpay = require('razorpay');
     }
   };
   
-  
+  //------------------------- Razorpay order -----------------------------
+  //=====================================================================
   
   const razorpayOrder = async (req, res) => {
     
@@ -128,16 +129,18 @@ const Razorpay = require('razorpay');
         price: item.totalPrice,
         quantity: item.quantity,
       }));
-  
+
       // Calculate total amount for Razorpay
       const shippingCharge = 90;
       const subtotal = cartItem.reduce((sum, item) => sum + item.price, 0);
       const totalAmount = subtotal + shippingCharge;
-  
+      
+      const razorpayKeyId = process.env.RAZORPAY_KEY_ID;
+      const razorpayKeySecret = process.env.RAZORPAY_KEY_SECRET;
       // Prepare options for creating a Razorpay order
       const instance = new Razorpay({
-        key_id: 'rzp_test_Kxp2z1D1shF2jK',
-        key_secret: 's02D9qdJStCCduNwdpgCO4Bd',
+        key_id: razorpayKeyId,
+        key_secret: razorpayKeySecret,
       });
       const options = {
         amount: totalAmount * 100, 
@@ -162,11 +165,6 @@ const Razorpay = require('razorpay');
             res.status(500).json({ error: 'Error creating Razorpay order' });
         }
     });
-
-    
-
-      
-
    
     } catch (error) {
       console.error('Error creating Razorpay order:', error);
@@ -228,7 +226,8 @@ const Razorpay = require('razorpay');
     }
   }
   
-  
+  //------------------------- Order details page -----------------------------
+  //===========================================================================
   
   const getOrderDetails = async(req,res)=>{
     try {
@@ -279,6 +278,9 @@ const Razorpay = require('razorpay');
     }
   }
   
+
+  //-------------------------Cancel the ordered product if it razorpay paid amount will be added to wallet-----------------------------
+  //====================================================================================================================================
   
   const cancelOrder = async (req, res) => {
     const { orderId } = req.params;
@@ -286,18 +288,42 @@ const Razorpay = require('razorpay');
     try {
   
         const order = await Order.findById(orderId);
-        // console.log(order, "order inside cancel order");
-        if (!order) {
-            return res.render('./users/404');
-        }
-  
-        if (order.orderStatus !== 'Pending') {
-            return res.render('./users/404')
-        }
-        order.orderStatus = 'Canceled';
-        await order.save();
+        const userId = req.session.user;
         
-        res.json({ success: true, updatedOrder: order });
+
+        for (const item of order.products) {
+          const product = await products.findById(item.productId);
+          product.stock += item.quantity;
+    
+          await product.save();
+        }
+        
+        if(order.payment==='razorpay' || order.paymentMethod==='Wallet'){
+          const user=await userModel.findById(userId).select('wallet')
+          let oldBalance=0
+          if(user.wallet.length>0){
+            oldBalance=user.wallet[user.wallet.length-1].balance
+          }
+          const walletData={
+            balance:oldBalance+order.total,
+            date:Date.now(),
+            creditAmount:order.total,
+            transactionType:'Credit'
+          }
+          // console.log(walletData, "razorpay");
+
+
+          user.wallet.push(walletData)
+          await user.save()
+          order.orderStatus='Canceled';
+          await order.save()
+          return res.json({message:'Order cancelled and refunded successfully'})
+        }else{
+          order.orderStatus='Canceled';
+          await order.save()
+          return res.json({message:'Order cancelled successfully'})
+         
+        }
     } catch (error) {
         
         console.error('Error cancelling order:', error);
@@ -306,6 +332,8 @@ const Razorpay = require('razorpay');
   };
   
   
+  //------------------------- Return order and add the paid amount to wallet -----------------------------
+  //=======================================================================================================
   
   const returnOrder = async (req, res) => {
     const { orderId } = req.params;
@@ -321,6 +349,33 @@ const Razorpay = require('razorpay');
         if (order.orderStatus !== 'Delivered') {
             return res.render('./users/404');
         }
+
+        for (const item of order.products) {
+          const product = await products.findById(item.productId);
+    
+          product.stock += item.quantity;
+    
+          await product.save();
+        }
+        const userId = req.session.user;
+        const user = await userModel.findById(userId).select('wallet');
+
+        let oldBalance = 0;
+
+        if (user.wallet.length > 0) {
+            oldBalance = user.wallet[user.wallet.length - 1].balance;
+        }
+
+        const walletData = {
+            balance: oldBalance + order.total,
+            date: Date.now(),
+            creditAmount: order.total,
+            transactionType: 'Credit'
+        };
+
+        user.wallet.push(walletData);
+        await user.save();
+
         order.orderStatus = 'Returned';
         await order.save();
         res.json({ success: true, updatedOrder: order });

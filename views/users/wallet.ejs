@@ -1,0 +1,113 @@
+<%- include('../layouts/userHeader') %>
+
+<div class="breadcrumb-section breadcrumb-bg">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 offset-lg-2 text-center">
+                <div class="breadcrumb-text">
+                    <p>DRY FRUITKHA</p>
+                    <h1>USER WALLET</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container-xl px-4 mt-4">
+    <div class="row">
+        <!-- Sidebar -->
+        <div class="col-md-3">
+            <div class="list-group" style="width: 80%;">
+                <a href="/userProfile" class="list-group-item list-group-item-action">
+                    <i class="fas fa-user"></i> Account Details
+                </a>
+                <a href="/addressBook" class="list-group-item list-group-item-action">
+                    <i class="fas fa-address-card"></i> Delivery Addresses
+                </a>
+                <!-- Display order history -->
+                <a href="/orderDetails" class="list-group-item list-group-item-action">
+                    <i class="fas fa-shopping-cart"></i> My Orders
+                </a>
+                <a href="#" id="changePasswordLink" class="list-group-item list-group-item-action">
+                    <i class="fas fa-key"></i> Change Password
+                </a>
+            </div>
+
+            <a href="/logout">
+                <button id="logoutBtn" class="btn btn-danger mt-4">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </button>
+            </a>
+        </div>
+
+        <!-- Main content -->
+        <hr class="mt-0 mb-4">
+            <div class="row">
+                <div class="col-xl-4">
+                    <div class="card mb-4 mb-xl-0">
+                        <div class="text-center card-header font-weight-bolder">Wallet</div>
+                        <div class="card-body text-center d-flex justify-content-center flex-column align-items-center">
+                            <img class="img-account-profile rounded-circle mb-2 larger-image" id="imagePreview" src="/images/billfold_dribble.png" alt="">
+                        </div>
+                        <div class="text-center mt-3 mb-4">
+                            <h5>Wallet Balance</h5>
+                            <% if (walletData.length) { %>
+                                <h5>₹<%= walletData[walletData.length-1].balance.toFixed(2) %></h5>
+                            <% } else { %>
+                                <h5>₹0.00</h5>
+                            <% } %>
+                        </div>
+                        
+                    </div>
+                </div>
+            </div>
+                <div class="col-xl-8">
+                    <div class="card mb-4">
+                        <div class="text-center card-header font-weight-bolder">Wallet History</div>
+                        <div class="card-body p-0">
+                            <!-- Billing history table -->
+                            <div class="table-responsive table-billing-history">
+                                <table class="table mb-0">
+                                    <thead>
+                                        <tr>
+                                            <th class="text-center border-gray-200 col-md-3" scope="col">Transaction ID</th>
+                                            <th class="text-center border-gray-200 col-md-3" scope="col">Date</th>
+                                            <th class="text-center border-gray-200 col-md-3" scope="col">Transaction Type</th>
+                                            <th class="text-center border-gray-200 col-md-3" scope="col">Amount</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <% walletData.forEach(wallet => { %>
+                                            <tr>
+                                                <td class="table-data text-center"><%= wallet._id.toString().slice(0, 9) %></td>
+                                                <td class="table-data text-center"><%= wallet.date ? wallet.date.toISOString().split('T')[0] : '' %></td>
+                                                <td class="table-data text-center"><%= wallet.transactionType %></td>
+                                                <td class="table-data text-center">
+                                                    <% if (wallet.transactionType === 'Credit') { %>
+                                                        ₹<%= wallet.creditAmount.toFixed(2) %>
+                                                    <% } else if (wallet.transactionType === 'Debit') { %>
+                                                        -₹<%= wallet.debitAmount.toFixed(2)  %>
+                                                    <% } else { %>
+                                                        N/A <!-- or any other default value you want to display -->
+                                                    <% } %>
+                                                </td>
+                                                
+                                            </tr>
+                                        <% }) %>
+                                    </tbody>
+                                    
+                                </table>
+                                <nav aria-label="Page navigation">
+                                    <ul class="pagination justify-content-center">
+                                        <li class="page-item"></li>
+                                    </ul>
+                                </nav>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<%- include('../layouts/userfooter') %>

@@ -68,7 +68,13 @@
                                     <td class="product-name">
                                         <%= cartItem.product.name %>
                                     </td>
-                                    <td class="product-price">₹<%= cartItem.product.price %></td>
+                                    <td class="product-price">
+                                        <% if (cartItem.product.offer && cartItem.product.expiryDate && new Date() <= cartItem.product.expiryDate) { %>
+                                          ₹<%= cartItem.product.discountPrice %>
+                                        <% } else { %>
+                                          ₹<%= cartItem.product.price %>
+                                        <% } %>
+                                      </td> 
                                     <td class="product-quantity">
                                         <% if (cartItem.product.stock > 0){ %>
                                             <input type="number" min="1" data-product-id="<%= cartItem.product._id %>" value="<%= cartItem.quantity %>" onchange="handleQuantityChange(this)">
@@ -76,6 +82,7 @@
                                             <span class="out-of-stock-message">Out of Stock</span>
                                         <% } %> 
                                     </td>
+                                    
                                     <td class="product-total">₹<span class="item-total-price"><%= cartItem.totalPrice %></span></td>
                                     <%total+=cartItem.totalPrice%>
                                 </tr>

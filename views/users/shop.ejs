@@ -63,7 +63,29 @@
               <img src="<%= product.image[0] %>" alt="">
             </div>
             <h3><%= product.name %></h3>
-            <p class="product-price"><span>Per Kg</span> ₹<%= product.price %> </p>
+            <% if (product.offer > 0) { %>
+                <% const currentDate = new Date(); %>
+                <% const expiryDate = new Date(product.expiryDate); %>
+                
+                <!-- Set hours to the end of the day -->
+                <% expiryDate.setHours(23, 59, 59, 999); %>
+  
+                <% if (currentDate <= expiryDate) { %>
+                <!-- Display offer information if the product has an offer -->
+                <div class="offer-section d-flex align-items-center justify-content-center">
+                  <i class="lni lni-offer p-1" style="color: rgb(234, 9, 16); font-size: 22px;"></i>
+                  <span class="pl-2" style="color: rgb(255, 0, 17); font-size: 24px;">Special offer of ₹<%= product.offer %></span>
+                </div>
+                <!-- Display discounted price -->
+                <p class="product-price"><span>Per Kg</span> ₹<%= product.discountPrice %> </p>
+              <% } else { %>
+                <!-- Display original price when there is no offer -->
+                <p class="product-price"><span>Per Kg</span> ₹<%= product.price %> </p>
+              <% } %>
+              <% } else { %>
+                <!-- Display original price when there is no offer -->
+                <p class="product-price"><span>Per Kg</span> ₹<%= product.price %> </p>
+              <% } %>
             <p><a href="/singleProduct?productId=<%= product._id %>" class="product-details-link">View Details</a></p>
            
           </div>

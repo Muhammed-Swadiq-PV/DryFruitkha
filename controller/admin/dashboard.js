@@ -59,7 +59,8 @@ const paymentMethod = async (req, res) => {
     try {
         const onlinePayment = await Order.countDocuments({ payment: 'razorpay' });
         const cashOnDelivery = await Order.countDocuments({ payment: 'cashondelivery' });
-        res.json({ onlinePayment, cashOnDelivery });
+        const walletPayment = await Order.countDocuments({ payment: 'wallet'})
+        res.json({ onlinePayment, cashOnDelivery , walletPayment});
     } catch (error) {
         console.error(error)
         res.redirect('/error?err=' + encodeURIComponent(error.message))
@@ -189,7 +190,7 @@ const filterSales = async (req, res) => {
 const downloadSalesReport=async(req,res)=>{
     try {
         const { startDate,endDate }=req.query
-        console.log(req.query);
+        // console.log(req.query);
         const orders=await Order.find({orderStatus:'Delivered',orderDate:{$gte:startDate,$lte:endDate}}).populate('userId').sort({ orderDate: -1 });
         // Extract the necessary data fields
     const data = orders.map((order) => ({
