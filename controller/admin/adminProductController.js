@@ -156,10 +156,22 @@ const postEditProduct = async (req, res) => {
     if (price > 0 && stock > 0) {
       updatedProduct.price = price;
       updatedProduct.stock = stock;
-      updatedProduct.offer = offer;
-      updatedProduct.expiryDate = expiryDate;
-      updatedProduct.discountPrice = price - offer;
-
+      if (offer > 0) {
+        // If there is an offer,
+        updatedProduct.offer = offer;
+        updatedProduct.discountPrice = price - offer;
+        if (expiryDate) {
+          updatedProduct.expiryDate = expiryDate;
+        } else {
+          
+          return res.status(400).json({ success: false, message: 'Expiry date is required for products with an offer' });
+        }
+      } else {
+        // If there is no offer, 
+        updatedProduct.offer = 0;
+        updatedProduct.discountPrice = 0;
+        updatedProduct.expiryDate = undefined; 
+      }
       await updatedProduct.save();
 
       res.json({ success: true, message: 'Product details updated successfully' });

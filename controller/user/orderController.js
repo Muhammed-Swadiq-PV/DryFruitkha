@@ -2,6 +2,7 @@ const products = require('../../model/productModel');
 const category = require('../../model/categoryModel');
 const userModel = require('../../model/userModel');
 const Order = require('../../model/orderModel');
+const coupon = require('../../model/coupon');
 const Razorpay = require('razorpay');
 require('dotenv').config();
 
@@ -37,9 +38,12 @@ require('dotenv').config();
       const subtotal = cartItem.reduce((sum,item) => sum + item.totalPrice,0)
       const shippingCharge = 90;
       const total = subtotal + shippingCharge;
+
+      const availableCoupons = await coupon.find({ isActive: true });
+        
   
       // console.log(subtotal,"subtotal",total,"total");
-      res.render('./users/checkout', { cartItem, user, defaultAddress, subtotal, total , addresses});
+      res.render('./users/checkout', { cartItem, user, defaultAddress, subtotal, total , addresses , availableCoupons});
   
     } catch (error) {
       console.error(error);

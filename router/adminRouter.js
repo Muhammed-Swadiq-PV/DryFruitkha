@@ -9,7 +9,7 @@ const productController = require('../controller/admin/adminProductController')
 const categoryController = require('../controller/admin/adminCategoryController')
 const usersController = require('../controller/admin/adminUser');
 const dashboard = require('../controller/admin/dashboard');
-
+const coupon = require('../controller/admin/adminCoupon');
 
 
 
@@ -64,13 +64,21 @@ router.patch('/updateOrderStatus', usersController.updateOrderStatus);
 
 //to get admin dashboard
 router.get('/adminDashboard',loggedIn,dashboard.getDashboard);
-router.get('/payment-method', dashboard.paymentMethod);
-router.get('/total-revenue' ,dashboard.totalRevenueGraph);
+router.get('/payment-method', loggedIn,dashboard.paymentMethod);
+router.get('/total-revenue' ,loggedIn,dashboard.totalRevenueGraph);
 router.post('/show-revenue',dashboard.showRevenue);
-router.get('/adminsales',dashboard.salesReportPage);
+router.get('/adminsales',loggedIn,dashboard.salesReportPage);
 router.post('/adminsales', dashboard.filterSales);
 router.get('/download-salesReport',loggedIn,dashboard.downloadSalesReport);
 
+
+router.get('/addCoupon',loggedIn,coupon.createCoupon);
+router.get('/checkCouponCode',loggedIn, coupon.checkCouponCode);
+router.post('/addCoupon',coupon.postCreateCoupon);
+router.post('/couponDelete/:id',coupon.deleteCoupon);
+router.get('/couponDetails/:id',loggedIn,coupon.getCouponDetails);
+router.patch('/updateCoupon/:id',coupon.updateCoupon);
+router.patch('/couponToggleStatus/:id',coupon.changeCouponStatus);
 
 
 module.exports = router
