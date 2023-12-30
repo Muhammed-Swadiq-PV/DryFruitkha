@@ -51,6 +51,60 @@ require('dotenv').config();
       res.status(500).send("Internal Server Error");
     }
   }
+
+ //-------------------------Apply coupon for order -----------------------------
+  //=====================================================================
+  const applyCoupon = async (req, res) => {
+    let error;
+    try {
+        const userId = req.session.user;
+        const couponCode = req.body.coupon;
+
+        // console.log(userId, couponCode, "apply couponile userid um coupon codum");
+
+        const user = await userModel.findById(userId).populate('cart.productId');
+        const cartItem = user.cart.map(item => ({
+            product: item.productId,
+            name: item.productId.name,
+            price: item.totalPrice,
+            quantity: item.quantity,
+        }));
+
+        const appliedCoupon = await coupon.findOne({ couponCode, isActive: true });
+        // console.log('Stored Coupon Code:', appliedCoupon ? appliedCoupon.couponCode : 'Not found');
+
+        if (!appliedCoupon) {
+            error = "Invalid coupon code";
+            return res.status(400).json({ success: false, error });
+        }
+
+        if (cartItem.reduce((sum, item) => sum + item.price, 0) >= appliedCoupon.purchaseAmount) {
+            const couponDiscount = appliedCoupon.price;
+            const shippingCharge = 90;
+            const subtotal = cartItem.reduce((sum, item) => sum + item.price, 0);
+            const totalBeforeDiscount = subtotal + shippingCharge;
+            //  console.log(couponDiscount, "total before discount");
+             req.session.couponDiscount = couponDiscount || 0;
+
+            const totalAfterDiscount = Math.max(totalBeforeDiscount - couponDiscount, 0);
+            console.log(totalAfterDiscount,"total after discount")
+            // Respond with success and the updated information
+            res.status(200).json({ success: true, totalAfterDiscount, couponDiscount });
+        } else {
+            error = "Purchase amount does not meet the coupon requirements";
+            // Respond with error message
+            res.status(400).json({ success: false, error });
+        }
+
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ success: false, error: "Internal Server Error" });
+    }
+};
+
+
+
+
   
   
   //------------------------- Cash on delivery -----------------------------
@@ -75,7 +129,11 @@ require('dotenv').config();
 
         const shippingCharge = 90;
         const subtotal = cartItem.reduce((sum, item) => sum + item.price, 0);
-        const total = subtotal + shippingCharge;
+
+        const couponDiscount = req.session.couponDiscount || 0;
+        const totalAfterDiscount = couponDiscount > 0 ? subtotal - couponDiscount : subtotal;
+
+        const total = totalAfterDiscount + shippingCharge;
   
   
         
@@ -137,7 +195,11 @@ require('dotenv').config();
       // Calculate total amount for Razorpay
       const shippingCharge = 90;
       const subtotal = cartItem.reduce((sum, item) => sum + item.price, 0);
-      const totalAmount = subtotal + shippingCharge;
+      const couponDiscount = req.session.couponDiscount || 0;
+        const totalAfterDiscount = couponDiscount > 0 ? subtotal - couponDiscount : subtotal;
+
+        const totalAmount = totalAfterDiscount + shippingCharge;
+  
       
       const razorpayKeyId = process.env.RAZORPAY_KEY_ID;
       const razorpayKeySecret = process.env.RAZORPAY_KEY_SECRET;
@@ -418,5 +480,6 @@ require('dotenv').config();
     razorpayOrder,
     afterPayment,
     getLastPage,
-    orderInvoice
+    orderInvoice,
+    applyCoupon
   }

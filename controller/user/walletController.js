@@ -2,6 +2,7 @@ const products = require('../../model/productModel');
 const category = require('../../model/categoryModel');
 const userModel = require('../../model/userModel');
 const Order = require('../../model/orderModel');
+const coupon = require('../../model/coupon');
 
 
 const getwalletPage = async(req , res)=>{
@@ -39,10 +40,13 @@ const orderWithWalletAmount = async (req, res) => {
         // Assuming the wallet balance is stored in the user's wallet array
         const walletBalance = user.wallet.length > 0 ? user.wallet[user.wallet.length - 1].balance : 0;
 
-        // Calculate total amount for the order
+    
         const shippingCharge = 90;
         const subtotal = cartItem.reduce((sum, item) => sum + item.price, 0);
-        const totalAmount = subtotal + shippingCharge;
+        const couponDiscount = req.session.couponDiscount || 0;
+        const totalAfterDiscount = couponDiscount > 0 ? subtotal - couponDiscount : subtotal;
+
+        const totalAmount = totalAfterDiscount + shippingCharge;
 
         // Check if the wallet balance is sufficient
         if (walletBalance >= totalAmount) {

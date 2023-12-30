@@ -7,7 +7,8 @@ const cartController = require('../controller/user/cartController')
 const addressController = require('../controller/user/addressController')
 const orderController = require('../controller/user/orderController');
 const wishlistController = require('../controller/user/wishlistController');
-const walletController = require('../controller/user/walletController')
+const walletController = require('../controller/user/walletController');
+
 
 router.get('/',userMiddleware.blockStatus,usercontroller.gethome)
 router.get('/login',usercontroller.getLogin);
@@ -60,7 +61,7 @@ router.post('/placeOrder', orderController.placeOrder);
 router.post('/razorpayOrder',orderController.razorpayOrder);
 router.post('/orderOnline', orderController.afterPayment);
 router.get('/lastpage',orderController.getLastPage);
-
+router.post('/applyCoupon' ,orderController.applyCoupon);
 
 //userProfile and address
 router.get('/userProfile',userMiddleware.blockStatus,addressController.getUserProfile);

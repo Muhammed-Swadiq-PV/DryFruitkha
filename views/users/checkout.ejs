@@ -204,6 +204,7 @@
                                 </td>
                                 <td>₹<%= cartItem.totalPrice %>
                                 </td>
+                                
                             </tr>
                             <% }); %>
                     </tbody>
@@ -214,8 +215,12 @@
                         <p><strong>Subtotal:</strong> ₹<%= cartItem.reduce((sum, item)=> sum + item.totalPrice, 0) %>
                         </p>
                         <p><strong>Shipping:</strong> ₹90</p>
+                        
+
+
                         <p><strong>Total:</strong> ₹<%= cartItem.reduce((sum, item)=> sum + item.totalPrice, 0) + 90 %>
                         </p>
+                        <p id="totalAfterDiscount"><strong>Coupon Discount:</strong> ₹0</p>
                     </div>
                 </div>
             </div>
@@ -224,7 +229,9 @@
     <div class="coupon-section" style="width: 400px;">
         <h3>Apply Coupon</h3>
         <div class="coupon-form-wrap">
-            <form action="/applyCoupon">
+            <div id="couponErrorMessage" style="color: red;"> </div>
+
+            <form id="applyCouponForm">
                 <p>
                     <select name="coupon" id="couponSelect"style="width:50%; height: 50px;">
                         <% if (availableCoupons && availableCoupons.length > 0) { %>
@@ -238,7 +245,8 @@
                         <% } %>
                     </select>
                 </p>
-                <p><input type="submit" value="Apply"></p>
+                <input type="hidden" name="couponId" id="couponIdInput" value="">
+    <p><input type="submit" value="Apply"></p>
             </form>
         </div>
     </div>
@@ -404,6 +412,8 @@
 
     <!----------------- script for razorpay -------------------->
     <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 
     <!--------------------------- scripts from here ------------------------------->
     <!--====== ============================================================================ ====== -->
@@ -758,6 +768,58 @@
         });
     }
 </script>
+
+<script>
+    const applyCoupon = async () => {
+        console.log('i am function');
+
+        const couponCode = document.getElementById('couponSelect').value;
+
+        const response = await fetch('/applyCoupon', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ coupon: couponCode }),
+        });
+
+        const data = await response.json();
+       
+        console.log(data);
+
+        if (data.success) {
+            // Coupon applied successfully, update the total and coupon details on the page
+            const errorMessageDiv = document.getElementById('couponErrorMessage');
+    
+    // Clear existing error message
+    errorMessageDiv.textContent = '';
+
+            Swal.fire({
+        title: 'Success!',
+        html: `Coupon applied successfully. Eligible for redeem!<br>
+                   Coupon Discount: ₹${data.couponDiscount}`,
+        icon: 'success',
+        confirmButtonText: 'OK',
+    });
+            document.getElementById('totalAfterDiscount').textContent = `Total After Discount: ₹${data.totalAfterDiscount}`;
+            document.getElementById('couponDiscount').textContent = `Coupon Discount: ₹${data.couponDiscount}`;
+            document.getElementById('couponErrorMessage').textContent = '';
+            
+       
+        } else {
+            const errorMessageDiv = document.getElementById('couponErrorMessage');
+            errorMessageDiv.textContent = data.error;
+            errorMessageDiv.style.color = 'red';
+        }
+    };
+
+    document.getElementById('applyCouponForm').addEventListener('submit', async function(event) {
+        event.preventDefault();
+        applyCoupon();
+    });
+</script>
+
+  
 
 
     <%- include('../layouts/userfooter') %>

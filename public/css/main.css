@@ -2884,3 +2884,8 @@ table.order-details tbody td {
   display: flex;
   gap: 10px; 
 }
+
+#couponErrorMessage {
+  color: red;
+  height: auto; /* or set a specific height that accommodates the error message */
+}
