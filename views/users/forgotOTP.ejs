@@ -37,44 +37,83 @@
 
 
 <script>
-    function handleResendClick() {
-        const email = document.getElementById("email").value;
-        const resendButton = document.getElementById("resendButton");
-        
-        // Disable the button
-        resendButton.disabled = true;
+    document.addEventListener('DOMContentLoaded', function () {
+    
+        handleResendClick();
 
-        let seconds = 30; // Set the countdown duration
+        function handleResendClick() {
+            const email = document.getElementById("email").value;
+            const resendButton = document.getElementById("resendButton");
 
-        // Update the button text with the countdown
-        const interval = setInterval(() => {
-            seconds--;
-            resendButton.innerText = `Resend OTP (${seconds}s)`;
+            // Disable the button
+            resendButton.disabled = true;
 
-            if (seconds <= 0) {
-                // Enable the button after the countdown ends
-                clearInterval(interval);
-                resendButton.disabled = false;
-                resendButton.innerText = "Resend OTP";
-            }
-        }, 1000);
+            let seconds = 30; 
+            // Update the button text with the countdown
+            const interval = setInterval(() => {
+                seconds--;
+                resendButton.innerText = `Resend OTP (${seconds}s)`;
 
-        fetch("/resendForgotOTP", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ email: email }),
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (!data.success) {
-                console.error("Failed to resend OTP");
-            }
-        })
-        .catch(error => console.error("Error:", error));
-    }
+                if (seconds <= 0) {
+                    // Enable the button after the countdown ends
+                    clearInterval(interval);
+                    resendButton.disabled = false;
+                    resendButton.innerText = "Resend OTP";
+                }
+            }, 1000);
+
+            fetch("/resendForgotOTP", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ email: email }),
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (!data.success) {
+                        console.error("Failed to resend OTP");
+                    }
+                })
+                .catch(error => console.error("Error:", error));
+        }
+    });
 </script>
+
+<script async>
+    document.addEventListener('DOMContentLoaded', function () {
+        function handleVerifyClick(event) {
+            event.preventDefault(); 
+
+            const email = document.getElementById("email").value;
+            const otpInput = document.getElementById("otp").value;
+
+            fetch("/verifyForgotOTP", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ email: email, otp: otpInput }),
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (!data.success) {
+                        // if otp error
+                        document.getElementById("errorMessage").style.display = "block";
+                        document.getElementById("errorMessage").innerText = "Invalid OTP. Please try again.";
+                    } else {
+                        document.getElementById("errorMessage").style.display = "none";
+                        console.log("OTP Verified Successfully!");
+                        window.location.href = "/resetPassword";
+                    }
+                })
+                .catch(error => console.error("Error:", error));
+        }
+
+        document.getElementById("verifyButton").addEventListener("click", handleVerifyClick);
+    });
+</script>
+
 
 
 

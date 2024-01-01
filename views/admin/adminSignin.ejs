@@ -54,10 +54,12 @@
                             <h3>Sign In</h3>
                         </div>
                         <form action="/admin/postLogin" method="post" id="loginForm">
+                            <div class="alert alert-danger d-none" id="errorDiv"></div>
                             <div class="form-floating mb-3">
                                 <input type="email" name="email" class="form-control" id="floatingInput" placeholder="name@example.com">
                                 <label for="floatingInput">Email address</label>
                             </div>
+                            
                             <div class="form-floating mb-4">
                                 <input type="password" name="Password" class="form-control" id="floatingPassword" placeholder="Password">
                                 <label for="floatingPassword">Password</label>
@@ -83,48 +85,40 @@
 
     <!-- validation -->
 
-    <!-- Add this script at the end of your HTML body -->
+
 
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const loginForm = document.querySelector('form');
-            const emailInput = document.querySelector('input[name="email"]');
-            const passwordInput = document.querySelector('input[name="Password"]');
-    
-            loginForm.addEventListener('submit', function (event) {
-                const emailErrorMessageDiv = createErrorMessageDiv('Please enter a valid email address.');
-                const passwordErrorMessageDiv = createErrorMessageDiv('Password must be at least 6 characters long.');
-    
-                if (!isValidEmail(emailInput.value)) {
-                    displayErrorMessage(emailErrorMessageDiv);
-                    event.preventDefault(); // Prevent form submission
-                } else if (passwordInput.value.length < 6) {
-                    displayErrorMessage(passwordErrorMessageDiv);
-                    event.preventDefault(); // Prevent form submission
-                }
-            });
-    
-            function createErrorMessageDiv(message) {
-                const errorDiv = document.createElement('div');
-                errorDiv.innerText = message;
-                errorDiv.classList.add('alert', 'alert-danger', 'd-none');
-                return errorDiv;
-            }
-    
-            function displayErrorMessage(errorDiv) {
-                const existingErrorDiv = loginForm.querySelector('.alert-danger');
-                if (existingErrorDiv) {
-                    existingErrorDiv.remove(); // Remove existing error message
-                }
-                loginForm.insertBefore(errorDiv, loginForm.firstChild);
-                errorDiv.classList.remove('d-none'); // Show the error message
-            }
-    
-            function isValidEmail(email) {
-                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-                return emailRegex.test(email);
-            }
+       document.getElementById('loginForm').addEventListener('submit', async function (event) {
+    event.preventDefault();
+
+    const email = document.getElementById('floatingInput').value;
+    const password = document.getElementById('floatingPassword').value;
+
+    try {
+        const response = await fetch('/admin/postLogin', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ email, Password: password }),
         });
+
+        const data = await response.json();
+
+        if (response.ok) {
+            // Successful login, redirect or perform other actions
+            window.location.href = '/admin/adminDashboard';
+        } else {
+            // Display error message
+            const errorDiv = document.getElementById('errorDiv');
+            errorDiv.innerText = data.error;
+            errorDiv.classList.remove('d-none');
+        }
+    } catch (error) {
+        console.error('Error during login:', error);
+    }
+});
+
     </script>
     
     

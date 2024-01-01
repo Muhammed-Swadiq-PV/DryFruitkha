@@ -14,21 +14,23 @@ const getlogin = async(req,res) =>{
 }
 
 const postlogin = async (req, res) => {
+    console.log("entered post login");
     try {
         const email = req.body.email;
         const password = req.body.Password;
+        console.log(email, password);
 
         const adminData = await adminModel.findOne({ email });
 
         if (adminData && adminData.password === password) {
             req.session.admin = adminData.email;
-            res.redirect('/admin/adminDashboard');
+            res.status(200).json({ success: true, message: 'Login successful' });
         } else {
             console.log('Password incorrect');
-            res.status(400).redirect('/admin/login');
+            res.status(400).json({ success: false, error: 'Incorrect email or password' });
         }
     } catch (error) {
-        console.log(error);
+        res.status(500).json({ success: false, error: 'Internal Server Error' });
     }
 }
 

@@ -28,10 +28,8 @@ const getUserProfile = async (req , res)=>{
       
       const orders = await Order.find({ userId: user._id }).sort({ orderDate: -1 });
   
-      res.render('./users/userProfile', { cartItem , user , orders, });
-      // orders.forEach(order => {
-      //   console.log(order._id, "getuser profilile");
-      // });
+      res.render('./users/userProfile', { cartItem , user , orders, referralCode: user.referralCode,});
+      
       
     } catch (error) {
       console.error(error)

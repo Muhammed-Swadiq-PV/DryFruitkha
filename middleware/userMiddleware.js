@@ -4,7 +4,7 @@ const User = require('../model/userModel')
 const loggedIn = async (req, res, next) => {
     try {
 
-        if (req.session.userId && req.session.status) {
+        if (req.session.user && req.session.status) {
             console.log('session is there and status true')
             next()
         } else {
@@ -22,9 +22,13 @@ const loggedIn = async (req, res, next) => {
 //checks the user blocked or not+
 const blockStatus = async (req,res,next)=>{
     try {
-        if(req.session.userId){
-            const userDetail = await User.findOne({_id:req.session.userId})
-            console.log('midlwre userdata',userDetail)
+        // console.log('Entering blockStatus middleware');
+
+        if(req.session.user){
+            const userDetail = await User.findOne({ _id: req.session.user }).catch((error) => {
+                console.error('Error retrieving user details:', error.message);
+            });
+            // console.log('midlwre userdata',userDetail)
             if(userDetail && userDetail.status){
                 return next()
             }else{
@@ -35,7 +39,7 @@ const blockStatus = async (req,res,next)=>{
             }
         }else{
             console.log('no session');
-            next()
+            return next()
         }
     } catch (error) {
         console.log(error.message)

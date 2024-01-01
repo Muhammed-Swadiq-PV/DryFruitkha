@@ -28,7 +28,7 @@ router.post('/login',usercontroller.postLogin)
 router.post('/changePassword',usercontroller.changePassword);
 
 router.get('/verifyEmail',userMiddleware.blockStatus,usercontroller.getVerifyEmail);
-router.post('/verifyEmail', usercontroller.verifyEmail);
+router.post('/verifyEmail',userMiddleware.blockStatus, usercontroller.verifyEmail);
 
 router.get('/forgotOTP', userMiddleware.blockStatus,usercontroller.getOTPforPassword);
 router.post("/verifyForgotOTP",usercontroller.postVerifyForgotOTP);
@@ -56,17 +56,17 @@ router.patch('/updateCartItemQuantity/:id',userMiddleware.blockStatus,cartContro
 
 //checkOut
 router.get('/checkOut',userMiddleware.blockStatus,orderController.getCheckOut);
-router.post('/addAddressCheckout',addressController.addAddressCheckout)
-router.post('/placeOrder', orderController.placeOrder);
-router.post('/razorpayOrder',orderController.razorpayOrder);
-router.post('/orderOnline', orderController.afterPayment);
-router.get('/lastpage',orderController.getLastPage);
-router.post('/applyCoupon' ,orderController.applyCoupon);
+router.post('/addAddressCheckout',userMiddleware.blockStatus,addressController.addAddressCheckout)
+router.post('/placeOrder',userMiddleware.blockStatus, orderController.placeOrder);
+router.post('/razorpayOrder',userMiddleware.blockStatus,userMiddleware.blockStatus,orderController.razorpayOrder);
+router.post('/orderOnline',userMiddleware.blockStatus, orderController.afterPayment);
+router.get('/lastpage',userMiddleware.blockStatus,orderController.getLastPage);
+router.post('/applyCoupon' ,userMiddleware.blockStatus,orderController.applyCoupon);
 
 //userProfile and address
 router.get('/userProfile',userMiddleware.blockStatus,addressController.getUserProfile);
-router.post('/address',addressController.addAddress);
-router.post('/setDefaultAddress/:addressId',userMiddleware.blockStatus, addressController.setDefaultAddress);
+router.post('/address',userMiddleware.blockStatus,addressController.addAddress);
+router.post('/setDefaultAddress/:addressId',userMiddleware.blockStatus,userMiddleware.blockStatus, addressController.setDefaultAddress);
 router.delete('/deleteAddress/:addressId',userMiddleware.blockStatus, addressController.deleteAddress);
 router.post('/update-address',userMiddleware.blockStatus, addressController.updateAddress);
 router.post('/updateProfile',userMiddleware.blockStatus, addressController.updateUserProfile);
@@ -79,7 +79,7 @@ router.get('/addressBook',userMiddleware.blockStatus,addressController.getAddres
 router.get('/orderDetails',userMiddleware.blockStatus,orderController.getOrderDetails);
 router.get('/viewDtailsOrder/:orderId',userMiddleware.blockStatus,orderController.getReturnOrder);
 router.get('/OrderInvoice/:orderId',userMiddleware.blockStatus,orderController.orderInvoice);
-router.patch('/updateOrderStatus/:orderId',orderController.cancelOrder);
+router.patch('/updateOrderStatus/:orderId',userMiddleware.blockStatus,orderController.cancelOrder);
 router.patch('/returnOrder/:orderId',userMiddleware.blockStatus,orderController.returnOrder);
 
 router.get('/wallet',userMiddleware.blockStatus,walletController.getwalletPage);

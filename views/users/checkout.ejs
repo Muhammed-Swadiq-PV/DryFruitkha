@@ -19,12 +19,12 @@
     <div class="container">
         <div class="row">
     <!-- user address form -->
-    <div class="col-md-12">
+    <div class="col-md-8">
     <form id="userAddressForm" action="/address" method="POST">
         <% if(defaultAddress){ %>
             <div class="container">
                 <div class="row">
-                    <div class="col-md-6">
+                    <div class="col-md-10">
                         <div class="shipping-address">
                             <h2>Billing details</h2>
                             <hr>
@@ -131,7 +131,6 @@
             </div>
             <%}else{%>
                 <div class="form-group">
-                    <!-- <a href="/userProfile" class="btn btn-link">Create a new address</a> -->
                     <div class="form-group">
                         <a href="#" class="btn btn-link" onclick="showAddAddressModal()">Create a new address</a>
                     </div>
@@ -146,12 +145,15 @@
     <!-- end user address form -->
 </div>
 </div>
-<!-- <div class="col-md-12"> -->
-    <div class="editAddresscard" style="margin-left: 20em; width: 80%;">
+</div>
+
+<div class="container">
     <h3>Your Addresses</h3>
+    <div class="yourwallet" style="display: flex;justify-content: space-between;">
     <div class="existing-addresses-container" style="display: flex; flex-wrap: wrap;">
+        
         <% addresses.forEach(address=> { %>
-            <div class="address-container mb-3 p-3 border" style="width: 17%;margin-left: 10px;">
+            <div class="address-container mb-3 p-3 border" style="width: 100%;margin-left: 10px;">
                 <div>
                     <strong>
                         <%= address.firstName %>
@@ -173,9 +175,26 @@
             </div>
             <% }) %>
     </div>
+    
+    <div class="col-xl-4" style="width: 30%;">
+        <div class="card mb-4 mb-xl-0">
+            
+                <div class="text-center card-header font-weight-bolder">Wallet</div>
+                <div class="text-center mt-3 mb-4">
+                    <h5>Wallet Balance</h5>
+                    <% if (walletData.length) { %>
+                        <h5>₹<%= walletData[walletData.length-1].balance.toFixed(2) %></h5>
+                    <% } else { %>
+                        <h5>₹0.00</h5>
+                    <% } %>
+                </div>
+                
+            </div>
+        </div>
+    </div>
 </div>
-<!-- </div> -->
-</div>
+
+
 
 
 <div class="coupon" style="display: flex; justify-content: space-between;">

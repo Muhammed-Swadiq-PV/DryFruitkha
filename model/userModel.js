@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-
+const shortid = require('shortid');
 
 const userSchema=mongoose.Schema({
 
@@ -78,7 +78,12 @@ const userSchema=mongoose.Schema({
     transactionType:{
         type:String
     }
-}]
+}],
+referralCode: {
+    type: String,
+    unique: true,
+    default: shortid.generate,
+},
 
        
 })

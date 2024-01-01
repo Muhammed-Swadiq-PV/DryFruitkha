@@ -389,6 +389,12 @@
   <!-------------------------------------------- script for edit coupon ----------------------------------------------- -->
 
   <script>
+   
+
+  // Function to validate the form
+  function validateForm() {
+    let isValid = true;
+
     function displayError(fieldId, errorMessage) {
       const field = document.getElementById(fieldId);
       const errorContainer = field.parentElement.querySelector('.error-message');
@@ -403,11 +409,6 @@
 
       isValid = false;
     }
-
-
-  // Function to validate the form
-  function validateForm() {
-    let isValid = true;
 
 
     function removeError(fieldId) {

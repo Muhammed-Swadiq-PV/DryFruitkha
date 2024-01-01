@@ -24,49 +24,7 @@ const getWishlist = async (req, res) => {
     }
 };
 
-// const postWishlist = async (req, res) => {
-//     console.log("inside post wish list");
-//     try {
-//         const productId = req.body.productid;
-//         const email = req.session.user;
-//         const price = parseInt(req.body.price);
 
-//         if (!email) {
-            
-//             res.redirect('/login');
-//         }
-
-//         const user = await userModel.findOne({ _id: email });
-
-//         if (user && user.wishlist) {
-//             const existingProduct = user.wishlist.find(
-//                 (item) => item.productId.equals(productId)
-//             );
-
-//             if (!existingProduct) {
-                
-//                 user.wishlist.push({
-//                     productId: productId,
-//                     price: price,
-//                 });
-//             }
-//         } else {
-//             // If there is no wishlist for the user, create a new wishlist
-//             user.wishlist = [
-//                 {
-//                     productId: productId,
-//                     price: price,
-//                 },
-//             ];
-//         }
-
-//         await user.save();
-//         res.status(200).json({ response: 'ok' });
-//     } catch (error) {
-//         console.log(error.message);
-//         res.status(500).json({ error: error.message });
-//     }
-// };
 
 const postWishlist = async (req, res) => {
     try {

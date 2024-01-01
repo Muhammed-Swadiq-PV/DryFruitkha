@@ -20,6 +20,8 @@ require('dotenv').config();
       }
   
       const user = await userModel.findById(userId).populate('cart.productId');
+
+      const walletData = user.wallet;
   
       // Find the default address
       const defaultAddress = user.address.find(address => address.isDefault);
@@ -43,7 +45,7 @@ require('dotenv').config();
         
   
       // console.log(subtotal,"subtotal",total,"total");
-      res.render('./users/checkout', { cartItem, user, defaultAddress, subtotal, total , addresses , availableCoupons});
+      res.render('./users/checkout', { cartItem, user, defaultAddress, subtotal, total , addresses , availableCoupons, walletData});
   
     } catch (error) {
       console.error(error);

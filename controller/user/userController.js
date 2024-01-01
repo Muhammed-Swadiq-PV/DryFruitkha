@@ -1,9 +1,8 @@
 const userModel = require('../../model/userModel')
 const bcrypt = require('bcryptjs')
-const userMiddleware = require('../../middleware/userMiddleware')
 const nodemailer = require('nodemailer')
 const randomstring = require('randomstring');
-
+const shortid = require('shortid');
 
 
 
@@ -130,6 +129,7 @@ const postSignUp = async (req, res) => {
     const confirmPassword = req.body.confirmPassword
     const email = req.body.email
     const phone = req.body.phone
+    const referedReferralCode = req.body.referralCode;
 
     const specialCharacterRegex = /[!@#$%^&*()_+{}\[\]:;<>,.?~\\/-]/;
 
@@ -157,7 +157,23 @@ const postSignUp = async (req, res) => {
 
     req.session.email = email;
 
+    let referredUser = null;
+
+if (referedReferralCode) {
+  console.log(referedReferralCode, "referedReferralCode");
+  referredUser = await userModel.findOne({ referralCode: referedReferralCode });
+console.log(referredUser, "referredUser");
+  if (referredUser) {
+    console.log('Referred User ID:', referredUser._id);
+  } else {
+    console.log('Reference code not found in database');
+  }
+}
+
     const hashedPassword = await bcrypt.hash(password, 10);
+
+    const referralCode = shortid.generate();
+    req.session.referredUser = referredUser;
 
     req.session.userData = new userModel({
       Firstname,
@@ -166,9 +182,11 @@ const postSignUp = async (req, res) => {
       email,
       password: hashedPassword,
       confirmPassword: hashedPassword,
+      referralCode
     });
     const otp = generateOTP();
     
+    console.log(otp, " otp for our signup");
     req.session.otp = otp;
     
      await userOTP(email,otp);
@@ -193,7 +211,7 @@ const getVerification = async(req,res) =>{
     const userId = req.session.user
     const user = await userModel.findOne({_id:userId})
     const email = req.session.email;
-    const alert = "Incorrect OTP. Please try again.";
+    const alert = req.query.error === 'true' ? 'Incorrect OTP. Please try again.' : null;
     res.render('users/verifyOTP',{email,alert, user:user||false})
   } catch (error) {
     console.log(error.message)
@@ -212,7 +230,33 @@ const postOTPverification = async (req , res)=>{
         return res.render('users/verifyOTP',{alert:'Invalid OTP',email})
     }
     const  {Firstname,Lastname,phone,password}=req.session.userData;
-    console.log(req.session.userData)
+    // console.log(req.session.userData)
+    if (req.session.referredUser) {
+      // Adding 51 rupees to the referred users wallet
+      let referredUser = req.session.referredUser;
+
+      // Check if referredUser is an instance of userModel
+      if (!(referredUser instanceof userModel)) {
+        referredUser = await userModel.findById(referredUser._id);
+      }
+
+      const rewardAmount = 51;
+
+      // Check if the referredUser has a wallet array
+      if (!referredUser.wallet) {
+        referredUser.wallet = [];
+      }
+
+      referredUser.wallet.push({
+        balance: (referredUser.wallet[0]?.balance || 0) + rewardAmount,
+        date: new Date(),
+        creditAmount: rewardAmount,
+        debitAmount: 0,
+        transactionType: 'Referral Reward',
+      });
+
+      await referredUser.save();
+    }
           const newUser=new userModel({
               Firstname,
               Lastname,
@@ -223,6 +267,7 @@ const postOTPverification = async (req , res)=>{
           await newUser.save();
           delete req.session.otp;
           delete req.session.userData;
+          delete req.session.referredUser;
           res.redirect('/login')
   } catch (error) {
     console.log(error.message)
@@ -331,22 +376,24 @@ const getOTPforPassword = async (req, res) => {
 
 const postVerifyForgotOTP = async (req, res) => {
   try {
-    console.log("inside verify forgot otp");
-      const enteredOTP = req.body.otp;
-      const storedOTP = req.session.otp;
-
-      if (enteredOTP === storedOTP) {
-          // Correct OTP, redirect to resetPassword page
-          res.redirect('/resetPassword');
-      } else {
-          // Incorrect OTP, send error message
-          res.render('./users/forgotOTP', { alert: 'Invalid OTP', email: req.body.email });
-      }
+    console.log(req.body);
+    const enteredOTP = req.body.otp;
+    const storedOTP = req.session.otp;
+    console.log(storedOTP, "storedotp" ,enteredOTP,"entered otp");
+    
+    if (enteredOTP === storedOTP) {
+      // Correct OTP, redirect to resetPassword page
+      res.json({ success: true, redirectUrl: '/resetPassword' });
+    } else {
+      // Incorrect OTP, send error message
+      res.status(400).json({ success: false, message: 'Invalid OTP' });
+    }
   } catch (error) {
-      
-      res.render('./users/404');
+    console.error(error.message);
+    res.status(500).json({ success: false, message: 'Internal Server Error' });
   }
 };
+
 
 const postResendForgotOTP = async (req, res) => {
   try {

@@ -156,68 +156,68 @@
 <script>
     // Script for myChart2
     document.addEventListener('DOMContentLoaded', async function () {
-        const response = await fetch('/admin/total-revenue');
-        const data = await response.json();
+    const response = await fetch('/admin/total-revenue');
+    const data = await response.json();
 
-        const labels = [];
-        const values = [];
+    const labels = [];
+    const values = [];
 
-        const currentYear = new Date().getFullYear();
+    const currentYear = new Date().getFullYear();
 
-        for (let year = 2023; year <= currentYear; year++) {
-            for (let month = 1; month <= 12; month++) {
-                const label = new Date(year, month - 1, 1).toLocaleString('default', { month: 'long' });
-                labels.push(label);
+    for (let month = 1; month <= 12; month++) {
+        const label = new Date(currentYear, month - 1, 1).toLocaleString('default', { month: 'long' });
+        labels.push(label);
 
-                const value = data[year] && data[year][month] ? data[year][month] : 0;
-                values.push(value);
-            }
-        }
+        const value = data[currentYear] && data[currentYear][month] ? data[currentYear][month] : 0;
+        values.push(value);
+    }
 
-        const ctx = document.getElementById('myChart2').getContext('2d');
+    const ctx = document.getElementById('myChart2').getContext('2d');
 
-        let myChart2 = new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: labels,
-                datasets: [{
-                    label: 'Total Revenue',
-                    data: values,
-                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                    borderColor: 'rgba(75, 192, 192, 1)',
-                    borderWidth: 1,
-                }],
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                scales: {
-                    x: {
-                        title: {
-                            display: true,
-                            text: `Total Revenue for Year ${new Date().getFullYear()}`,
-                        },
-                    },
-                    y: {
-                        title: {
-                            display: true,
-                            text: 'Total Revenue (in currency)',
-                        },
+    let myChart2 = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Total Revenue',
+                data: values,
+                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                borderColor: 'rgba(75, 192, 192, 1)',
+                borderWidth: 1,
+            }],
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                x: {
+                    title: {
+                        display: true,
+                        text: `Total Revenue for Year ${currentYear}`,
                     },
                 },
-                plugins: {
-                    tooltip: {
-                        callbacks: {
-                            label: (context) => {
-                                const label = context.dataset.label || '';
-                                const value = context.parsed.y || 0;
-                                return `${label}: ₹${value}`;
-                            },
+                y: {
+                    title: {
+                        display: true,
+                        text: 'Total Revenue (in currency)',
+                    },
+                },
+            },
+            plugins: {
+                tooltip: {
+                    callbacks: {
+                        label: (context) => {
+                            const label = context.dataset.label || '';
+                            const value = context.parsed.y || 0;
+                            return `${label}: ₹${value}`;
                         },
                     },
                 },
             },
-        });
+        },
+    
+});
+
 
         const fetchRevenueBtn = document.getElementById('fetchRevenueBtn');
 
