@@ -13,7 +13,15 @@ const categorySchema = mongoose.Schema({
     status:{
         type:Boolean,
         default:true
-    }
+    },
+    offerPercent:{
+        type:Number,
+        default : 0
+    },
+    expiryDate:{
+        type : Date ,
+        // required : true
+    },
 
 })
 

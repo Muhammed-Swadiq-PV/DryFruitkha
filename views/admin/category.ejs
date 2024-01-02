@@ -3,323 +3,381 @@
 
 
 
-<div class="alert alert-danger alert-dismissible fade show" role="alert" id="errorMessage" style="display: none;">
-  <!-- Error message goes here -->
-  <% if(typeof req !== 'undefined' && req.query.error) { %>
-    <div class="alert alert-danger alert-dismissible fade show" role="alert" id="errorMessage">
-      <%= req.query.error %>
-      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-    </div>
-  <% } %>
-</div>
-   
+  <div class="alert alert-danger alert-dismissible fade show" role="alert" id="errorMessage" style="display: none;">
+    <!-- Error message goes here -->
+    <% if(typeof req !=='undefined' && req.query.error) { %>
+      <div class="alert alert-danger alert-dismissible fade show" role="alert" id="errorMessage">
+        <%= req.query.error %>
+          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+      <% } %>
+  </div>
+
 
   <!-- Button to trigger modal -->
   <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addCategoryModal">
     Add New Category
   </button>
- 
-  <!-- Modal for add category  -->
-<div class="modal fade" id="addCategoryModal" tabindex="-1" aria-labelledby="addCategoryModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-md">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="addCategoryModalLabel">Add New Category</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        
 
-        <!-- Form for adding category -->
-        <form action="/admin/add-category" method="post">
-          <div class="mb-3">
+  <!-- Modal for add category  -->
+  <div class="modal fade" id="addCategoryModal" tabindex="-1" aria-labelledby="addCategoryModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-md">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="addCategoryModalLabel">Add New Category</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+
+
+          <!-- Form for adding category -->
+          <form action="/admin/add-category" method="post">
+            <div class="mb-3">
               <label for="categoryName" class="form-label">Category Name</label>
               <input type="text" class="form-control" id="categoryName" name="categoryName" required>
               <div class="modal-body">
                 <div id="errorMessageDiv" class="text-danger"></div>
                 <!-- Rest of the form and modal content -->
-                   
+
+              </div>
+
             </div>
-             
-          </div>
-          
-      
-          <div class="mb-3">
+
+
+            <div class="mb-3">
               <label for="categoryDescription" class="form-label">Category Description</label>
-              <textarea class="form-control" id="categoryDescription" name="categoryDescription" rows="3" required></textarea>
-          </div>
-          <button type="submit" class="btn btn-primary">Add Category</button>
-      </form>
-      </div> 
-    </div>
-  </div>
-</div>
-
-
-
-  <!-- responsive-table-for-the-category -->
-<div class="container-fluid pt-4 px-4">
-  <div class="row g-4">
-    <div class="col-12">
-      <div class="bg-light rounded h-100 p-4">
-        <h6 class="mb-4">Category</h6>
-        <div class="table-responsive">
-          <table class="table table-striped">
-            <thead class="table-dark">
-              <tr>
-                <th scope="col">#</th>
-                <th scope="col">Name</th>
-                <th scope="col">Description</th>
-                <th scope="col">List</th>
-                <th scope="col">Edit</th>
-              </tr>
-            </thead>
-            <tbody>
-              <% if(categoryData.length > 0) {
-                for(i = 0; i < categoryData.length; i++) { %>
-                  <tr>
-                    <td>
-                      <%= i + 1 %>
-                    </td>
-                    <td>
-                      <%= categoryData[i].name.trim() %>
-                    </td>
-                    <td>
-                      <%= categoryData[i].description.trim() %>
-                    </td>
-                   
-                      <% if (categoryData[i].status) { %>
-  <td>
-    <a href="#" class="btn rounded-0 block-btn modalbtn"
-       data-bs-toggle="modal"
-       data-target="#confirmationPopUp"
-       data-id="<%= categoryData[i]._id %>"
-       data-status="false"
-       style="color:green; border: 1px solid green;">Listed</a>
-  </td>
-<% } else { %>
-  <td>
-    <a href="#" class="btn rounded-0 unBlock-btn modalbtn"
-       data-bs-toggle="modal"
-       data-target="#confirmationPopUp"
-       data-id="<%= categoryData[i]._id %>"
-       data-status="true"
-       style="color:red; border: 1px solid red;">Delisted</a>
-  </td>
-<% } %>
-
-                    <td>  
-                      <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#editCategoryModal_<%= categoryData[i]._id %>">Edit Category</button>
-                    </td>
-                  </tr>
-                  <!-- Edit Category Modal -->
-                  <div class="modal fade" id="editCategoryModal_<%= categoryData[i]._id %>" tabindex="-1"
-                    aria-labelledby="exampleModalLabel" aria-hidden="true">
-                    <div class="modal-dialog">
-                      <div class="modal-content">
-                        <div class="modal-header">
-                          <h1 class="modal-title fs-5" id="exampleModalLabel">Edit category name</h1>
-                          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div class="modal-body">
-                          <div id="editCategoryErrorDiv" class="text-danger"></div>
-                          <form id="editCategoryForm_<%= categoryData[i]._id %>">
-                            <div class="mb-3">
-                              <label for="recipient-name" class="col-form-label">Please change the name</label>
-                              <input type="text" class="form-control" id="edit-category-name_<%= categoryData[i]._id %>" value="<%= categoryData[i].name %>" required>                            </div>
-                            <div class="mb-3">
-                              <label for="message-text" class="col-form-label">Edit description</label>
-                              <textarea class="form-control" id="edit-category-description_<%= categoryData[i]._id %>" required><%= categoryData[i].description %></textarea>
-                            </div>
-                          </form>
-                        </div>
-                        <div class="modal-footer">
-                          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                          <button type="button" class="btn btn-primary" onclick="saveChanges('<%= categoryData[i]._id %>')">Save changes</button>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                <% } %>
-              <% } else { %>
-                <tr>
-                  <td>
-                    <% if (req.query.error) { %>
-                      <%= req.query.error %>
-                    <% } else { %>
-                      Category not found
-                    <% } %>
-                  </td>
-                </tr>
-              <% } %>
-            </tbody>
-          </table>
+              <textarea class="form-control" id="categoryDescription" name="categoryDescription" rows="3"
+                required></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary">Add Category</button>
+          </form>
         </div>
       </div>
     </div>
   </div>
-</div>
 
-<!-- Confirmation Modal -->
-<div class="modal fade" id="confirmationPopUp" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Confirmation</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        Are you sure you want to change the status?
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        <a href="#" id="confirmStatusChange" class="btn btn-primary">Confirm</a>
+
+
+  <!-- responsive-table-for-the-category -->
+  <div class="container-fluid pt-4 px-4">
+    <div class="row g-4">
+      <div class="col-12">
+        <div class="bg-light rounded h-100 p-4">
+          <h6 class="mb-4">Category</h6>
+          <div class="table-responsive">
+            <table class="table table-striped">
+              <thead class="table-dark">
+                <tr>
+                  <th scope="col">#</th>
+                  <th scope="col">Name</th>
+                  <th scope="col">Description</th>
+                  <th scope="col">List</th>
+                  <th scope="col">Edit</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% if(categoryData.length> 0) {
+                  for(i = 0; i < categoryData.length; i++) { %>
+                    <tr>
+                      <td>
+                        <%= i + 1 %>
+                      </td>
+                      <td>
+                        <%= categoryData[i].name.trim() %>
+                      </td>
+                      <td>
+                        <%= categoryData[i].description.trim() %>
+                      </td>
+
+                      <% if (categoryData[i].status) { %>
+                        <td>
+                          <a href="#" class="btn rounded-0 block-btn modalbtn" data-bs-toggle="modal"
+                            data-target="#confirmationPopUp" data-id="<%= categoryData[i]._id %>" data-status="false"
+                            style="color:green; border: 1px solid green;">Listed</a>
+                        </td>
+                        <% } else { %>
+                          <td>
+                            <a href="#" class="btn rounded-0 unBlock-btn modalbtn" data-bs-toggle="modal"
+                              data-target="#confirmationPopUp" data-id="<%= categoryData[i]._id %>" data-status="true"
+                              style="color:red; border: 1px solid red;">Delisted</a>
+                          </td>
+                          <% } %>
+
+                            <td>
+                              <button type="button" class="btn btn-warning" data-bs-toggle="modal"
+                                data-bs-target="#editCategoryModal_<%= categoryData[i]._id %>">Edit Category</button>
+                            </td>
+                    </tr>
+                    <!-- Edit Category Modal -->
+                    <div class="modal fade" id="editCategoryModal_<%= categoryData[i]._id %>" tabindex="-1"
+                      aria-labelledby="exampleModalLabel" aria-hidden="true">
+                      <div class="modal-dialog">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <h1 class="modal-title fs-5" id="exampleModalLabel">Edit category name</h1>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                          </div>
+                          <div class="modal-body">
+                            <div id="editCategoryErrorDiv" class="text-danger"></div>
+                            <form id="editCategoryForm_<%= categoryData[i]._id %>">
+                              <div class="mb-3">
+                                <label for="recipient-name" class="col-form-label">Please change the name</label>
+                                <input type="text" class="form-control"
+                                  id="edit-category-name_<%= categoryData[i]._id %>" value="<%= categoryData[i].name %>"
+                                  required>
+                              </div>
+                              <div class="mb-3">
+                                <label for="message-text" class="col-form-label">Edit description</label>
+                                <textarea class="form-control" id="edit-category-description_<%= categoryData[i]._id %>"
+                                  required><%= categoryData[i].description %></textarea>
+                              </div>
+
+                              <div class="mb-3">
+                                <label for="offer-percent" class="col-form-label">Offer (%)</label>
+                                <input type="number" class="form-control"
+                                  id="edit-category-offer-percent_<%= categoryData[i]._id %>"
+                                  value="<%= categoryData[i].offerPercent %>" required>
+                              </div>
+                              <div class="mb-3">
+                                <label for="offer-expiry" class="col-form-label">Offer Expiry Date</label>
+                                <input type="date" class="form-control"
+                                  id="edit-category-offer-expiry_<%= categoryData[i]._id %>"
+                                  value="<%= categoryData[i].offerExpiry %>" required>
+                              </div>
+
+                            </form>
+                          </div>
+                          <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-primary"
+                              onclick="saveChanges('<%= categoryData[i]._id %>')">Save changes</button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <% } %>
+                      <% } else { %>
+                        <tr>
+                          <td>
+                            <% if (req.query.error) { %>
+                              <%= req.query.error %>
+                                <% } else { %>
+                                  Category not found
+                                  <% } %>
+                          </td>
+                        </tr>
+                        <% } %>
+              </tbody>
+            </table>
+          </div>
+        </div>
       </div>
     </div>
   </div>
-</div>
+
+  <!-- Confirmation Modal -->
+  <div class="modal fade" id="confirmationPopUp" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Confirmation</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          Are you sure you want to change the status?
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <a href="#" id="confirmStatusChange" class="btn btn-primary">Confirm</a>
+        </div>
+      </div>
+    </div>
+  </div>
 
 
 
-    
 
-    
-<script>
-  const addCategory = async () => {
-  const categoryName = document.getElementById('categoryName').value.trim();
-  const categoryDescription = document.getElementById('categoryDescription').value.trim();
-  const errorMessageDiv = document.getElementById('errorMessageDiv');
 
-  try {
-    // Validate if the category name is blank
-    if (!categoryName || !categoryDescription) {
-      errorMessageDiv.textContent = 'Name and description cannot be blank.';
-      return;
-    }
 
-    const response = await fetch('/admin/add-category', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ categoryName, categoryDescription }),
-    });
+  <script>
+    const addCategory = async () => {
+      const categoryName = document.getElementById('categoryName').value.trim();
+      const categoryDescription = document.getElementById('categoryDescription').value.trim();
+      const errorMessageDiv = document.getElementById('errorMessageDiv');
 
-    if (response.ok) {
-      window.location.href = '/admin/category';
-    } else {
-      const data = await response.json().catch(() => null);
+      try {
+        // Validate if the category name is blank
+        if (!categoryName || !categoryDescription) {
+          errorMessageDiv.textContent = 'Name and description cannot be blank.';
+          return;
+        }
 
-      if (data && data.error) {
-        // Show the error message in the modal
-        errorMessageDiv.textContent = data.error;
-        errorMessageDiv.style.color = 'red';
+        const response = await fetch('/admin/add-category', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ categoryName, categoryDescription }),
+        });
 
-        // Display the modal with the error message
-        $('#addCategoryModal').modal('show');
-      } else {
+        if (response.ok) {
+          window.location.href = '/admin/category';
+        } else {
+          const data = await response.json().catch(() => null);
+
+          if (data && data.error) {
+            // Show the error message in the modal
+            errorMessageDiv.textContent = data.error;
+            errorMessageDiv.style.color = 'red';
+
+            // Display the modal with the error message
+            $('#addCategoryModal').modal('show');
+          } else {
+            errorMessageDiv.textContent = 'An unexpected error occurred.';
+            errorMessageDiv.style.color = 'red';
+          }
+        }
+      } catch (error) {
+        console.error('Error:', error);
         errorMessageDiv.textContent = 'An unexpected error occurred.';
         errorMessageDiv.style.color = 'red';
       }
+    };
+
+  </script>
+
+  <script>
+    function saveChanges(categoryId) {
+      // console.log("inside the saveChanges");
+      const categoryNameInput = document.getElementById(`edit-category-name_${categoryId}`);
+      const categoryDescriptionInput = document.getElementById(`edit-category-description_${categoryId}`);
+      const categoryOfferPercentInput = document.getElementById(`edit-category-offer-percent_${categoryId}`);
+      const categoryOfferExpiryInput = document.getElementById(`edit-category-offer-expiry_${categoryId}`);
+      const editCategoryErrorDiv = document.getElementById('editCategoryErrorDiv');
+
+      const categoryName = categoryNameInput.value.trim();
+      const categoryDescription = categoryDescriptionInput.value.trim();
+      const categoryOfferPercent = categoryOfferPercentInput.value.trim();
+      const categoryOfferExpiry = categoryOfferExpiryInput.value.trim();
+
+      editCategoryErrorDiv.textContent = '';
+
+
+      if (!categoryName || !categoryDescription) {
+        editCategoryErrorDiv.textContent = 'Name and description cannot be blank.';
+        editCategoryErrorDiv.style.color = 'red';
+        return;
+      }
+
+      const offerError = validateOffer(categoryOfferPercent);
+      const expiryError = validateExpiryDate(categoryOfferPercent, categoryOfferExpiry);
+
+      if (offerError || expiryError) {
+        editCategoryErrorDiv.textContent = offerError || expiryError;
+        editCategoryErrorDiv.style.color = 'red';
+        return;
+      }
+
+      // Fetch request
+      fetch(`/admin/edit-category/${categoryId}`, {
+        method: 'POST',
+        body: JSON.stringify({
+          updatedCategoryName: categoryName,
+          updatedCategoryDescription: categoryDescription,
+          updatedCategoryOfferPercent: categoryOfferPercent,
+          updatedCategoryOfferExpiry: categoryOfferExpiry,
+        }),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      })
+        .then(response => response.json())
+        .then(data => {
+          console.log(data);
+
+          if (data && data.message === 'Category updated successfully') {
+            const modalElement = document.getElementById(`editCategoryModal_${categoryId}`);
+            const bootstrapModal = new bootstrap.Modal(modalElement);
+
+
+            $(modalElement).removeClass('show');
+            $('body').removeClass('modal-open');
+            $('.modal-backdrop').remove();
+
+
+            Swal.fire({
+              icon: 'success',
+              title: 'Success!',
+              text: 'Category updated successfully.',
+            }).then(() => {
+              window.location.reload();
+            });
+          } else if (data && data.message === 'Category with updated name already exists') {
+            // console.log('Category name already exists.');
+            editCategoryErrorDiv.textContent = 'Category name already exists.';
+            editCategoryErrorDiv.style.color = 'red';
+          } else {
+            console.error('Error: Save operation failed');
+          }
+        })
+        .catch(error => {
+          console.error(error);
+        });
     }
-  } catch (error) {
-    console.error('Error:', error);
-    errorMessageDiv.textContent = 'An unexpected error occurred.';
-    errorMessageDiv.style.color = 'red';
-  }
-};
-
-</script>
-
-<script>
-  function saveChanges(categoryId) {
-  // console.log("inside the saveChanges");
-  const categoryNameInput = document.getElementById(`edit-category-name_${categoryId}`);
-  const categoryDescriptionInput = document.getElementById(`edit-category-description_${categoryId}`);
-  const editCategoryErrorDiv = document.getElementById('editCategoryErrorDiv');
-
-  const categoryName = categoryNameInput.value.trim();
-  const categoryDescription = categoryDescriptionInput.value.trim();
-
-  // Clear previous error messages
-  editCategoryErrorDiv.textContent = '';
-
-  if (!categoryName || !categoryDescription) {
-    editCategoryErrorDiv.textContent = 'Name and description cannot be blank.';
-    return;
-  }
-
-  // Fetch request
-  fetch(`/admin/edit-category/${categoryId}`, {
-    method: 'POST', 
-    body: JSON.stringify({ updatedCategoryName: categoryName, updatedCategoryDescription: categoryDescription }),
-    headers: {
-      'Content-Type': 'application/json',
-    },
-  })
-  .then(response => response.json())
-  .then(data => {
-    console.log(data);
-
-    // Check if the response indicates success before hiding the modal
-    if (data && data.message === 'Category updated successfully') {
-      const modalElement = document.getElementById(`editCategoryModal_${categoryId}`);
-      const bootstrapModal = new bootstrap.Modal(modalElement);
-      
-      
-      $(modalElement).removeClass('show');
-$('body').removeClass('modal-open');
-$('.modal-backdrop').remove();
-
-      
-setTimeout(() => {
-        window.location.reload();
-      }, 500);
-    } else if (data && data.message === 'Category with updated name already exists') {
-      // console.log('Category name already exists.');
-      editCategoryErrorDiv.textContent = 'Category name already exists.';
-      editCategoryErrorDiv.style.color = 'red';
-    } else {
-      console.error('Error: Save operation failed');
+    function validateOffer(offer) {
+      if (offer !== '' && (isNaN(offer) || parseFloat(offer) < 0 || parseFloat(offer) > 100)) {
+        return 'Offer percentage must be a number between 0 and 100.';
+      }
+      return null;
     }
-  })
-  .catch(error => {
-    console.error(error);
-  });
-}
 
-</script>
+    function validateExpiryDate(offer, expiryDate) {
+      if (offer !== '' && parseFloat(offer) !== 0) {
+        if (expiryDate === '') {
+          return 'Expiry date is required for categories with a non-zero offer.';
+        }
 
+        const currentDate = new Date();
+        const selectedDate = new Date(expiryDate);
 
-<script>
-  document.addEventListener('DOMContentLoaded', function () {
+        if (isNaN(selectedDate) || selectedDate <= currentDate) {
+          return 'Expiry date must be greater than the current date.';
+        }
+      }
+
+      return null;
+    } ś
+  </script>
+
+  <script>
     // Show confirmation modal when "Listed" or "Delisted" button is clicked
-    $('.modalbtn').on('click', function (event) {
-      event.preventDefault(); // Prevent default behavior of the anchor element
+    document.addEventListener('DOMContentLoaded', function () {
 
-      const button = $(this);
-      const categoryId = button.data('id');
-      const currentStatus = button.data('status');
-      const confirmLink = $('#confirmStatusChange');
-      const newStatus = currentStatus === 'true' ? 'false' : 'true'; // Toggle the status
+      $('.modalbtn').on('click', function (event) {
+        event.preventDefault();
 
-      // Set the href of the confirmation link dynamically
-      confirmLink.attr('href', `/admin/category-status/${categoryId}?status=${newStatus}`);
+        const button = $(this);
+        const categoryId = button.data('id');
+        const currentStatus = button.data('status');
+        const confirmLink = $('#confirmStatusChange');
+        const newStatus = currentStatus === 'true' ? 'false' : 'true';
 
-      // Trigger the modal
-      $('#confirmationPopUp').modal('show');
+        confirmLink.attr('href', `/admin/category-status/${categoryId}?status=${newStatus}`);
+
+        $('#confirmationPopUp').modal('show');
+      });
     });
-  });
-</script>
-
-
-
-
- 
+  </script>
 
 
 
 
 
 
-    <%- include('../layouts/adminFooter') %>
+
+
+
+
+
+  <%- include('../layouts/adminFooter') %>
