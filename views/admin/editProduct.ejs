@@ -176,6 +176,7 @@
                     return false;
                 }
             }
+            formDataObject.append('offer', offerValue);
 
             try {
                 const response = await fetch('/admin/edit-product/', {

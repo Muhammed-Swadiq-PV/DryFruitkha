@@ -2889,3 +2889,15 @@ table.order-details tbody td {
   color: red;
   height: auto; /* or set a specific height that accommodates the error message */
 }
+
+/* Inside your CSS file or in a <style> tag */
+.offer-sticker {
+  background-color: #35ba31; /* Coral color, you can customize the color */
+  color: #fff; /* White text */
+  padding: 5px 10px; /* Adjust padding as needed */
+  border-radius: 5px; /* Rounded corners */
+  font-size: 14px; /* Adjust font size */
+  position: absolute; /* Position it as needed */
+  top: 10px; /* Adjust top position */
+  right: 10px; /* Adjust right position */
+}

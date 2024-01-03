@@ -1,23 +1,5 @@
 <%- include('../layouts/userHeader') %>
 
-<!-- search area -->
-<div class="search-area">
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-12">
-                <span class="close-btn"><i class="fas fa-window-close"></i></span>
-                <div class="search-bar">
-                    <div class="search-bar-tablecell">
-                        <h3>Search For:</h3>
-                        <input type="text" placeholder="Keywords">
-                        <button type="submit">Search <i class="fas fa-search"></i></button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-<!-- end search area -->
 
 <!-- breadcrumb-section -->
 <div class="breadcrumb-section breadcrumb-bg">
@@ -63,7 +45,18 @@
               <img src="<%= product.image[0] %>" alt="">
             </div>
             <h3><%= product.name %></h3>
-            <% if (product.offer > 0) { %>
+            <% const categoryOffer = categoriesWithOffer.some(cat => cat._id.equals(product.category)&& new Date(cat.expiryDate) >= new Date()); %>
+
+            <% if (categoryOffer) { %>
+              
+                <!-- Display offer sticker for the entire category added styles in css (public/css) -->
+                <div class="offer-sticker">
+                  <i class="lni lni-offer p-1" style="color: rgb(236, 225, 226); font-size: 22px;"></i>
+                  <span class="pl-2" style="color: rgb(237, 221, 222); font-size: 24px;">Category Offer!</span>
+                </div>
+              <% }else if (product.offer > 0) { %> 
+
+            
                 <% const currentDate = new Date(); %>
                 <% const expiryDate = new Date(product.expiryDate); %>
                 

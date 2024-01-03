@@ -137,6 +137,7 @@ const postEditProduct = async (req, res) => {
     console.log('coming heree ',productId);
     const { name, category, price, description, stock ,offer, expiryDate} = req.body;
     // console.log('coming heree ',name, category, );
+    console.log(req.body);
 
     const updatedProduct = await products.findById(productId);
 

@@ -48,41 +48,41 @@ const getCart = async (req, res) => {
   const addToCart = async (req, res) => {
     try {
       const productId = req.params.id;
-      // console.log(productId,"productid");
       const email = req.session.user;
-      // const price = parseInt(req.body.price);
-      // console.log(price,"addtocart price");
-      // const totalPrice = price;
   
-      // console.log(productId, email, price, totalPrice);
-      if(!email){
+      if (!email) {
         return res.status(401).json({ error: 'User not logged in' });
       }
+  
       const user = await userModel.findOne({ _id: email });
-    const product = await products.findOne({ _id: productId });
-
-    if (!product) {
-      return res.status(404).json({ error: 'Product not found' });
-    }
-
-    let price;
-
-    if (product.offer && product.expiryDate && new Date() <= product.expiryDate) {
-      price = product.discountPrice;
-    } else {
-      price = product.price;
-    }
-
-    const totalPrice = price;
-    console.log(totalPrice, "addtototal");
+      const product = await products.findOne({ _id: productId });
+  
+      if (!product) {
+        return res.status(404).json({ error: 'Product not found' });
+      }
+  
+      // Default to product price
+      let price = product.price;
+  
+      const categoriesWithOffer = await category.find({ offerPercent: { $gt: 0 }, expiryDate: { $gte: new Date() } });
+      const categoryOffer = categoriesWithOffer.find(cat => cat._id.equals(product.category));
+  
+      if (categoryOffer && new Date(categoryOffer.expiryDate) >= new Date()) {
+        // Apply category-level offer
+        const discountedPrice = product.price - (product.price * (categoryOffer.offerPercent / 100));
+        price = discountedPrice > 0 ? discountedPrice : product.price;
+      } else if (product.offer && product.expiryDate && new Date() <= product.expiryDate) {
+        // Check for product-level offer
+        price = product.discountPrice > 0 ? product.discountPrice : product.price;
+      }
+  
+      const totalPrice = price;
   
       if (user && user.cart) {
         // Check if the product is already in the cart
         const existingProduct = user.cart.find(
           (item) => item.productId.equals(productId)
-          
         );
-        // console.log(existingProduct);
   
         if (existingProduct) {
           // If the product exists, update its quantity and total price
@@ -93,9 +93,8 @@ const getCart = async (req, res) => {
           user.cart.push({
             productId: productId,
             quantity: 1,
-            price:price,
+            price: price,
             totalPrice: totalPrice,
-
           });
         }
       } else {
@@ -104,7 +103,7 @@ const getCart = async (req, res) => {
           {
             productId: productId,
             quantity: 1,
-            price:price,
+            price: price,
             totalPrice: totalPrice,
           },
         ];
@@ -117,6 +116,7 @@ const getCart = async (req, res) => {
       res.status(500).json({ error: error.message });
     }
   };
+  
   
 
   //all line removing from cart

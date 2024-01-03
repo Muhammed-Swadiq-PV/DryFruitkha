@@ -103,7 +103,8 @@
                             </div>
                             <div class="text-end mt-3">
                                 <h4>Delivery charge <span class="colon">:</span> ₹90.00</h4>
-                                <h3>Total <span class="colon">:</span> ₹<%=total + 90.00%></h3>
+                                <h4>You saved <span class="colon">:</span>₹<%= total + 90 - order.total %></h4>
+                                <h3>Total <span class="colon">:</span> ₹<%=order.total%></h3>
                             </div>          
                             <div class="d-print-none mt-4">
                                 <div class="text-center">
