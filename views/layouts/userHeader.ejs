@@ -131,22 +131,10 @@
 						<nav class="main-menu">
 							<ul>
 								<li ><a href="/">Home</a>
-									<ul class="sub-menu">
-										<li><a href="index.html">Static Home</a></li>
-										<li><a href="index_2.html">Slider Home</a></li>
-									</ul>
+									
 								</li>
-								<li><a href="about.html">About</a></li>
-								<li><a href="#">Pages</a>
-									<ul class="sub-menu">
-										<li><a href="404.html">404 page</a></li>
-										<li><a href="about.html">About</a></li>
-										<li><a href="/cart">Cart</a></li>
-										<li><a href="checkout.html">Check Out</a></li>
-										<li><a href="contact.html">Contact</a></li>
-										<li><a href="news.html">signup</a></li>
-										<li><a href="/shop">Shop</a></li>
-									</ul>
+								<li><a href="/cart">Cart</a></li>
+								
 									
 									<% if (typeof user !== 'undefined' && user) { %>
 										<!-- If user is logged in, show Logout -->
@@ -163,10 +151,16 @@
 								</li>
 								<li>
 									<div class="header-icons">
+										<form id="searchForm" class="form2 form-inline my-2 my-lg-0" action="/shop" method="GET">
+											<div class="d-flex">
+											  <input class="form1 form-control mr-sm-2" type="search" name="searchQuery" placeholder="Search" aria-label="Search">
+											  <button class="btn1 btn btn-dark my-2 my-sm-0" type="submit">Search</button>
+											</div>
+										  </form>
 										<a class="shopping-cart" href="/cart"><i class="fas fa-shopping-cart"></i></a>
 										<a class="mobile-hide search-bar-icon" href="/wishlist"><i class="fas fa-heart"></i></a>
 										<a class="user-page" href="/userProfile"><i class="fas fa-user"></i></a>
-
+										
 									</div>
 								</li>
 							</ul>
@@ -179,3 +173,19 @@
 			</div>
 		</div>
 	</div>
+
+	<script>
+		document.getElementById('searchForm').addEventListener('submit', function (event) {
+			// Prevent the default form submission
+			event.preventDefault();
+	
+			// Access the value of the search input field by name
+			var searchQueryValue = this.elements['searchQuery'].value.trim();
+	
+			// Your custom form submission logic goes here
+			// For example, you can use AJAX to submit the form data asynchronously
+			// Or you can redirect to the search page using JavaScript
+			window.location.href = '/shop?searchQuery=' + encodeURIComponent(searchQueryValue);
+		});
+	</script>
+	

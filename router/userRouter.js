@@ -41,6 +41,8 @@ router.post("/resetPassword",usercontroller.postResetPassword);
 router.get('/shop',userMiddleware.blockStatus,userProductController.getShop)
 // singleProduct
 router.get('/singleProduct',userMiddleware.blockStatus,userProductController.getSingleProduct);
+//search icon
+
 
 //wishlist
 router.get('/wishlist',userMiddleware.blockStatus,wishlistController.getWishlist)

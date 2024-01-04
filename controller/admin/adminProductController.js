@@ -29,15 +29,9 @@ const getAddProduct = async (req, res) => {
 
 
 
-
 const resizeImage = async (inputPath, outputPath, width, height) => {
   const image = await Jimp.read(inputPath);
-
-  // Resize the image to fit within the specified dimensions
-  await image.coverAsync(width, height);
-
-  // Save the cropped and resized image
-  await image.writeAsync(outputPath);
+  await image.cover(width, height).writeAsync(outputPath);
 };
 
 
@@ -84,10 +78,6 @@ const postAddProduct = async (req, res) => {
     res.status(500).send('Internal Server Error');
   }
 };
-
-
-
-
 
 
 

@@ -20,19 +20,47 @@
 <div class="product-section mt-150 mb-150">
     <div class="container">
 
-        <div class="row">
-            <div class="col-md-12">
-                <!-- Product filters based on categories fetched from the server -->
-                <div class="product-filters">
-                    <ul>
-                        <li class="active" data-filter="*">All</li>
-                        <% Categories.forEach(category => { %>
-                            <li data-filter=".<%= category %>"><%= category.name %></li>
-                        <% }); %>
-                    </ul>
-                </div>
-            </div>
-        </div>
+        <!-- Price filter -->
+<div class="row">
+  <div class="col-md-3 offset-md-2">
+      <div class="form-group">
+          <label for="priceFrom">Price from:</label>
+          <div class="form-field">
+              <i class="icon icon-arrow-down3"></i>
+              <select name="priceFrom" id="priceFrom" class="form-control">
+                  <option value=""></option>
+                  <option value="1">1</option>
+                  <option value="100">100</option>
+                  <option value="200">200</option>
+                  <!-- Add more price options as needed -->
+              </select>
+          </div>
+      </div>
+  </div>
+  <div class="col-md-3 offset-md-1" >
+      <div class="form-group">
+          <label for="priceTo">Price to:</label>
+          <div class="form-field">
+              <i class="icon icon-arrow-down3"></i>
+              <select name="priceTo" id="priceTo" class="form-control">
+                  <option value=""></option>
+                  <option value="300">300</option>
+                  <option value="500">500</option>
+                  <option value="1000">1000</option>
+                  <!-- Add more price options as needed -->
+              </select>
+          </div>
+      </div>
+  </div>
+  <div class="col-md-12">
+      <div class="form-group">
+        <button type="button" id="filterButton" class="btn btn-dark btn-block" onclick="applyFilter()">APPLY</button>
+      </div>
+  </div>
+</div>
+
+
+        
 
        <!-- Product items dynamically rendered based on products fetched from the server -->
 <div class="row product-lists">
@@ -54,6 +82,7 @@
                   <i class="lni lni-offer p-1" style="color: rgb(236, 225, 226); font-size: 22px;"></i>
                   <span class="pl-2" style="color: rgb(237, 221, 222); font-size: 24px;">Category Offer!</span>
                 </div>
+                <p class="product-price"><span>Per Kg</span> ₹<%= product.price %> </p>
               <% }else if (product.offer > 0) { %> 
 
             
@@ -89,19 +118,26 @@
   
           
 
-        <div class="row">
-            <div class="col-lg-12 text-center">
-                <div class="pagination-wrap">
-                    <ul>
-                        <li><a href="#">Prev</a></li>
-                        <li><a href="#">1</a></li>
-                        <li><a class="active" href="#">2</a></li>
-                        <li><a href="#">3</a></li>
-                        <li><a href="#">Next</a></li>
-                    </ul>
-                </div>
-            </div>
+  <div class="row">
+    <div class="col-lg-12 text-center">
+        <div class="pagination-wrap">
+            <ul>
+                <% if (currentPage > 1) { %>
+                    <li><a href="/shop?page=<%= currentPage - 1 %>">Prev</a></li>
+                <% } %>
+                
+                <% for (let i = 1; i <= totalPages; i++) { %>
+                    <li <% if (currentPage === i) { %>class="active"<% } %>><a href="/shop?page=<%= i %>"><%= i %></a></li>
+                <% } %>
+
+                <% if (currentPage < totalPages) { %>
+                    <li><a href="/shop?page=<%= currentPage + 1 %>">Next</a></li>
+                <% } %>
+            </ul>
         </div>
+    </div>
+</div>
+
     </div>
 </div>
 <!-- end products -->
@@ -117,5 +153,18 @@
     </div>
 </div>
 <!-- end logo carousel -->
+
+<script>
+  // document.getElementById('filterButton').addEventListener('click', applyFilter);
+  function applyFilter() {
+    console.log("inside the apply filter");
+      var priceFrom = document.getElementById('priceFrom').value;
+      var priceTo = document.getElementById('priceTo').value;
+      var currentUrl = window.location.href;
+      var updatedUrl = currentUrl + `?priceFrom=${priceFrom}&priceTo=${priceTo}`;
+      console.log(updatedUrl,"updated url");
+      window.location.href = updatedUrl;
+  }
+</script>
 
 <%- include('../layouts/userfooter') %>
