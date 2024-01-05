@@ -7,39 +7,39 @@ const shortid = require('shortid');
 
 
 let transporter = nodemailer.createTransport({
-  service:"Gmail",
-  auth:{
-    user:"swadiqproject@gmail.com",
-    pass:"noma vgqp tdhn dsww"
+  service: "Gmail",
+  auth: {
+    user: "swadiqproject@gmail.com",
+    pass: "noma vgqp tdhn dsww"
   }
 })
-const generateOTP = () =>{
-   return randomstring.generate({
-    length:6,
-    charset:'numeric',
-   })
-  
+const generateOTP = () => {
+  return randomstring.generate({
+    length: 6,
+    charset: 'numeric',
+  })
+
 }
 
 
-const userOTP =async(email,otp)=>{
+const userOTP = async (email, otp) => {
   try {
     const mailOption = {
-      from:"swadiqproject@gmail.com",
-      to:email,
-      subject:"verify your email",
-      html:`<p>  This is your verification otp ${otp} from Dry Fruitkha </p>`
-    
+      from: "swadiqproject@gmail.com",
+      to: email,
+      subject: "verify your email",
+      html: `<p>  This is your verification otp ${otp} from Dry Fruitkha </p>`
+
     }
-    transporter.sendMail(mailOption,(error)=>{
-      if(error){
+    transporter.sendMail(mailOption, (error) => {
+      if (error) {
         console.log("errorotp")
-      }else{
+      } else {
         console.log("code send")
       }
     })
   } catch (error) {
-    console.log("error in userotp function",error.message)
+    console.log("error in userotp function", error.message)
   }
 }
 
@@ -47,7 +47,7 @@ const userOTP =async(email,otp)=>{
 
 const resentOTP = async (req, res) => {
   try {
-    const newOTP = generateOTP(); 
+    const newOTP = generateOTP();
     console.log(newOTP, "resentotp yile new otp");
 
     const email = req.session.email;
@@ -68,12 +68,12 @@ const resentOTP = async (req, res) => {
 const gethome = async (req, res) => {
   try {
     const userId = req.session.user
-    const user = userId ? await userModel.findOne({_id:userId}) : false;
+    const user = userId ? await userModel.findOne({ _id: userId }) : false;
 
-  
-      res.render('users/home', { user});
-    
-    
+
+    res.render('users/home', { user });
+
+
   } catch (error) {
     console.log(error);
   }
@@ -82,36 +82,35 @@ const gethome = async (req, res) => {
 
 
 // get login, if blocked error 
-const getLogin = async(req, res) => {
+const getLogin = async (req, res) => {
   try {
-    if(req.session.user){
-     return res.redirect('/')
+    if (req.session.user) {
+      return res.redirect('/')
     }
     const userId = req.session.user
-    const user = await userModel.findOne({_id:userId})
+    const user = await userModel.findOne({ _id: userId })
 
     const blockError = req.app.locals.specialContext
     req.app.locals.specialContext = null
 
-    const blocked=req.app.locals.blocked
+    const blocked = req.app.locals.blocked
     req.app.locals.blocked = null
 
-    res.render('users/login', { error: '', blockError,blocked , user:user||false})
+    res.render('users/login', { error: '', blockError, blocked, user: user || false })
   } catch (error) {
     console.log(error);
   }
 }
 
-const getSignUp = async(req, res) => {
+const getSignUp = async (req, res) => {
   try {
     const userId = req.session.user
-    const user = userId ? await userModel.findOne({_id:userId}) : false;
+    const user = userId ? await userModel.findOne({ _id: userId }) : false;
 
-    if(req.session.user)
-    {
+    if (req.session.user) {
       return res.redirect('/')
     }
-    res.render('users/signUp',{error: '' ,user} )
+    res.render('users/signUp', { error: '', user })
   } catch (error) {
     console.log(error)
   }
@@ -159,16 +158,16 @@ const postSignUp = async (req, res) => {
 
     let referredUser = null;
 
-if (referedReferralCode) {
-  console.log(referedReferralCode, "referedReferralCode");
-  referredUser = await userModel.findOne({ referralCode: referedReferralCode });
-console.log(referredUser, "referredUser");
-  if (referredUser) {
-    console.log('Referred User ID:', referredUser._id);
-  } else {
-    console.log('Reference code not found in database');
-  }
-}
+    if (referedReferralCode) {
+      console.log(referedReferralCode, "referedReferralCode");
+      referredUser = await userModel.findOne({ referralCode: referedReferralCode });
+      console.log(referredUser, "referredUser");
+      if (referredUser) {
+        console.log('Referred User ID:', referredUser._id);
+      } else {
+        console.log('Reference code not found in database');
+      }
+    }
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
@@ -185,19 +184,19 @@ console.log(referredUser, "referredUser");
       referralCode
     });
     const otp = generateOTP();
-    
+
     console.log(otp, " otp for our signup");
     req.session.otp = otp;
-    
-     await userOTP(email,otp);
-     res.redirect('/verifyOTP?fromSignUpPage=true');
+
+    await userOTP(email, otp);
+    res.redirect('/verifyOTP?fromSignUpPage=true');
   } catch (error) {
     console.error(error);
-   
+
   }
 };
 
-  
+
 
 
 
@@ -205,31 +204,31 @@ console.log(referredUser, "referredUser");
 //verify otp
 
 
-const getVerification = async(req,res) =>{
+const getVerification = async (req, res) => {
   try {
-     
+
     const userId = req.session.user
-    const user = await userModel.findOne({_id:userId})
+    const user = await userModel.findOne({ _id: userId })
     const email = req.session.email;
     const alert = req.query.error === 'true' ? 'Incorrect OTP. Please try again.' : null;
-    res.render('users/verifyOTP',{email,alert, user:user||false})
+    res.render('users/verifyOTP', { email, alert, user: user || false })
   } catch (error) {
     console.log(error.message)
   }
 };
 
 
-const postOTPverification = async (req , res)=>{
+const postOTPverification = async (req, res) => {
   try {
     console.log("posted verification otp");
-    const enteredOTP=req.body.otp;
-    const generatedOTP=req.session.otp;
+    const enteredOTP = req.body.otp;
+    const generatedOTP = req.session.otp;
     // console.log(enteredOTP,generatedOTP)
     const email = req.session.email;
-    if(enteredOTP!==generatedOTP){
-        return res.render('users/verifyOTP',{alert:'Invalid OTP',email})
+    if (enteredOTP !== generatedOTP) {
+      return res.render('users/verifyOTP', { alert: 'Invalid OTP', email })
     }
-    const  {Firstname,Lastname,phone,password}=req.session.userData;
+    const { Firstname, Lastname, phone, password } = req.session.userData;
     // console.log(req.session.userData)
     if (req.session.referredUser) {
       // Adding 51 rupees to the referred users wallet
@@ -257,18 +256,18 @@ const postOTPverification = async (req , res)=>{
 
       await referredUser.save();
     }
-          const newUser=new userModel({
-              Firstname,
-              Lastname,
-              phone,
-              email,
-              password
-          });
-          await newUser.save();
-          delete req.session.otp;
-          delete req.session.userData;
-          delete req.session.referredUser;
-          res.redirect('/login')
+    const newUser = new userModel({
+      Firstname,
+      Lastname,
+      phone,
+      email,
+      password
+    });
+    await newUser.save();
+    delete req.session.otp;
+    delete req.session.userData;
+    delete req.session.referredUser;
+    res.redirect('/login')
   } catch (error) {
     console.log(error.message)
   }
@@ -286,7 +285,7 @@ const postLogin = async (req, res) => {
 
     if (user) {
       if (user.status) {
-      
+
         let checkPassword = bcrypt.compareSync(password, user.password);
 
         if (checkPassword) {
@@ -295,22 +294,19 @@ const postLogin = async (req, res) => {
           return res.redirect('/');
         } else {
           // Incorrect password
-          req.app.locals.blockError = "Invalid email or password.";
-          return res.redirect('/login');
+          return res.render('./users/login',{alert:'Password or email incorrect'})
         }
       } else {
         // User is blocked
-        req.app.locals.blocked = "User is blocked.";
-        return res.redirect('/login');
+        return res.render('./users/login',{alert:"Can't access your account."})
       }
     } else {
       // Non-existing user
-      req.app.locals.blockError = "User does not exist.";
-      return res.redirect('/login');
+      return res.render('./users/login',{alert:"If you don't have an account please signup."});
     }
   } catch (error) {
     console.error("Error:", error);
-   
+
     return res.redirect('/login');
   }
 };
@@ -328,15 +324,15 @@ const postLogout = async (req, res) => {
 }
 
 
-const getVerifyEmail = async(req,res)=>{
+const getVerifyEmail = async (req, res) => {
   try {
-   res.render('./users/verifyEmail')
+    res.render('./users/verifyEmail')
   } catch (error) {
-   console.error(error.message)
+    console.error(error.message)
   }
- }
+}
 
- const verifyEmail = async (req, res) => {
+const verifyEmail = async (req, res) => {
   try {
     const email = req.body.email;
     // console.log(email, "verify emailile mail sessionil store cheythu")
@@ -344,7 +340,7 @@ const getVerifyEmail = async(req,res)=>{
 
     if (user) {
       const newOTP = generateOTP();
-      console.log(newOTP ,"forgot passwordinulla kkulla new otp")
+      console.log(newOTP, "forgot passwordinulla kkulla new otp")
       await userOTP(email, newOTP);
 
       req.session.otp = newOTP;
@@ -360,7 +356,7 @@ const getVerifyEmail = async(req,res)=>{
     res.render('./users/404');
   }
 };
- 
+
 
 
 const getOTPforPassword = async (req, res) => {
@@ -379,8 +375,8 @@ const postVerifyForgotOTP = async (req, res) => {
     console.log(req.body);
     const enteredOTP = req.body.otp;
     const storedOTP = req.session.otp;
-    console.log(storedOTP, "storedotp" ,enteredOTP,"entered otp");
-    
+    console.log(storedOTP, "storedotp", enteredOTP, "entered otp");
+
     if (enteredOTP === storedOTP) {
       // Correct OTP, redirect to resetPassword page
       res.json({ success: true, redirectUrl: '/resetPassword' });
@@ -397,23 +393,23 @@ const postVerifyForgotOTP = async (req, res) => {
 
 const postResendForgotOTP = async (req, res) => {
   try {
-      const newOTP = generateOTP();
-      console.log(newOTP, "resend otp yile otp");
-      const email = req.body.email;
-      await userOTP(email, newOTP);
+    const newOTP = generateOTP();
+    console.log(newOTP, "resend otp yile otp");
+    const email = req.body.email;
+    await userOTP(email, newOTP);
 
-      req.session.otp = newOTP;
-      req.session.save();
+    req.session.otp = newOTP;
+    req.session.save();
 
-      res.json({ success: true });
+    res.json({ success: true });
   } catch (error) {
-      console.error("Error in postResendForgotOTP:", error);
-      res.render('./users/404');
+    console.error("Error in postResendForgotOTP:", error);
+    res.render('./users/404');
   }
 };
 
 
-const getResetPassword = async(req,res)=>{
+const getResetPassword = async (req, res) => {
   try {
     const email = req.session.email;
 
@@ -426,62 +422,62 @@ const getResetPassword = async(req,res)=>{
 
 const postResetPassword = async (req, res) => {
   try {
-      const email = req.body.email;
-      const newPassword = req.body.newPassword;
-      const confirmPassword = req.body.confirmPassword;
+    const email = req.body.email;
+    const newPassword = req.body.newPassword;
+    const confirmPassword = req.body.confirmPassword;
 
-      if (newPassword !== confirmPassword) {
-          return res.render('resetPassword', { email, alert: 'Passwords do not match' });
-      }
+    if (newPassword !== confirmPassword) {
+      return res.render('resetPassword', { email, alert: 'Passwords do not match' });
+    }
 
-     
-       const user = await userModel.findOneAndUpdate({ email }, { password: newPassword });
 
-     
-      delete req.session.email;
-      delete req.session.otp;
+    const user = await userModel.findOneAndUpdate({ email }, { password: newPassword });
 
-     
-      res.redirect('/login');
+
+    delete req.session.email;
+    delete req.session.otp;
+
+
+    res.redirect('/login');
   } catch (error) {
-      console.error("Error in postResetPassword:", error);
-      res.render('./users/404');
+    console.error("Error in postResetPassword:", error);
+    res.render('./users/404');
   }
 };
 
 
-const changePassword = async(req,res)=>{
+const changePassword = async (req, res) => {
   try {
     const userId = req.session.user;
-        const user = await userModel.findById(userId);
+    const user = await userModel.findById(userId);
 
-        const oldPassword = req.body.oldPassword;
-        const newPassword = req.body.newPassword;
-        const confirmNewPassword = req.body.confirmPassword;
-        console.log(oldPassword,newPassword,confirmNewPassword,"old, new, confirm");
+    const oldPassword = req.body.oldPassword;
+    const newPassword = req.body.newPassword;
+    const confirmNewPassword = req.body.confirmPassword;
+    console.log(oldPassword, newPassword, confirmNewPassword, "old, new, confirm");
 
-        const isPasswordValid = await bcrypt.compare(oldPassword, user.password);
+    const isPasswordValid = await bcrypt.compare(oldPassword, user.password);
 
-        if (!isPasswordValid) {
-            return res.render('users/changePassword', { error: 'Incorrect old password.' });
-        }
+    if (!isPasswordValid) {
+      return res.render('users/changePassword', { error: 'Incorrect old password.' });
+    }
 
-        if (newPassword !== confirmNewPassword) {
-            return res.render('users/changePassword', { error: 'New passwords do not match.' });
-        }
+    if (newPassword !== confirmNewPassword) {
+      return res.render('users/changePassword', { error: 'New passwords do not match.' });
+    }
 
-        // Hash the new password
-        const hashedPassword = await bcrypt.hash(newPassword, 10);
+    // Hash the new password
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
 
-        // Update the user's password in the database
-        await userModel.findByIdAndUpdate(userId, { password: hashedPassword });
+    // Update the user's password in the database
+    await userModel.findByIdAndUpdate(userId, { password: hashedPassword });
 
-        res.redirect('/userProfile'); 
-       
+    res.redirect('/userProfile');
+
   } catch (error) {
     res.status(500).json({ success: false, message: 'Internal Server Error' });
     console.error('Error in postChangePassword:', error);
-        res.render('./users/404');
+    res.render('./users/404');
   }
 }
 
@@ -489,21 +485,21 @@ const changePassword = async(req,res)=>{
 
 module.exports = {
   gethome,
-   getLogin,
-    getSignUp,
-     postSignUp,
-      postLogin,
-       postLogout ,
-       getVerification,
-        postOTPverification,
-        resentOTP,
-        verifyEmail,
-        getVerifyEmail,
-        getOTPforPassword,
-        postVerifyForgotOTP,
-        postResendForgotOTP,
-        postResetPassword,
-        getResetPassword,
-        changePassword
+  getLogin,
+  getSignUp,
+  postSignUp,
+  postLogin,
+  postLogout,
+  getVerification,
+  postOTPverification,
+  resentOTP,
+  verifyEmail,
+  getVerifyEmail,
+  getOTPforPassword,
+  postVerifyForgotOTP,
+  postResendForgotOTP,
+  postResetPassword,
+  getResetPassword,
+  changePassword
 }
 

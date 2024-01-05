@@ -161,7 +161,8 @@
       var priceFrom = document.getElementById('priceFrom').value;
       var priceTo = document.getElementById('priceTo').value;
       var currentUrl = window.location.href;
-      var updatedUrl = currentUrl + `?priceFrom=${priceFrom}&priceTo=${priceTo}`;
+      var urlWithoutParams = currentUrl.split('?')[0];
+      var updatedUrl = `${urlWithoutParams}?priceFrom=${priceFrom}&priceTo=${priceTo}`;
       console.log(updatedUrl,"updated url");
       window.location.href = updatedUrl;
   }

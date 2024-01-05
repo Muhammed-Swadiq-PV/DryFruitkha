@@ -24,24 +24,15 @@
             <div class="login_part_form_iner text-center border p-4">
               <h2>YOUR ACCOUNT FOR EVERYTHING</h2>
   
-              <% if (error) { %>
-                <div class="alert alert-danger">
-                  <%= error %>
-                </div>
-              <% } %>
+            
   
               <form class="row contact_form" action="/login" method="post">
 
-                <!-- user blocked error message while user logged in -->
-                <small style="color: red;" class="ml-5">
-                  <%=locals.blockError?blockError :'' %>
-                </small>
-
-                 <!-- user blocked error message -->
-                 <small style="color: red;" class="mt-3">
-                  <%=locals.blocked?blocked :'' %>
-                </small>
-               
+                <div class="form-group text-center">
+                  <% if (locals.alert){ %>
+                      <p class="alert alert-danger"><%= locals.alert %></p>
+                      <% } %>
+                </div>
 
                 <div class="col-md-12 form-group">
                   <input type="email" class="form-control" id="email" name="email" value="" placeholder="Email">
@@ -72,7 +63,7 @@
   </section>
 
 
-  <script>
+  <!-- <script>
     document.addEventListener('DOMContentLoaded', function () {
       const loginForm = document.querySelector('form');
       const notification = document.querySelector('.alert'); 
@@ -117,7 +108,7 @@
         }
       });
     });
-  </script>
+  </script> -->
   
 
 <%- include('../layouts/userfooter') %>
