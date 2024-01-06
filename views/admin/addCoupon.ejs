@@ -207,6 +207,17 @@
           <% }) %>
       </tbody>
     </table>
+    <div class="pagination mt-4">
+      <% if (totalPages > 1) { %>
+          <% if (currentPage > 1) { %>
+              <a href="/admin/addCoupon?page=<%= currentPage - 1 %>" class="btn btn-secondary">Previous Page</a>
+          <% } %>
+  
+          <% if (currentPage < totalPages) { %>
+              <a href="/admin/addCoupon?page=<%= currentPage + 1 %>" class="btn btn-secondary">Next Page</a>
+          <% } %>
+      <% } %>
+  </div>
   </div>
 
   <!------------------------------------------- script for create coupon ---------------------------------- -->

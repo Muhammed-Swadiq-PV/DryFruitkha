@@ -1,9 +1,10 @@
 <%- include('../layouts/adminHeader') %>
 
 <body>
-    <div class="container mt-3">
+    <div class="container mt-3" >
+        <div class="top-header d-flex justify-content-center">
         <h1>Admin Order Management</h1>
-
+    </div>
         <div class="table-responsive">
             <table class="table table-bordered">
                 <thead>
@@ -54,6 +55,17 @@
                     <% }) %>
                 </tbody>
             </table>
+            <div class="pagination mt-4 d-flex justify-content-center">
+                <% if (totalPages > 1) { %>
+                    <% if (currentPage > 1) { %>
+                        <a href="/admin/orders?page=<%= currentPage - 1 %>" class="btn btn-secondary">Previous Page</a>
+                    <% } %>
+            
+                    <% if (currentPage < totalPages) { %>
+                        <a href="/admin/orders?page=<%= currentPage + 1 %>" class="btn btn-secondary">Next Page</a>
+                    <% } %>
+                <% } %>
+            </div>
         </div>
       
     </div>

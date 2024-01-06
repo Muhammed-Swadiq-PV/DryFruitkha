@@ -3,14 +3,14 @@ const bcrypt = require('bcryptjs')
 const nodemailer = require('nodemailer')
 const randomstring = require('randomstring');
 const shortid = require('shortid');
-
+require('dotenv').config()
 
 
 let transporter = nodemailer.createTransport({
   service: "Gmail",
   auth: {
     user: "swadiqproject@gmail.com",
-    pass: "noma vgqp tdhn dsww"
+    pass: process.env.ADMIN_PASSWORD
   }
 })
 const generateOTP = () => {
@@ -246,6 +246,7 @@ const postOTPverification = async (req, res) => {
         referredUser.wallet = [];
       }
 
+      
       referredUser.wallet.push({
         balance: (referredUser.wallet[0]?.balance || 0) + rewardAmount,
         date: new Date(),

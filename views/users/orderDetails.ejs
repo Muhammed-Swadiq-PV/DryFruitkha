@@ -111,9 +111,23 @@
 
 
 
+  </div>
+  
+  <div class="pagination mt-4 d-flex justify-content-center">
+    <% if (totalPages > 1) { %>
+        <% if (currentPage > 1) { %>
+            <a href="/orderDetails?page=<%= currentPage - 1 %>" class="btn btn-secondary" style="margin-right: 10px;">Previous Page</a>
+        <% } %>
+
+        <% if (currentPage < totalPages) { %>
+            <a href="/orderDetails?page=<%= currentPage + 1 %>" class="btn btn-secondary"style="margin-left: 10px;">Next Page</a>
+        <% } %>
+    <% } %>
 </div>
-  </div>
-  </div>
+</div>
+</div>
+
+
 
 
 

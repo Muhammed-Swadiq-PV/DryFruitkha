@@ -1,11 +1,16 @@
 const coupon = require('../../model/coupon');
 
-// ======================get the addcoupon page by sorting date
+// ======================get the addcoupon page by sorting date ====================================
 
 const createCoupon = async(req,res)=>{
     try {
-        const coupons = await coupon.find({ isActive: true });
-        const inactiveCoupons = await coupon.find({ isActive: false });
+      const page = parseInt(req.query.page) || 1;
+        const limit = 8;
+        const skip = (page - 1) * limit;
+        const totalCouponsCount = await coupon.countDocuments();
+        const totalPages = Math.ceil(totalCouponsCount / limit);
+        const coupons = await coupon.find({ isActive: true }).skip(skip).limit(limit);
+        const inactiveCoupons = await coupon.find({ isActive: false }).skip(skip).limit(limit);
  
 
         coupons.sort((a, b) => {
@@ -14,7 +19,7 @@ const createCoupon = async(req,res)=>{
           });
           const allCoupons = [...coupons, ...inactiveCoupons];
 
-        res.render('admin/addCoupon', { coupons: allCoupons,couponData: coupons });
+        res.render('admin/addCoupon', { coupons: allCoupons,couponData: coupons, currentPage:page, totalPages });
     } catch (error) {
         console.error(error.message)
     }
@@ -103,7 +108,7 @@ const getCouponDetails = async (req, res) => {
   };
 
 
-//========= edited update coupon to data base ===============
+//====================================== edited update coupon to data base ===================================================
 
   const updateCoupon = async (req, res) => {
     try {

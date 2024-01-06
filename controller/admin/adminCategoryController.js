@@ -5,8 +5,15 @@ const products = require('../../model/productModel')
 //for category
 const getAdminCategoryPage = async (req, res) => {
   try {
-    const categoryData = await category.find();
-    res.render('admin/category', { categoryData, error: req.query.error });
+    const page = parseInt(req.query.page) || 1;
+        const limit = 9; 
+
+        const skip = (page - 1) * limit;
+        const totalCategoriesCount = await category.countDocuments();
+        const totalPages = Math.ceil(totalCategoriesCount / limit);
+
+    const categoryData = await category.find().skip(skip).limit(limit);
+    res.render('admin/category', { categoryData, error: req.query.error, currentPage: page, totalPages  });
   } catch (error) {
     console.log(error.message);
   }

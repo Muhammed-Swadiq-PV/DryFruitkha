@@ -22,12 +22,14 @@ const postlogin = async (req, res) => {
 
         const adminData = await adminModel.findOne({ email });
 
-        if (adminData && adminData.password === password) {
+        if(!adminData){
+            res.render('admin/adminSignin',{alert: 'invalid mail or password'});
+        }else if(adminData && adminData.password === password) {
             req.session.admin = adminData.email;
-            res.status(200).json({ success: true, message: 'Login successful' });
+            res.redirect('/admin/adminDashboard');
         } else {
             console.log('Password incorrect');
-            res.status(400).json({ success: false, error: 'Incorrect email or password' });
+            res.render('admin/adminSignin',{alert: 'incorrect password'});
         }
     } catch (error) {
         res.status(500).json({ success: false, error: 'Internal Server Error' });

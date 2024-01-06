@@ -143,8 +143,18 @@ const showRevenue = async (req, res) => {
 
 const salesReportPage = async(req,res)=>{
     try {
-        const orders = await Order.find({orderStatus:'Delivered'}).populate('userId');
-        res.render('admin/adminSales',{orders})
+        const page = parseInt(req.query.page) || 1;
+        const limit = 10; 
+        const skip = (page - 1) * limit;
+        const totalOrdersCount = await Order.find({ orderStatus: 'Delivered' }).countDocuments();
+        const totalPages = Math.ceil(totalOrdersCount / limit);
+
+        const orders = await Order.find({orderStatus:'Delivered'})
+        .populate('userId')
+        .sort({ orderDate: 'desc' })
+            .skip(skip)
+            .limit(limit);
+        res.render('admin/adminSales',{orders, currentPage: page, totalPages})
     } catch (error) {
         console.error(error);
     }

@@ -9,9 +9,16 @@ const Order = require('../../model/orderModel');
 //for Users
 const getAdminUserPage = async (req, res) => {
     try {
-        const userData = await user.find()
+        const page = parseInt(req.query.page) || 1;
+        const limit = 9;
+
+        const skip = (page - 1) * limit;
+        const totalCount = await user.countDocuments();
+        const totalPages = Math.ceil(totalCount / limit);
+
+        const userData = await user.find().skip(skip).limit(limit)
     
-        res.render('admin/adminUsers',{userData})
+        res.render('admin/adminUsers',{userData ,currentPage: page, totalPages})
     } catch (error) {
        console.log(error.message) 
     }
@@ -42,10 +49,15 @@ const getStatusUsers = async (req , res)=>{
 
 const getOrders = async(req,res)=>{
     try {
+        const page = parseInt(req.query.page) || 1;
+        const limit = 8; // Adjust the limit as needed
 
-        const orders = await Order.find().sort({ orderDate: -1 });
+        const skip = (page - 1) * limit;
+        const totalOrdersCount = await Order.countDocuments();
+        const totalPages = Math.ceil(totalOrdersCount / limit);
+        const orders = await Order.find().sort({ orderDate: -1 }).skip(skip).limit(limit);
         
-        res.render('./admin/orders', {orders});
+        res.render('./admin/orders', {orders, currentPage: page, totalPages });
     } catch (error) {
         console.error(error.message);
     }

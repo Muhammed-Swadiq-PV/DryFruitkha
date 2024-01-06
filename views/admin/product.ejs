@@ -1,6 +1,6 @@
 <%- include('../layouts/adminHeader') %>
 
-    <div class="text-end mb-3">
+    <div class="text-end mb-3 d-flex justify-content-center">
         <form action="/admin/add-Product" method="get">
             <button type="submit" class="btn btn-success">Add Product</button>
         </form>
@@ -113,6 +113,17 @@
                                             <% }%>
                             </tbody>
                         </table>
+                    </div>
+                    <div class="pagination mt-4 d-flex justify-content-center">
+                        <% if (totalPages > 1) { %>
+                            <% if (currentPage > 1) { %>
+                                <a href="/admin/product?page=<%= currentPage - 1 %>" class="btn btn-secondary">Previous Page</a>
+                            <% } %>
+                    
+                            <% if (currentPage < totalPages) { %>
+                                <a href="/admin/product?page=<%= currentPage + 1 %>" class="btn btn-secondary">Next Page</a>
+                            <% } %>
+                        <% } %>
                     </div>
                 </div>
             </div>

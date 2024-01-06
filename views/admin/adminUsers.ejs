@@ -3,6 +3,8 @@
 
 <div class="col-12">
     <div class="bg-light rounded h-100 p-4">
+
+     
         <h6 class="mb-4">User Details</h6>
         <div class="table-responsive">
             <table class="table">
@@ -77,6 +79,17 @@
                 </tbody>
             </table>
         </div>
+        <div class="pagination mt-4 d-flex justify-content-center">
+                <% if (totalPages > 1) { %>
+                    <% if (currentPage > 1) { %>
+                        <a href="/admin/adminUsers?page=<%= currentPage - 1 %>" class="btn btn-secondary">Previous Page</a>
+                    <% } %>
+            
+                    <% if (currentPage < totalPages) { %>
+                        <a href="/admin/adminUsers?page=<%= currentPage + 1 %>" class="btn btn-secondary">Next Page</a>
+                    <% } %>
+                <% } %>
+            </div>
     </div>
 </div>
 </div>

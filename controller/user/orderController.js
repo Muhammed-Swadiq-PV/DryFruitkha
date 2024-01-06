@@ -300,19 +300,27 @@ require('dotenv').config();
   const getOrderDetails = async(req,res)=>{
     try {
       const userId = req.session.user;
+      const page = parseInt(req.query.page) || 1;
+    const pageSize = 5;
   
       if (!userId) {
         return res.redirect('/login');
       }
+      const totalOrders = await Order.countDocuments({ userId });
+    const totalPages = Math.ceil(totalOrders / pageSize);
+
   
-      const orders = await Order.find({userId}).sort({ orderDate: -1 });
+      const orders = await Order.find({userId})
+      .sort({ orderDate: -1 })
+      .skip((page - 1) * pageSize)
+      .limit(pageSize);
       const user = await userModel.findById(userId)
   
       if (!orders) {
         return res.render('./users/404')
       }
   
-      res.render('users/orderDetails', { orders , user});
+      res.render('users/orderDetails', { orders , user, totalPages, currentPage: page});
        
     } catch (error) {
       console.error('Error fetching order details:', error);

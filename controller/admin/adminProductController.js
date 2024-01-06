@@ -8,9 +8,16 @@ const fs = require('fs').promises;
 
 const getAdminProductPage = async (req, res) => {
   try {
-    const productData = await products.find()
+    const page = parseInt(req.query.page) || 1;
+        const limit = 6; 
+
+        const skip = (page - 1) * limit;
+        const totalProductsCount = await products.countDocuments();
+        const totalPages = Math.ceil(totalProductsCount / limit);
+
+    const productData = await products.find().skip(skip).limit(limit);
     //    console.log(productData);
-    res.render('admin/product', { productData })
+    res.render('admin/product', { productData , currentPage: page, totalPages})
 
   } catch (error) {
     console.log(error.message);
