@@ -45,12 +45,15 @@ const postCreateCoupon = async(req , res) =>{
     try {
         const { couponCode, expiryDate, price, purchaseAmount } = req.body;
         console.log(req.body, " create couponile req.body");
+        if (!couponCode.trim()) {
+          return res.status(400).json({ success: false, message: 'Coupon code cannot be empty or contain only spaces' });
+        }
 
         const existingCoupon = await coupon.findOne({ couponCode });
-
         if (existingCoupon) {
-            return res.status(400).json({ success: false, message: 'Coupon code already exists' });
-          }
+          // console.log("coupon code already exists");
+          return res.status(400).json({ success: false, message: 'Coupon code already exists' });
+        }
 
         const newCoupon = new coupon({
             couponCode,

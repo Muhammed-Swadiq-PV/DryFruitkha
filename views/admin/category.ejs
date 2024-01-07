@@ -137,13 +137,13 @@
                                 <label for="offer-percent" class="col-form-label">Offer (%)</label>
                                 <input type="number" class="form-control"
                                   id="edit-category-offer-percent_<%= categoryData[i]._id %>"
-                                  value="<%= categoryData[i].offerPercent %>" required>
+                                  value="<%= categoryData[i].offerPercent %>" >
                               </div>
                               <div class="mb-3">
                                 <label for="offer-expiry" class="col-form-label">Offer Expiry Date</label>
                                 <input type="date" class="form-control"
                                   id="edit-category-offer-expiry_<%= categoryData[i]._id %>"
-                                  value="<%= categoryData[i].offerExpiry %>" required>
+                                  value="<%= categoryData[i].offerExpiry %>" >
                               </div>
 
                             </form>
@@ -278,6 +278,11 @@
       if (!categoryName || !categoryDescription) {
         editCategoryErrorDiv.textContent = 'Name and description cannot be blank.';
         editCategoryErrorDiv.style.color = 'red';
+
+        if (parseFloat(categoryOfferPercent) > 99 || parseFloat(categoryOfferPercent) < 0) {
+      editCategoryErrorDiv.textContent = 'Offer percentage must be between 0 and 99.';
+      editCategoryErrorDiv.style.color = 'red';
+    }
         return;
       }
 
@@ -326,8 +331,8 @@
             });
           } else if (data && data.message === 'Category with updated name already exists') {
             // console.log('Category name already exists.');
-            editCategoryErrorDiv.textContent = 'Category name already exists.';
-            editCategoryErrorDiv.style.color = 'red';
+            const editCategoryErrorDiv = document.getElementById('editCategoryErrorDiv');
+            editCategoryErrorDiv.innerText = data.message;
           } else {
             console.error('Error: Save operation failed');
           }
@@ -337,7 +342,7 @@
         });
     }
     function validateOffer(offer) {
-      if (offer !== '' && (isNaN(offer) || parseFloat(offer) < 0 || parseFloat(offer) > 100)) {
+      if (offer !== '' && (isNaN(offer) || parseFloat(offer) < 0 || parseFloat(offer) > 99)) {
         return 'Offer percentage must be a number between 0 and 100.';
       }
       return null;
@@ -358,7 +363,7 @@
       }
 
       return null;
-    } ś
+    } 
   </script>
 
   <script>

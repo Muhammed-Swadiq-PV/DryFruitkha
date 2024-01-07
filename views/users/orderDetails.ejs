@@ -118,7 +118,7 @@
         <% if (currentPage > 1) { %>
             <a href="/orderDetails?page=<%= currentPage - 1 %>" class="btn btn-secondary" style="margin-right: 10px;">Previous Page</a>
         <% } %>
-
+        <span class="current-page" style="margin-left: 10px;margin-right: 10px;" ><strong><%= currentPage %> of <%= totalPages %></strong></span>
         <% if (currentPage < totalPages) { %>
             <a href="/orderDetails?page=<%= currentPage + 1 %>" class="btn btn-secondary"style="margin-left: 10px;">Next Page</a>
         <% } %>

@@ -23,11 +23,12 @@
                                     <div class="flex-grow-1 mb-3">
                                     <label for="productName" class="form-label">Product Name</label>
                                     <input type="text" class="form-control" id="productName" name="name"
-                                        value="<%= productData.name %>" required>
+                                        value="<%= productData.name %>">
+                                        <small id="productNameError" class="text-danger"></small>
                                 </div>
                                 <div class="flex-grow-1 mb-3">
                                     <label for="category" class="form-label">Category</label>
-                                    <select class="form-control" id="category" name="category" required>
+                                    <select class="form-control" id="category" name="category" >
                                         <option value="">Select category</option>
                                         <% Categories.forEach(cat=> { %>
                                             <option value="<%= cat %>" <%=productData.category===cat ? 'selected' : ''
@@ -40,18 +41,20 @@
                                 <div class="mb-3">
                                     <label for="description" class="form-label">Description</label>
                                     <textarea class="form-control" id="description" name="description" rows="2"
-                                        required><%= productData.description %></textarea>
+                                        ><%= productData.description %></textarea>
+                                        <small id="descriptionError" class="text-danger"></small>
                                 </div>
                                 <div class="mb-3">
                                     <label for="stock" class="form-label">Stock</label>
                                     <input type="number" class="form-control" id="stock" name="stock"
-                                        value="<%= productData.stock %>" required>
+                                        value="<%= productData.stock %>" >
                                 </div>
 
                                 <div class="form-group">
                                     <label for="addoffer">Offer</label>
                                     <input class="form-control " type="number" id="offer" name="offer"
-                                        aria-label="default input example" value="<%= productData.offer %>" required>
+                                        aria-label="default input example" value="<%= productData.offer %>" >
+                                        <small id="offerError" class="text-danger"></small>
                                 </div>
 
                                 <% let formattedDate='' ; %>
@@ -66,12 +69,14 @@
                                                             <input placeholder="Select date" type="date" id="expiryDate"
                                                                 name="expiryDate" class="form-control"
                                                                 value="<%= formattedDate %>">
+                                                                <small id="expiryDateError" class="text-danger"></small>
 
                                                             <div class="form-group">
                                                                 <label for="orginalPrice">Product Original
                                                                     Price:</label>
                                                                 <input type="number" class="form-control" id="price"
                                                                     name="price" value="<%= productData.price %>">
+                                                                    <small id="priceError" class="text-danger"></small>
                                                             </div>
                                                             <!-- Button to open Bootstrap modal -->
                                                             <button type="button" class="btn btn-secondary"
@@ -128,6 +133,60 @@
     <script>
         document.querySelector('form').addEventListener('submit', async function (event) {
             event.preventDefault();
+
+            document.getElementById('validationMessages').textContent = '';
+
+    // Create an object to store individual field error messages
+    const fieldErrors = {};
+
+    // Add validation for product name (letters only)
+    const productName = document.getElementById('productName').value.trim();
+    if (!/^[a-zA-Z\s]+$/.test(productName)) {
+        fieldErrors['productName'] = 'Product name should contain letters only';
+    }
+
+    const description = document.getElementById('description').value.trim();
+    if (!description) {
+        fieldErrors['description'] = 'Description cannot be blank';
+    }
+
+    // Add validation for product quantity (greater than 0)
+    const stock = parseInt(document.getElementById('stock').value, 10);
+    if (isNaN(stock) || stock <= 0) {
+        fieldErrors['stock'] = 'Product quantity should be greater than 0';
+    }
+
+    const offer = parseFloat(document.getElementById('offer').value);
+    const price = parseFloat(document.getElementById('price').value);
+
+    if (isNaN(price) || price <= 0) {
+    fieldErrors['price'] = 'Product price must be a valid positive number';
+}
+
+    if (isNaN(offer) || offer < 0) {
+        fieldErrors['offer'] = 'Offer must be a non-negative number';
+    } else if (offer >= price) {
+        fieldErrors['offer'] = 'Offer must be less than the product price';
+    }
+
+    const currentDateUTC = new Date().toUTCString();
+
+    if (offer > 0 && (!expiryDate || new Date(expiryDate).toUTCString() <= currentDateUTC)) {
+    fieldErrors['expiryDate'] = 'Expiry date is required and must be greater than the current date';
+}
+
+    // Display individual error messages for each field
+    Object.keys(fieldErrors).forEach(fieldName => {
+        const errorElement = document.getElementById(`${fieldName}Error`);
+        if (errorElement) {
+            errorElement.textContent = fieldErrors[fieldName];
+        }
+    });
+
+    // Check if there are any validation errors
+    if (Object.keys(fieldErrors).length > 0) {
+        return;
+    }
 
             // Create FormData object
             const formDataObject = new FormData();

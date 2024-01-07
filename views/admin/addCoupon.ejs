@@ -29,6 +29,7 @@
                 <label for="coupon" style="font-weight: 600;">COUPON CODE</label>
                 <input type="text" name="couponCode" class="form-control" id="couponCode" placeholder=""
                   style="border-radius: 1em;">
+                <div id="couponCodeError" class="error-message"></div>
               </div>
 
 
@@ -36,21 +37,24 @@
                 <label for="date" style="font-weight: 600;">EXPIRY DATE</label>
                 <input type="date" name="expiryDate" class="form-control" id="expiryDate" placeholder=""
                   style="border-radius: 1em;">
+                  <div id="expiryDateError" class="error-message"></div>
               </div>
             </div>
             <div class="form-row">
               <div class="form-group col-md-8">
                 <label for="price" style="font-weight: 600;">COUPON PRICE</label>
                 <input type="number" name="price" class="form-control" id="couponPrice" placeholder=""
-                  style="border-radius: 1em;" min="1">
+                  style="border-radius: 1em;">
+                  <div id="couponPriceError" class="error-message"></div>
               </div>
               <div class="form-group col-md-8">
                 <label for="purchaseAmount" style="font-weight: 600;">PURCHASE AMOUNT</label>
                 <input type="number" name="purchaseAmount" class="form-control" id="purchaseAmount" placeholder=""
-                  style="border-radius: 1em;" min="1">
+                  style="border-radius: 1em;">
               </div>
             </div>
-            <button type="submit" class="btn btn-success mx-auto d-block" style="margin-top: 20px;">CREATE
+            <button type="submit" onclick="createCoupon()" class="btn btn-success mx-auto d-block"
+              style="margin-top: 20px;">CREATE
               COUPON</button>
           </form>
         </div>
@@ -86,8 +90,8 @@
 
   <!------------------------------------- Modal for edit coupon  ------------------------------------->
 
-  <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel"
-    aria-hidden="true"data-backdrop="static" data-keyboard="false">
+  <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true"
+    data-backdrop="static" data-keyboard="false">
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
@@ -130,28 +134,28 @@
 
   <!-- ---------------- Modal for list and delist ----------------------------------- -->
   <div class="modal fade" id="listDelistModal" tabindex="-1" role="dialog" aria-labelledby="listDelistModalLabel"
-  aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="listDelistModalLabel">List/ Delist Confirmation</h5>
-        <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        Are you sure you want to <%= coupons.isActive ? 'List' : 'Delist' %> this coupon?
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-        <button type="button" class="btn btn-primary" id="confirmListDelistBtn">OK</button>
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="listDelistModalLabel">List/ Delist Confirmation</h5>
+          <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          Are you sure you want to <%= coupons.isActive ? 'List' : 'Delist' %> this coupon?
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button type="button" class="btn btn-primary" id="confirmListDelistBtn">OK</button>
+        </div>
       </div>
     </div>
   </div>
-</div>
 
 
-<!------------------------------------------- Responsible table for showing coupon data ------------------------------------------------>
+  <!------------------------------------------- Responsible table for showing coupon data ------------------------------------------------>
 
   <div class="container mt-4">
     <div class="d-flex justify-content-between mb-4" style="margin-top: -30px;">
@@ -192,7 +196,7 @@
                 <%= coupon.isActive ? 'Delist' : 'List' %>
               </button>
             </td>
-            
+
             <td class="col-md-2 table-data text-center">
               <button type="button" class="btn btn-warning edit-btn" data-toggle="modal" data-target="#editModal"
                 data-coupon-id="<%= coupon._id %>">Edit</button>
@@ -208,374 +212,305 @@
       </tbody>
     </table>
     <div class="pagination mt-4">
-      <% if (totalPages > 1) { %>
-          <% if (currentPage > 1) { %>
-              <a href="/admin/addCoupon?page=<%= currentPage - 1 %>" class="btn btn-secondary">Previous Page</a>
+      <% if (totalPages> 1) { %>
+        <% if (currentPage> 1) { %>
+          <a href="/admin/addCoupon?page=<%= currentPage - 1 %>" class="btn btn-secondary">Previous Page</a>
           <% } %>
-  
-          <% if (currentPage < totalPages) { %>
+
+            <% if (currentPage < totalPages) { %>
               <a href="/admin/addCoupon?page=<%= currentPage + 1 %>" class="btn btn-secondary">Next Page</a>
-          <% } %>
-      <% } %>
-  </div>
+              <% } %>
+                <% } %>
+    </div>
   </div>
 
   <!------------------------------------------- script for create coupon ---------------------------------- -->
 
-   <script>
-    function showSuccessMessage() {
-    Swal.fire({
-      icon: 'success',
-      title: 'Coupon created Successfully',
-      showConfirmButton: false,
-      timer: 2000,
+
+  <script>
+    document.getElementById('openCreateCouponModal').addEventListener('click', function () {
+      let createCouponModal = new bootstrap.Modal(document.getElementById('createCouponModal'), {
+        backdrop: 'static',
+        keyboard: false
+      });
+      createCouponModal.show();
     });
-    setTimeout(() => {
-    // Redirect to another page after 2 seconds
-    window.location.href = '/admin/addCoupon';
-  }, 2000);
-  }
 
-  document.getElementById('openCreateCouponModal').addEventListener('click', function () {
-    let createCouponModal = new bootstrap.Modal(document.getElementById('createCouponModal'), {
-    backdrop: 'static',
-    keyboard: false
-  });
-  createCouponModal.show();
-  });
-  
-  document.getElementById('couponForm').addEventListener('submit', async function (event) {
-    event.preventDefault();
-  
-    try{
-    // Validate the form
-    const isValid = await validateForm();
-  
-    if (isValid) {
-      // Proceed with form submission
-      var formData = new FormData(this);
-  
-      
-      // Check if the coupon code already exists
-      const couponCode = formData.get('couponCode');
-      const isCouponCodeExist = await checkCouponCodeExistence(couponCode);
+    document.getElementById('couponForm').addEventListener('submit', async function (event) {
+      event.preventDefault();
+    });
 
-      if (isCouponCodeExist) {
-        console.error('Coupon code already exists.');
+    function createCoupon() {
+      // Get form data
+      const formData = {
+        couponCode: document.getElementById('couponCode').value.trim(),
+        expiryDate: document.getElementById('expiryDate').value,
+        price: document.getElementById('couponPrice').value,
+        purchaseAmount: document.getElementById('purchaseAmount').value,
+      };
+
+      if (formData.couponCode === '') {
+        displayErrorMessage(couponCodeError, 'Coupon code cannot be empty');
         return;
       }
-          const response = await fetch('/admin/addCoupon', {
-  method: 'POST',
-  headers: {
-    'Content-Type': 'application/x-www-form-urlencoded',
-  },
-  body: new URLSearchParams(formData).toString(),
 
-          });
-  
-        if (response.ok) {
-          const responseData = await response.json();
-  
-          if (responseData.success) {
-            showSuccessMessage();
-          } else {
-            console.error('Failed to create coupon:', responseData.message);
+      const currentDate = new Date();
+  const selectedExpiryDate = new Date(formData.expiryDate);
+
+  // Validate expiry date
+  if (selectedExpiryDate <= currentDate) {
+    displayErrorMessage(expiryDateError, 'Expiry date must be greater than the current date');
+    return;
+  }
+
+  const couponPrice = parseFloat(formData.price);
+  const purchaseAmount = parseFloat(formData.purchaseAmount);
+
+  if (isNaN(couponPrice) || isNaN(purchaseAmount) || couponPrice >= (0.1 * purchaseAmount)) {
+    displayErrorMessage(couponPriceError, 'Coupon price must be less than 10% of the purchase amount');
+    return;
+  }
+      fetch('/admin/addCoupon', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      })
+        .then(response => {
+          console.log('Server response:', response);
+
+          return response.text(); // by making here it self json the code from the backend not showing correctly so make it text then if the response body is not in json format the parse will be fail so first make it as text then parse later
+        })
+        .then(data => {
+          console.log('Response body as text:', data);
+
+          try {
+            
+            const jsonData = JSON.parse(data);
+
+            if (jsonData.success) {
+            
+              Swal.fire({
+                icon: 'success',
+                title: jsonData.message,
+                showConfirmButton: false,
+                timer: 2000,
+              });
+              setTimeout(() => {
+                window.location.href = '/admin/addCoupon';
+              }, 2000);
+            } else {
+              console.log("Inside the coupon code exists error message");
+              // Display the specific error message to the user
+              displayErrorMessage(couponCodeError, jsonData.message);
+            }
+          } catch (error) {
+            // Log any JSON parsing errors
+            console.error('Error parsing JSON:', error);
+            displayErrorMessage(couponCodeError, 'Coupon creation failed');
           }
-        
-        } else {
-          console.error('Failed to create coupon:', response.statusText);
-        }
-      }
-      } catch (error) {
-        console.error('Error during fetch:', error);
-      }
-    
-  });
-  async function checkCouponCodeExistence(couponCode, couponData) {
-  try {
-    const response = await fetch(`/admin/checkCouponCode?couponCode=${encodeURIComponent(couponCode)}`);
+        })
+        .catch(error => {
+          // Display a generic error message for other errors
+          console.error('Error:', error);
+          displayErrorMessage(couponCodeError, 'Coupon creation failed');
+        });
 
-    if (!response.ok) {
-      console.error('Error checking coupon code existence. HTTP status:', response.status);
-      return false;
     }
 
-    const contentType = response.headers.get('content-type');
-    if (!contentType || !contentType.includes('application/json')) {
-      console.error('Invalid content type. Expected JSON, but received:', contentType);
-      return false;
-    } 
 
-    const data = await response.json();
-    return data.exists;
-  } catch (error) {
-    console.error('Error checking coupon code existence:', error);
-    return false; 
-  }
-}
-  
-  // Function to validate the form
- async function validateForm() {
-    let isValid = true;
-  
-    function displayError(fieldId, errorMessage) {
-      const field = document.getElementById(fieldId);
-      const errorContainer = field.parentElement.querySelector('.error-message');
-  
-      if (!errorContainer) {
-        const errorElement = document.createElement('div');
-        errorElement.className = 'error-message';
-        errorElement.textContent = errorMessage;
-        errorElement.style.color = 'red';
-        field.parentElement.appendChild(errorElement);
-      }
-  
-      isValid = false;
+    function displayErrorMessage(element, message) {
+      // Display the error message in the specified element
+      element.innerHTML = `<div class="alert alert-danger">${message}</div>`;
     }
-  
-    function removeError(fieldId) {
-      const field = document.getElementById(fieldId);
-      const errorContainer = field.parentElement.querySelector('.error-message');
-  
-      if (errorContainer) {
-        errorContainer.remove();
-      }
-    }
-  
-    const couponCode = document.getElementById('couponCode').value;
-    const expiryDate = document.getElementById('expiryDate').value;   
-    const price = document.getElementById('couponPrice').value;
-    const purchaseAmount = document.getElementById('purchaseAmount').value;
-   
+  </script>
 
-    if (!couponCode.trim()) {
-      displayError('couponCode', 'Coupon code cannot be blank.');
-    } else {
-       const isCouponCodeExist = await checkCouponCodeExistence(couponCode);
 
-    if (isCouponCodeExist) {
-      displayError('couponCode', 'Coupon code already exists.');
-    } else {
-      removeError('couponCode');
-    }
   
-    
-    if (!expiryDate) {
-    displayError('editExpiryDate', 'Expiry date cannot be blank.');
-  } else {
-    const today = new Date();
-    const selectedDate = new Date(expiryDate);
 
-    if (selectedDate < today) {
-      displayError('editExpiryDate', 'Expiry date must be later than today.');
-    } else {
-      removeError('editExpiryDate');
-    }
-  }
-  
-    // Validate coupon price (numeric)
-    if (isNaN(price) || price < 0) {
-      displayError('couponPrice', 'Coupon price must be a number.');
-    } else {
-      removeError('couponPrice');
-    }
-  
-    // Validate purchase amount (numeric)
-    if (!isNaN(price) && !isNaN(purchaseAmount) && price >= purchaseAmount) {
-      displayError('purchaseAmount', 'Purchase amount must be a number and greater than offer');
-    } else {
-      removeError('purchaseAmount');
-    }
-  
-    return isValid;
-  }
-  
-  
-}
-</script>
 
- 
 
 
   <!-------------------------------------------- script for edit coupon ----------------------------------------------- -->
 
   <script>
-   
-
-  // Function to validate the form
-  function validateForm() {
-    let isValid = true;
-
-    function displayError(fieldId, errorMessage) {
-      const field = document.getElementById(fieldId);
-      const errorContainer = field.parentElement.querySelector('.error-message');
-
-      if (!errorContainer) {
-        const errorElement = document.createElement('div');
-        errorElement.className = 'error-message';
-        errorElement.style.color = 'red';
-        errorElement.textContent = errorMessage;
-        field.parentElement.appendChild(errorElement);
-      }
-
-      isValid = false;
-    }
 
 
-    function removeError(fieldId) {
-      const field = document.getElementById(fieldId);
-      const errorContainer = field.parentElement.querySelector('.error-message');
+    // Function to validate the form
+    function validateForm() {
+      let isValid = true;
 
-      if (errorContainer) {
-        errorContainer.remove();
-      }
-    }
+      function displayError(fieldId, errorMessage) {
+        const field = document.getElementById(fieldId);
+        const errorContainer = field.parentElement.querySelector('.error-message');
 
-    const couponCode = document.getElementById('editCouponCode').value;
-    const expiryDate = document.getElementById('editExpiryDate').value;
-    const couponRate = document.getElementById('editCouponRate').value;
-    const purchaseAmount = document.getElementById('editPurchaseAmount').value;
-
-    if (!couponCode.trim()) {
-      displayError('editCouponCode', 'Coupon code cannot be blank.');
-    } else {
-      removeError('editCouponCode');
-    }
-
-    if (!expiryDate) {
-    displayError('editExpiryDate', 'Expiry date cannot be blank.');
-  } else {
-    const today = new Date();
-    const selectedDate = new Date(expiryDate);
-
-    if (selectedDate < today) {
-      displayError('editExpiryDate', 'Expiry date must be later than today.');
-    } else {
-      removeError('editExpiryDate');
-    }
-  }
-
-    if (isNaN(couponRate) || couponRate < 0) {
-      displayError('editCouponRate', 'Coupon rate must be a number.');
-    } else {
-      removeError('editCouponRate');
-    }
-
-    if (!isNaN(couponRate) && !isNaN(purchaseAmount) && couponRate >= purchaseAmount) {
-      displayError('editPurchaseAmount',' Purchase amount must be a number or greater than offer.');
-    } else {
-      removeError('editPurchaseAmount');
-    }
-
-    return isValid;
-  }
-
-
-
-document.addEventListener('DOMContentLoaded', function () {
-  let clickedEditBtn;
-  let editBtns = document.querySelectorAll('.edit-btn');
-
-  editBtns.forEach(function (editBtn) {
-    editBtn.addEventListener('click', async function () {
-      clickedEditBtn = editBtn;
-
-      let couponId = editBtn.getAttribute('data-coupon-id');
-      console.log(couponId, "script coupon id");
-
-      try {
-        const response = await fetch(`/admin/couponDetails/${couponId}`)
-       
-          if (!response.ok) {
-            throw new Error('Network response was not ok');
-          }
-          const data = await response.json();
-        
-          document.getElementById('editCouponCode').value = data.couponCode;
-          document.getElementById('editExpiryDate').value = data.expiryDate;
-          document.getElementById('editCouponRate').value = data.price;
-          document.getElementById('editPurchaseAmount').value = data.purchaseAmount;
-
-          let editModal = new bootstrap.Modal(document.getElementById('editModal'), {
-            backdrop: 'static',
-            keyboard: false
-          });
-
-          editModal.show();
-        } catch (error) {
-          console.error('Error fetching coupon details:', error);
+        if (!errorContainer) {
+          const errorElement = document.createElement('div');
+          errorElement.className = 'error-message';
+          errorElement.style.color = 'red';
+          errorElement.textContent = errorMessage;
+          field.parentElement.appendChild(errorElement);
         }
-    });
-  });
+
+        isValid = false;
+      }
+
+
+      function removeError(fieldId) {
+        const field = document.getElementById(fieldId);
+        const errorContainer = field.parentElement.querySelector('.error-message');
+
+        if (errorContainer) {
+          errorContainer.remove();
+        }
+      }
+
+      const couponCode = document.getElementById('editCouponCode').value;
+      const expiryDate = document.getElementById('editExpiryDate').value;
+      const couponRate = parseFloat(document.getElementById('editCouponRate').value);
+const purchaseAmount = parseFloat(document.getElementById('editPurchaseAmount').value);
+
+      if (!couponCode.trim()) {
+        displayError('editCouponCode', 'Coupon code cannot be blank.');
+      } else {
+        removeError('editCouponCode');
+      }
+
+      if (!expiryDate) {
+        displayError('editExpiryDate', 'Expiry date cannot be blank.');
+      } else {
+        const today = new Date();
+        const selectedDate = new Date(expiryDate);
+
+        if (selectedDate < today) {
+          displayError('editExpiryDate', 'Expiry date must be later than today.');
+        } else {
+          removeError('editExpiryDate');
+        }
+      }
+
+      if (isNaN(couponRate) || couponRate < 0) {
+        displayError('editCouponRate', 'Coupon rate must be a number.');
+      } else {
+        removeError('editCouponRate');
+      }
+
+      if (!isNaN(couponRate) && !isNaN(purchaseAmount) && couponRate >= (0.1 * purchaseAmount)) {
+        displayError('editPurchaseAmount', ' "Purchase amount must be at least 10 times greater than the offer.".');
+      } else {
+        removeError('editPurchaseAmount');
+      }
+
+      return isValid;
+    }
 
 
 
+    document.addEventListener('DOMContentLoaded', function () {
+      let clickedEditBtn;
+      let editBtns = document.querySelectorAll('.edit-btn');
 
-  document.getElementById('saveChangesBtn').addEventListener('click', function () {
-    const editedData = {
-      couponCode: document.getElementById('editCouponCode').value,
-      expiryDate: document.getElementById('editExpiryDate').value,
-      price: document.getElementById('editCouponRate').value,
-      purchaseAmount: document.getElementById('editPurchaseAmount').value,
-    };
+      editBtns.forEach(function (editBtn) {
+        editBtn.addEventListener('click', async function () {
+          clickedEditBtn = editBtn;
 
-    if (validateForm()) {
-      if (clickedEditBtn) {
-        let couponId = clickedEditBtn.getAttribute('data-coupon-id');
+          let couponId = editBtn.getAttribute('data-coupon-id');
+          console.log(couponId, "script coupon id");
 
-        fetch(`/admin/updateCoupon/${couponId}`, {
-          method: 'PATCH',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(editedData),
-        })
-          .then(function (response) {
+          try {
+            const response = await fetch(`/admin/couponDetails/${couponId}`)
+
             if (!response.ok) {
-          //     throw new Error('Network response was not ok');
-          displayError('editCouponCode', 'Duplicate coupon code. Please choose a different one.');
-
+              throw new Error('Network response was not ok');
             }
-            return response.json();
-          })
-          .then(function (result) {
-            if (result.error === 'Duplicate coupon code') {
-    // Display the duplicate coupon code error on the form
-    displayError('editCouponCode', 'Duplicate coupon code. Please choose a different one.');
-  }else{
-            console.log('Coupon updated successfully:', result);
-            Swal.fire({
-              icon: 'success',
-              title: 'Coupon Updated',
-              text: 'Coupon details have been updated successfully!',
-            }).then(() => {
-              window.location.reload();
-            });
-          }
-          })
-          .catch(function (error) {
-          console.log('Handling error:', error);
+            const data = await response.json();
 
-          if (error.message === 'Network response was not ok') {
-            handleNetworkError(error);
-          } else if (error.response) {
-            handleApplicationError(error);
+            document.getElementById('editCouponCode').value = data.couponCode;
+            document.getElementById('editExpiryDate').value = data.expiryDate;
+            document.getElementById('editCouponRate').value = data.price;
+            document.getElementById('editPurchaseAmount').value = data.purchaseAmount;
+
+            let editModal = new bootstrap.Modal(document.getElementById('editModal'), {
+              backdrop: 'static',
+              keyboard: false
+            });
+
+            editModal.show();
+          } catch (error) {
+            console.error('Error fetching coupon details:', error);
           }
         });
-    } else {
-      console.error('editBtn is not defined');
-    }
-  }
-});
+      });
 
 
-});
+
+
+      document.getElementById('saveChangesBtn').addEventListener('click', function () {
+        const editedData = {
+          couponCode: document.getElementById('editCouponCode').value,
+          expiryDate: document.getElementById('editExpiryDate').value,
+          price: document.getElementById('editCouponRate').value,
+          purchaseAmount: document.getElementById('editPurchaseAmount').value,
+        };
+
+        if (validateForm()) {
+          if (clickedEditBtn) {
+            let couponId = clickedEditBtn.getAttribute('data-coupon-id');
+
+            fetch(`/admin/updateCoupon/${couponId}`, {
+              method: 'PATCH',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify(editedData),
+            })
+              .then(function (response) {
+                if (!response.ok) {
+                  //     throw new Error('Network response was not ok');
+                  displayError('editCouponCode', 'Duplicate coupon code. Please choose a different one.');
+
+                }
+                return response.json();
+              })
+              .then(function (result) {
+                if (result.error === 'Duplicate coupon code') {
+                  // Display the duplicate coupon code error on the form
+                  displayError('editCouponCode', 'Duplicate coupon code. Please choose a different one.');
+                } else {
+                  console.log('Coupon updated successfully:', result);
+                  Swal.fire({
+                    icon: 'success',
+                    title: 'Coupon Updated',
+                    text: 'Coupon details have been updated successfully!',
+                  }).then(() => {
+                    window.location.reload();
+                  });
+                }
+              })
+              .catch(function (error) {
+                console.log('Handling error:', error);
+
+                if (error.message === 'Network response was not ok') {
+                  handleNetworkError(error);
+                } else if (error.response) {
+                  handleApplicationError(error);
+                }
+              });
+          } else {
+            console.error('editBtn is not defined');
+          }
+        }
+      });
+
+
+    });
 
 
   </script>
 
-   <!---------------------------------- script for delete coupon --------------------- -->
-   <script>
+  <!---------------------------------- script for delete coupon --------------------- -->
+  <script>
 
     var deleteButtons = document.querySelectorAll('.delete-btn');
 
@@ -625,60 +560,60 @@ document.addEventListener('DOMContentLoaded', function () {
       });
     });
   </script>
-<script>
-document.addEventListener('DOMContentLoaded', function () {
-  document.getElementById('userTableBody').addEventListener('click', function (event) {
-    if (event.target.classList.contains('list-delist-btn')) {
-      let couponId = event.target.dataset.couponId;
-      document.getElementById('listDelistModal').dataset.couponId = couponId;
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      document.getElementById('userTableBody').addEventListener('click', function (event) {
+        if (event.target.classList.contains('list-delist-btn')) {
+          let couponId = event.target.dataset.couponId;
+          document.getElementById('listDelistModal').dataset.couponId = couponId;
 
-      let listDelistCouponModal = new bootstrap.Modal(document.getElementById('listDelistModal'), {
-        backdrop: 'static',
-        keyboard: false
-      });
-      
-      listDelistCouponModal.show();
-    }
-  });
+          let listDelistCouponModal = new bootstrap.Modal(document.getElementById('listDelistModal'), {
+            backdrop: 'static',
+            keyboard: false
+          });
 
-  document.getElementById('confirmListDelistBtn').addEventListener('click', async function () {
-    let couponId = document.getElementById('listDelistModal').dataset.couponId;
-
-    try {
-      const response = await fetch(`/admin/couponToggleStatus/${couponId}`, {
-        method: 'PATCH',
+          listDelistCouponModal.show();
+        }
       });
 
-      const data = await response.json();
+      document.getElementById('confirmListDelistBtn').addEventListener('click', async function () {
+        let couponId = document.getElementById('listDelistModal').dataset.couponId;
 
-      if (data.success) {
-        // Update the button text and color based on the new status
-        const listDelistButton = document.querySelector(`.list-delist-btn[data-coupon-id="${couponId}"]`);
-        if (listDelistButton) {
-          listDelistButton.textContent = data.isActive ? 'Delist' : 'List';
-          listDelistButton.classList.toggle('btn-success', data.isActive);
-          listDelistButton.classList.toggle('btn-danger', !data.isActive);
+        try {
+          const response = await fetch(`/admin/couponToggleStatus/${couponId}`, {
+            method: 'PATCH',
+          });
+
+          const data = await response.json();
+
+          if (data.success) {
+            // Update the button text and color based on the new status
+            const listDelistButton = document.querySelector(`.list-delist-btn[data-coupon-id="${couponId}"]`);
+            if (listDelistButton) {
+              listDelistButton.textContent = data.isActive ? 'Delist' : 'List';
+              listDelistButton.classList.toggle('btn-success', data.isActive);
+              listDelistButton.classList.toggle('btn-danger', !data.isActive);
+            }
+
+            Swal.fire({
+              title: 'Success!',
+              text: 'Coupon status updated successfully.',
+              icon: 'success',
+            }).then(() => {
+              // Reload the page after the alert is closed
+              location.reload();
+            });
+          } else {
+            console.error('Failed to update coupon status');
+          }
+        } catch (error) {
+          console.error('Error:', error);
         }
 
-        Swal.fire({
-        title: 'Success!',
-        text: 'Coupon status updated successfully.',
-        icon: 'success',
-      }).then(() => {
-        // Reload the page after the alert is closed
-        location.reload();
+        let listDelistCouponModal = bootstrap.Modal.getInstance(document.getElementById('listDelistModal'));
+        listDelistCouponModal.hide();
       });
-      } else {
-        console.error('Failed to update coupon status');
-      }
-    } catch (error) {
-      console.error('Error:', error);
-    }
-
-    let listDelistCouponModal = bootstrap.Modal.getInstance(document.getElementById('listDelistModal'));
-    listDelistCouponModal.hide();
-  });
-});
-</script>
+    });
+  </script>
 
   <%- include('../layouts/adminFooter') %>

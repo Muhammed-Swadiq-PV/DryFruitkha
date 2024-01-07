@@ -67,7 +67,7 @@
                 <% if (currentPage > 1) { %>
                     <a href="/admin/adminsales?page=<%= currentPage - 1 %>" class="btn btn-secondary">Previous Page</a>
                 <% } %>
-        
+                <span class="current-page" style="margin-left: 10px;margin-right: 10px;" ><strong><%= currentPage %> of <%= totalPages %></strong></span>
                 <% if (currentPage < totalPages) { %>
                     <a href="/admin/adminsales?page=<%= currentPage + 1 %>" class="btn btn-secondary">Next Page</a>
                 <% } %>

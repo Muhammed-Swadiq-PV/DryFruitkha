@@ -128,7 +128,7 @@
                                         <div class="form-group">
                                             <label for="billingPhone">Phone</label>
                                             <input type="text" class="form-control" id="billingPhone" name="phones"
-                                                placeholder="Phone" pattern="[0-9]{10}">
+                                                placeholder="Phone">
                                             <div id="billingPhoneError" class="text-danger"></div>
                                         </div>
                                     </div>
@@ -236,64 +236,105 @@
     </div>
     <!-- Edit Address Modal -->
     <div class="modal" id="editAddressModal" tabindex="-1" role="dialog">
-        <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document" style="width: 80%;">
+        <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document" style="width: 80%; height: 65%;">
             <div class="modal-content" style="overflow-y: auto;">
                 <div class="modal-header">
                     <h5 class="modal-title">Edit Address</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        <span aria-hidden="true">&times;</span>
+                    <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <form id="editAddressForm" onsubmit="submitEditAddressForm(event)">
 
                     <input type="hidden" id="addressToUpdate" value="<%= addresses.id %>" />
-                    <div class="form-group">
-                        <label for="editFirstName">First Name</label>
-                        <input type="text" class="form-control" id="editFirstName" name="editFirstName"
-                            placeholder="First Name" value="<%=  %>" required>
+                    <div class="container">
+                        <div class="row">
+                            <div class="col">
+                                <div class="form-group">
+                                    <label for="editFirstName">First Name</label>
+                                    <input type="text" class="form-control" id="editFirstName" name="editFirstName"
+                                        placeholder="First Name" value="<%=  %>">
+                                    <div id="editFirstNameError" class="text-danger"></div>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="form-group">
+                                    <label for="editLastName">Last Name</label>
+                                    <input type="text" class="form-control" id="editLastName" name="editLastName"
+                                        placeholder="Last Name">
+                                    <div id="editLastNameError" class="text-danger"></div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <label for="editLastName">Last Name</label>
-                        <input type="text" class="form-control" id="editLastName" name="editLastName"
-                            placeholder="Last Name" required>
+                    <div class="container">
+                        <div class="row">
+                            <div class="col">
+                                <div class="form-group">
+                                    <label for="editState">State</label>
+                                    <input type="text" class="form-control" id="editState" name="editState"
+                                        placeholder="State">
+                                    <div id="editStateError" class="text-danger"></div>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="form-group">
+                                    <label for="editStreetAddress">Street Address</label>
+                                    <input type="text" class="form-control" id="editStreetAddress" name="editAddress"
+                                        placeholder="House number and street name">
+                                    <div id="editStreetAddressError" class="text-danger"></div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <label for="editState">State</label>
-                        <input type="text" class="form-control" id="editState" name="editState" placeholder="State"
-                            required>
-                    </div>
-                    <div class="form-group">
-                        <label for="editStreetAddress">Street Address</label>
-                        <input type="text" class="form-control" id="editStreetAddress" name="editAddress"
-                            placeholder="House number and street name" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="editTownCity">Town / City</label>
-                        <input type="text" class="form-control" id="editTownCity" name="editCity"
-                            placeholder="Town / City" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="editPostcodeZip">Postcode / ZIP</label>
-                        <input type="text" class="form-control" id="editPostcodeZip" name="editPostCode"
-                            placeholder="Postcode / ZIP" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="editDistrict">District</label>
-                        <input type="text" class="form-control" id="editDistrict" name="editDistrict"
-                            placeholder="District" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="editPhone">Phone</label>
-                        <input type="text" class="form-control" id="editPhone" name="editPhoneNumber"
-                            placeholder="Phone" pattern="[0-9]{10}" required>
-                    </div>
+                    <div class="container">
+                        <div class="row">
 
-                    <button type="submit" class="btn btn-primary btn-orange">Save Changes</button>
+
+                            <div class="col">
+                                <div class="form-group">
+                                    <label for="editTownCity">Town / City</label>
+                                    <input type="text" class="form-control" id="editTownCity" name="editCity"
+                                        placeholder="Town / City">
+                                    <div id="editTownCityError" class="text-danger"></div>
+                                </div>
+                            </div>
+
+                            <div class="col">
+                                <div class="form-group">
+                                    <label for="editPostcodeZip">Postcode / ZIP</label>
+                                    <input type="text" class="form-control" id="editPostcodeZip" name="editPostCode"
+                                        placeholder="Postcode / ZIP">
+                                    <div id="editPostcodeZipError" class="text-danger"></div>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="form-group">
+                                    <label for="editDistrict">District</label>
+                                    <input type="text" class="form-control" id="editDistrict" name="editDistrict"
+                                        placeholder="District">
+                                    <div id="editDistrictError" class="text-danger"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="container" style="align-items: center;">
+                        <div class="form-group">
+                            <label for="editPhone">Phone</label>
+                            <input type="text" class="form-control" id="editPhone" name="editPhoneNumber"
+                                placeholder="Phone">
+                            <div id="editPhoneError" class="text-danger"></div>
+                        </div>
+                    </div>
+                    <div style="text-align: center;">
+                        <button type="submit" class="btn btn-primary btn-orange">Save Changes</button>
+                    </div>
                 </form>
 
             </div>
-          
+
         </div>
+    </div>
 
 
 
@@ -303,211 +344,250 @@
 
 
 
-
-        <!-- --------------------make the address as default -------------------------------- -->
-        <script>
-            function setDefaultAsDefault(element) {
-                try {
-                    const addressId = element.getAttribute('data-address-id');
-
-
-                    fetch('/setDefaultAddress/' + addressId, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                    })
-                        .then((response) => response.json())
-                        .then((data) => {
-
-                            console.log(data);
-
-                            if (data.success) {
-                                console.log('Default address set successfully');
-                            } else {
-                                console.error('Error setting default address:', data.message);
-                            }
-                        })
-                        .catch((error) => {
-                            console.error('Fetch error:', error);
-                        });
-                } catch (error) {
-                    console.error('Error:', error);
-                }
-            }
-
-        </script>
-
-        <!-- ------------------add address validation ------------------------>
-        <script>
-            document.addEventListener('DOMContentLoaded', () => {
-                const form = document.getElementById('userAddressForm');
-
-                form.addEventListener('submit', (event) => {
-                    event.preventDefault();
-
-                    const firstName = document.getElementById('billingFirstName');
-                    const lastName = document.getElementById('billingLastName');
-                    const state = document.getElementById('billingState');
-                    const streetAddress = document.getElementById('billingStreetAddress');
-                    const townCity = document.getElementById('billingTownCity');
-                    const postcodeZip = document.getElementById('billingPostcodeZip');
-                    const district = document.getElementById('billingDistrict');
-                    const phone = document.getElementById('billingPhone');
-
-                    const validateField = (field, errorMessage) => {
-                        const value = field.value.trim();
-                        const errorElement = document.getElementById(`${field.id}Error`);
-
-                        if (!value) {
-                            errorElement.textContent = errorMessage;
-                        } else {
-                            errorElement.textContent = '';
-                        }
-
-                        return value;
-                    };
-
-                    const validatedFirstName = validateField(firstName, 'First Name is required');
-                    const validatedLastName = validateField(lastName, 'Last Name is required');
-                    const validatedState = validateField(state, 'State is required');
-                    const validatedStreetAddress = validateField(streetAddress, 'Street Address is required');
-                    const validatedTownCity = validateField(townCity, 'Town / City is required');
-                    const validatedPostcodeZip = validateField(postcodeZip, 'Postcode / ZIP is required');
-                    const validatedDistrict = validateField(district, 'District is required');
-                    const validatedPhone = validateField(phone, 'Phone number must be 10 digits');
-
-                    if (
-                        validatedFirstName &&
-                        validatedLastName &&
-                        validatedState &&
-                        validatedStreetAddress &&
-                        validatedTownCity &&
-                        validatedPostcodeZip &&
-                        validatedDistrict &&
-                        validatedPhone
-                    ) {
-                        form.submit();
-                    }
-                });
-            });
-        </script>
+    <!-- --------------------make the address as default -------------------------------- -->
+    <script>
+        function setDefaultAsDefault(element) {
+            try {
+                const addressId = element.getAttribute('data-address-id');
 
 
-        <!------------------------------ delete address function -------------------------------->
-
-        <script>
-            function confirmDelete(id) {
-                console.log("delelte modal");
-                fetch('/deleteAddress/' + id, {
-                    method: 'DELETE',
+                fetch('/setDefaultAddress/' + addressId, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
                 })
                     .then((response) => response.json())
                     .then((data) => {
+
+                        console.log(data);
+
                         if (data.success) {
-                            console.log('Address deleted successfully');
-                            window.location.href = window.location.href;
+                            console.log('Default address set successfully');
                         } else {
-                            console.error('Error deleting address:', data.message);
+                            console.error('Error setting default address:', data.message);
                         }
                     })
                     .catch((error) => {
                         console.error('Fetch error:', error);
                     });
+            } catch (error) {
+                console.error('Error:', error);
             }
-        </script>
+        }
 
+    </script>
 
+    <!-- ------------------add address validation ------------------------>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const form = document.getElementById('userAddressForm');
 
+            form.addEventListener('submit', (event) => {
+                event.preventDefault();
 
+                const firstName = document.getElementById('billingFirstName');
+                const lastName = document.getElementById('billingLastName');
+                const state = document.getElementById('billingState');
+                const streetAddress = document.getElementById('billingStreetAddress');
+                const townCity = document.getElementById('billingTownCity');
+                const postcodeZip = document.getElementById('billingPostcodeZip');
+                const district = document.getElementById('billingDistrict');
+                const phone = document.getElementById('billingPhone');
 
+                const validateField = (field, errorMessage) => {
+                    const value = field.value.trim();
+                    const errorElement = document.getElementById(`${field.id}Error`);
 
+                    if (!value) {
+                        errorElement.textContent = errorMessage;
+                    } else {
+                        errorElement.textContent = '';
+                    }
 
+                    return value;
+                };
 
+                const validatedFirstName = validateField(firstName, 'First Name is required');
+                const validatedLastName = validateField(lastName, 'Last Name is required');
+                const validatedState = validateField(state, 'State is required');
+                const validatedStreetAddress = validateField(streetAddress, 'Street Address is required');
+                const validatedTownCity = validateField(townCity, 'Town / City is required');
+                const validatedPostcodeZip = validateField(postcodeZip, 'Postcode / ZIP is required');
+                const validatedDistrict = validateField(district, 'District is required');
+                const validatedPhone = validateField(phone, 'Phone number must be 10 digits');
 
-
-
-        <!---------------------------- edit address function -------------------------------->
-        <script>
-            document.addEventListener('DOMContentLoaded', function () {
-                const urlParams = new URLSearchParams(window.location.search);
-        
-                if (urlParams.has('success') && urlParams.get('success') === 'true') {
-                    // Display SweetAlert success message
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'Updated address successfully',
-                        showConfirmButton: false,
-                        timer: 2000,
-                    }).then(() => {
-                        // Reload the page after the SweetAlert is closed
-                        console.log("sweet alert success message displayed");
-                        location.reload();
-                    });
+                if (
+                    validatedFirstName &&
+                    validatedLastName &&
+                    validatedState &&
+                    validatedStreetAddress &&
+                    validatedTownCity &&
+                    validatedPostcodeZip &&
+                    validatedDistrict &&
+                    validatedPhone
+                ) {
+                    form.submit();
                 }
             });
-        
-            function editAddressModal(addressId, address) {
-                const editAddressModal = document.getElementById('editAddressModal');
-                const addressToUpdate = document.getElementById('addressToUpdate');
-        
-                const selectedAddress = typeof address === 'string' ? JSON.parse(address) : address;
-                console.log('Selected Address:', selectedAddress);
-        
-                addressToUpdate.value = addressId;
-        
-                document.getElementById('editFirstName').value = selectedAddress.firstName;
-                document.getElementById('editLastName').value = selectedAddress.LastName;
-                document.getElementById('editState').value = selectedAddress.state;
-                document.getElementById('editStreetAddress').value = selectedAddress.address;
-                document.getElementById('editTownCity').value = selectedAddress.city;
-                document.getElementById('editPostcodeZip').value = selectedAddress.Postcode;
-                document.getElementById('editDistrict').value = selectedAddress.district;
-                document.getElementById('editPhone').value = selectedAddress.phones;
-        
-                editAddressModal.style.display = 'block';
-            }
-        
-            function submitEditAddressForm(event) {
-                console.log("inside submit edit address form");
-                event.preventDefault();
-        
-                const updatedAddressData = {
-                    firstName: document.getElementById('editFirstName').value,
-                    LastName: document.getElementById('editLastName').value,
-                    state: document.getElementById('editState').value,
-                    address: document.getElementById('editStreetAddress').value,
-                    city: document.getElementById('editTownCity').value,
-                    Postcode: document.getElementById('editPostcodeZip').value,
-                    district: document.getElementById('editDistrict').value,
-                    phones: document.getElementById('editPhone').value,
-                };
-        
-                const addressId = document.getElementById('addressToUpdate').value;
-        
-                fetch('/update-address', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ addressId, updatedAddressData }),
-                    redirect: 'follow',
+        });
+    </script>
+
+
+    <!------------------------------ delete address function -------------------------------->
+
+    <script>
+        function confirmDelete(id) {
+            console.log("delelte modal");
+            fetch('/deleteAddress/' + id, {
+                method: 'DELETE',
+            })
+                .then((response) => response.json())
+                .then((data) => {
+                    if (data.success) {
+                        console.log('Address deleted successfully');
+                        window.location.href = window.location.href;
+                    } else {
+                        console.error('Error deleting address:', data.message);
+                    }
                 })
-                .then(response =>{
+                .catch((error) => {
+                    console.error('Fetch error:', error);
+                });
+        }
+    </script>
 
-                    // console.log(data.message);
-                    window.location.reload()
 
-                   
-                 response.json()})
-                
-                .catch(error => {
-                    console.error(error);
+
+
+
+
+
+
+
+
+
+    <!---------------------------- edit address function -------------------------------->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const urlParams = new URLSearchParams(window.location.search);
+
+            if (urlParams.has('success') && urlParams.get('success') === 'true') {
+                // Display SweetAlert success message
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Updated address successfully',
+                    showConfirmButton: false,
+                    timer: 2000,
+                }).then(() => {
+                    // Reload the page after the SweetAlert is closed
+                    console.log("sweet alert success message displayed");
+                    location.reload();
                 });
             }
-        </script>
-        
-        
+        });
+
+        function editAddressModal(addressId, address) {
+            const editAddressModal = document.getElementById('editAddressModal');
+            const addressToUpdate = document.getElementById('addressToUpdate');
+
+            const selectedAddress = typeof address === 'string' ? JSON.parse(address) : address;
+            console.log('Selected Address:', selectedAddress);
+
+            addressToUpdate.value = addressId;
+
+            document.getElementById('editFirstName').value = selectedAddress.firstName;
+            document.getElementById('editLastName').value = selectedAddress.LastName;
+            document.getElementById('editState').value = selectedAddress.state;
+            document.getElementById('editStreetAddress').value = selectedAddress.address;
+            document.getElementById('editTownCity').value = selectedAddress.city;
+            document.getElementById('editPostcodeZip').value = selectedAddress.Postcode;
+            document.getElementById('editDistrict').value = selectedAddress.district;
+            document.getElementById('editPhone').value = selectedAddress.phones;
+
+            editAddressModal.style.display = 'block';
+        }
+
+        function submitEditAddressForm(event) {
+  event.preventDefault();
+
+  // Reset error messages
+  const errorElements = document.querySelectorAll('.text-danger');
+  errorElements.forEach(element => element.textContent = '');
+
+  const updatedAddressData = {
+    firstName: document.getElementById('editFirstName').value,
+    LastName: document.getElementById('editLastName').value,
+    state: document.getElementById('editState').value,
+    address: document.getElementById('editStreetAddress').value,
+    city: document.getElementById('editTownCity').value,
+    Postcode: document.getElementById('editPostcodeZip').value,
+    district: document.getElementById('editDistrict').value,
+    phones: document.getElementById('editPhone').value,
+  };
+
+  let isValid = true;
+
+  // Validate first name (letters only)
+  if (!/^[a-zA-Z]+$/.test(updatedAddressData.firstName)) {
+    isValid = false;
+    document.getElementById('editFirstNameError').textContent = 'First name should only contain letters.';
+  }
+
+  // Validate last name (letters only)
+  if (!/^[a-zA-Z]+$/.test(updatedAddressData.LastName)) {
+    isValid = false;
+    document.getElementById('editLastNameError').textContent = 'Last name should only contain letters.';
+  }
+
+  // Validate district (letters only)
+  if (!/^[a-zA-Z]+$/.test(updatedAddressData.district)) {
+    isValid = false;
+    document.getElementById('editDistrictError').textContent = 'District should only contain letters.';
+  }
+
+  // Validate state (letters only)
+  if (!/^[a-zA-Z]+$/.test(updatedAddressData.state)) {
+    isValid = false;
+    document.getElementById('editStateError').textContent = 'State should only contain letters.';
+  }
+
+  // Validate postcode/zip (numbers only)
+  if (!/^[0-9]+$/.test(updatedAddressData.Postcode)) {
+    isValid = false;
+    document.getElementById('editPostcodeZipError').textContent = 'Postcode/ZIP should only contain numbers.';
+  }
+
+  // Validate phone (numbers only, 10 digits)
+  if (!/^[0-9]{10}$/.test(updatedAddressData.phones)) {
+    isValid = false;
+    document.getElementById('editPhoneError').textContent = 'Phone number should be 10 digits.';
+  }
+
+  if (isValid) {
+    // Proceed with form submission
+    const addressId = document.getElementById('addressToUpdate').value;
+
+    fetch('/update-address', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ addressId, updatedAddressData }),
+      redirect: 'follow',
+    })
+      .then(response => {
+        window.location.reload();
+      })
+      .catch(error => {
+        console.error(error);
+      });
+  }
+}
+
+    </script>
 
 
-        <%- include('../layouts/userfooter') %>
+
+
+    <%- include('../layouts/userfooter') %>

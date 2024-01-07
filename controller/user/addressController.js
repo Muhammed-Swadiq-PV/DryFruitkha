@@ -232,7 +232,9 @@ const updateUserProfile = async (req, res) => {
   const updateAddress = async (req, res) => {
     try {
         const userId = req.session.user;
+        console.log(userId, "userid");
         const { addressId, updatedAddressData } = req.body;
+        console.log(req.body , 'update address');
 
         const user = await userModel.findById(userId);
 

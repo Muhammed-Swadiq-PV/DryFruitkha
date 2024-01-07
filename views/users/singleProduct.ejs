@@ -100,8 +100,12 @@
 
                                                                             </p>
                                                                             <p><strong>Stock:</strong>
-                                                                                <%= product.stock %> units
-                                                                            </p>
+                                                                                <% if (product.stock > 0) { %>
+                                                                                  <%= product.stock %> units
+                                                                                <% } else { %>
+                                                                                  <span style="color: red;">Out of Stock</span>
+                                                                                <% } %>
+                                                                              </p>
                                                                             <p><strong>Category:</strong>
                                                                                 <%= product.categoryDetails.name %>
                                                                             </p>

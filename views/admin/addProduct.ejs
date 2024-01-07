@@ -5,14 +5,14 @@
         <div class="col-12">
             <div class="bg-light rounded h-100 p-4">
                 <h6 class="mb-4">Add Product</h6>
-                <small id="productError" style="color: red;"></small>
-
+                
                 <form id="productForm" action="/admin/product" method="post" enctype="multipart/form-data">
                     <div class="mb-3">
                         <label for="productImage" class="form-label">Product Image</label>
-                        <input type="file" class="form-control" id="productImage" name="image" accept="image/*" multiple required>
+                        <input type="file" class="form-control" id="productImage" name="image" accept="image/*" multiple >
                         
                     </div>
+                    <small id="productError" style="color: red;"></small>
                     <div class="mb-3">
                         <label for="productName" class="form-label">Product Name</label>
                         <input type="text" class="form-control" id="productName" name="name" >
@@ -20,7 +20,7 @@
                     <div class="d-flex">
                         <div class="flex-grow-1 mb-3">
                         <label for="category" class="form-label">Category</label>
-                        <select class="form-control" id="category" name="category" required>
+                        <select class="form-control" id="category" name="category" >
                             <option value="">Select category</option>
                             <% Categories.forEach(category => { %>
                                 <option value="<%= category._id %>"><%= category.name %></option>
@@ -53,7 +53,27 @@
 
 <script>
 
+function showError(message, fieldId) {
+    const errorDiv = document.createElement("div");
+    errorDiv.className = "text-danger";
+    errorDiv.innerHTML = message;
+
+    const field = document.getElementById(fieldId);
+    const parentDiv = field.parentElement;
+
+    // Check if there is an existing error message for the field
+    const existingError = parentDiv.querySelector(".text-danger");
+    if (existingError) {
+        existingError.innerHTML = message; // Update existing error message
+    } else {
+        parentDiv.appendChild(errorDiv); // Append error message if none exists
+    }
+}
+
 function validateForm() {
+    // Reset previous error messages
+    clearErrorMessages();
+
     const productName = document.getElementById("productName").value.trim();
     const category = document.getElementById("category").value.trim();
     const price = document.getElementById("price").value.trim();
@@ -61,45 +81,52 @@ function validateForm() {
     const description = document.getElementById("description").value.trim();
     const imageCount = document.getElementById("productImage").files.length;
 
-    const errorElement = document.getElementById("productError");
+    let isValid = true;
 
-    if (!imageCount) {
-        errorElement.textContent = "Please select any images";
-        return false;
+    // Validate Product Image
+    if (imageCount === 0) {
+        showError("Please add an image.", "productImage");
+        isValid = false;
     }
 
-    if (productName === "") {
-        errorElement.textContent = "Product name cannot be empty";
-        return false;
+    // Validate Product Name
+    if (!productName) {
+        showError("Please enter a product name.", "productName");
+        isValid = false;
     }
 
-    if (category === "") {
-        errorElement.textContent = "Please select a category";
-        return false;
+    // Validate Category
+    if (!category) {
+        showError("Please select a category.", "category");
+        isValid = false;
     }
 
-   
-
-    if (!/^\d+(\.\d{1,2})?$/.test(price) || price =='') {
-        errorElement.textContent = "please enter valid price";
-        return false;
+    // Validate Price
+    if (!price || isNaN(price) || parseFloat(price) <= 0) {
+        showError("Please enter a valid price.", "price");
+        isValid = false;
     }
 
-   
-
-   
-
-    if (description === "") {
-        errorElement.textContent = "Product description cannot be empty";
-        return false;
+    // Validate Stock
+    if (!stock || isNaN(stock) || parseInt(stock) < 1) {
+        showError("Please enter a valid stock quantity.", "stock");
+        isValid = false;
     }
 
-    if (!/^\d+(\.\d{1,2})?$/.test(stock)) {
-        errorElement.textContent = "please enter stock";
-        return false;
+    // Validate Description
+    if (!description) {
+        showError("Please enter a product description.", "description");
+        isValid = false;
     }
 
-    return true;
+    return isValid;
+}
+
+function clearErrorMessages() {
+    const errorMessages = document.getElementsByClassName("text-danger");
+    for (let i = 0; i < errorMessages.length; i++) {
+        errorMessages[i].remove();
+    }
 }
 
    
