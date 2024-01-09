@@ -100,12 +100,14 @@
 
                                                                             </p>
                                                                             <p><strong>Stock:</strong>
-                                                                                <% if (product.stock > 0) { %>
-                                                                                  <%= product.stock %> units
-                                                                                <% } else { %>
-                                                                                  <span style="color: red;">Out of Stock</span>
-                                                                                <% } %>
-                                                                              </p>
+                                                                                <% if (product.stock> 0) { %>
+                                                                                    <%= product.stock %> units
+                                                                                        <% } else { %>
+                                                                                            <span
+                                                                                                style="color: red;">Out
+                                                                                                of Stock</span>
+                                                                                            <% } %>
+                                                                            </p>
                                                                             <p><strong>Category:</strong>
                                                                                 <%= product.categoryDetails.name %>
                                                                             </p>
@@ -119,10 +121,19 @@
                                                                                     <div
                                                                                         class="single-product-form mx-3">
 
-                                                                                        <a onclick="addToCart('<%= product._id %>')"
-                                                                                            class="cart-btn"><i
-                                                                                                class="fas fa-shopping-cart"></i>
-                                                                                            Add to Cart</a>
+                                                                                        <% if (product.stock> 0) { %>
+                                                                                            <a onclick="addToCart('<%= product._id %>')"
+                                                                                                class="cart-btn"><i
+                                                                                                    class="fa fa-shopping-cart"></i>
+                                                                                                Add to Cart</a>
+                                                                                            <% } else { %>
+                                                                                                <button disabled
+                                                                                                    class="cart-btn"><i
+                                                                                                        class="fa fa-shopping-cart"></i>
+                                                                                                    Out of
+                                                                                                    Stock</button>
+                                                                                                <% } %>
+
 
                                                                                     </div>
                                                                                     <div class="single-product-form">

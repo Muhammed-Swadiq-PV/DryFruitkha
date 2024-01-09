@@ -31,33 +31,51 @@
                                 </tr>
                             </thead>
                             <tbody>
+                                
                                 <% for (let i = 0; i < user.wishlist.length; i++) { %>
                                     <% const product = user.wishlist[i].product; %>
                                     <script>console.log('Product:', '<%= JSON.stringify(product) %>');</script>
                                     <tr class="table-body-row">
                                         <td class="product-remove">
+                                            <% if (product && product._id) { %>
                                             <a href="#" class="remove-product-btn" style="width: 20px"
                                               onclick="event.preventDefault(); removeWishlistItem('<%=product._id%>')">
                                               <i class="far fa-window-close"></i>
                                             </a>
+                                            <% } %>
                                           </td>
-                                          <script>console.log('ProductId:', '<%= product.productId %>');</script>
+                                          <script>console.log('ProductId:', '<%= product._id %>');</script>
                                         <td class="product-image">
+                                            <% if (product && product.image && product.image.length > 0) { %>
                                             <img src="<%= product.image[0] %>" alt="product-image" class="img-fluid" width="100">
+                                            <% } %>
                                         </td>
                                         <td class="product-name">
+                                            <% if(product){ %>
                                             <%= product.name %>
+                                            <% } %>
                                         </td>
-                                        <td class="product-price">₹<%= product.price %></td>
+                                        <td class="product-price">
+                                            <% if(product){ %>
+                                            ₹<%= product.price %>
+                                                <% } %>
+                                        </td>
                                         <td class="product-total">
-                                            <button onclick="event.preventDefault(); addToCartFromWishlist('<%= product._id %>', '<%= product.price %>')">Add to Cart</button>
-
-                                        </td>
+                                            <% if (product && product._id) { %>
+                                              <% if (product.stock > 0) { %>
+                                                <button onclick="event.preventDefault(); addToCartFromWishlist('<%= product._id %>', '<%= product.price %>')">Add to Cart</button>
+                                              <% } else { %>
+                                                <button disabled>Add to Cart</button>
+                                              <% } %>
+                                            <% } %>
+                                          </td>
+                                          
                                     </tr>
                                 <% } %>
                             </tbody>
                         </table>
                     <% } else { %>
+                    
                         <p>Your wishlist is empty.</p>
                     <% } %>
                 </div>

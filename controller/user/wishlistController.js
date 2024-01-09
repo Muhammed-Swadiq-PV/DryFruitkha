@@ -14,9 +14,8 @@ const getWishlist = async (req, res) => {
       if (!user) {
         res.redirect('/login');
       }
-  
-      
       const wishlist = user.wishlist.map((item) => item.product);
+      //  
   
       res.render("users/wishlist", {  user , wishlist });
     } catch (error) {
@@ -38,7 +37,10 @@ const postWishlist = async (req, res) => {
       if (!user) {
         return res.status(404).json({ message: "User not found" });
       }
-      if (user.wishlist.some(item => item.product.toString() === productId)) {
+      if (!Array.isArray(user.wishlist)) {
+        user.wishlist = []; 
+      }
+      if (user.wishlist.some(item =>  item.product && item.product.toString() === productId)) {
         return res.status(409).json({ message: "Product already exists in wishlist" });
       }
       
