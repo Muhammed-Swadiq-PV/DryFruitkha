@@ -83,7 +83,7 @@ referralCode: {
     type: String,
     unique: true,
     default: shortid.generate,
-},
+},  
 
        
 })

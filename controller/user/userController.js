@@ -159,9 +159,9 @@ const postSignUp = async (req, res) => {
     let referredUser = null;
 
     if (referedReferralCode) {
-      console.log(referedReferralCode, "referedReferralCode");
+      // console.log(referedReferralCode, "referedReferralCode");
       referredUser = await userModel.findOne({ referralCode: referedReferralCode });
-      console.log(referredUser, "referredUser");
+      // console.log(referredUser, "referredUser");
       if (referredUser) {
         console.log('Referred User ID:', referredUser._id);
       } else {
@@ -238,17 +238,21 @@ const postOTPverification = async (req, res) => {
       if (!(referredUser instanceof userModel)) {
         referredUser = await userModel.findById(referredUser._id);
       }
-
-      const rewardAmount = 51;
-
       // Check if the referredUser has a wallet array
       if (!referredUser.wallet) {
         referredUser.wallet = [];
       }
 
+      const rewardAmount = 51;
+      const totalBalance = referredUser.wallet.reduce(
+        (total, entry) => total + entry.creditAmount - entry.debitAmount,
+        0
+      ) + rewardAmount;
+
+
       
       referredUser.wallet.push({
-        balance: (referredUser.wallet[0]?.balance || 0) + rewardAmount,
+        balance: totalBalance,
         date: new Date(),
         creditAmount: rewardAmount,
         debitAmount: 0,
