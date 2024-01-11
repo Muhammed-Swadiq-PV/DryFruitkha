@@ -131,9 +131,14 @@ const postSignUp = async (req, res) => {
     const referedReferralCode = req.body.referralCode;
 
     const specialCharacterRegex = /[!@#$%^&*()_+{}\[\]:;<>,.?~\\/-]/;
+    const alphabetRegex = /^[a-zA-Z]+$/;
 
     if (!Firstname || !Lastname || !phone || !email || !password || !confirmPassword) {
       return res.render('users/signUp', { error: 'All fields are required.' });
+    }
+
+    if (!alphabetRegex.test(Firstname) || !alphabetRegex.test(Lastname)) {
+      return res.render('users/signUp', { error: 'First name and last name should contain only alphabets.' });
     }
 
     if (password.length < 6) {
