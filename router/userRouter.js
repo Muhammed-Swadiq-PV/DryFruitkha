@@ -1,22 +1,22 @@
-const express =require('express')
-const router =express()
-const usercontroller = require('../controller/user/userController')
-const userMiddleware = require('../middleware/userMiddleware')
-const userProductController = require('../controller/user/userProductController')
-const cartController = require('../controller/user/cartController')
-const addressController = require('../controller/user/addressController')
+const express =require('express');
+const router =express();
+const usercontroller = require('../controller/user/userController');
+const userMiddleware = require('../middleware/userMiddleware');
+const userProductController = require('../controller/user/userProductController');
+const cartController = require('../controller/user/cartController');
+const addressController = require('../controller/user/addressController');
 const orderController = require('../controller/user/orderController');
 const wishlistController = require('../controller/user/wishlistController');
 const walletController = require('../controller/user/walletController');
 
 
-router.get('/',userMiddleware.blockStatus,usercontroller.gethome)
+router.get('/',userMiddleware.blockStatus,usercontroller.gethome);
 router.get('/login',usercontroller.getLogin);
 
 //logout user
-router.get('/logout',usercontroller.postLogout)
+router.get('/logout',usercontroller.postLogout);
 
-router.get('/signup',usercontroller.getSignUp)
+router.get('/signup',usercontroller.getSignUp);
 
 router.post('/signup',usercontroller.postSignUp);
 //otp verification
@@ -24,7 +24,7 @@ router.get('/verifyOTP',usercontroller.getVerification)
 router.post('/verifyOTP/resentOTP', usercontroller.resentOTP);
 router.post('/verifyOTP', usercontroller.postOTPverification);
 
-router.post('/login',usercontroller.postLogin)
+router.post('/login',usercontroller.postLogin);
 router.post('/changePassword',usercontroller.changePassword);
 
 router.get('/verifyEmail',userMiddleware.blockStatus,usercontroller.getVerifyEmail);
@@ -38,14 +38,14 @@ router.get('/resetPassword',userMiddleware.blockStatus,usercontroller.getResetPa
 router.post("/resetPassword",usercontroller.postResetPassword);
 
 //home shop
-router.get('/shop',userMiddleware.blockStatus,userProductController.getShop)
+router.get('/shop',userMiddleware.blockStatus,userProductController.getShop);
 // singleProduct
 router.get('/singleProduct',userMiddleware.blockStatus,userProductController.getSingleProduct);
 //search icon
 
 
 //wishlist
-router.get('/wishlist',userMiddleware.blockStatus,wishlistController.getWishlist)
+router.get('/wishlist',userMiddleware.blockStatus,wishlistController.getWishlist);
 router.post('/addToWishlist/:id',userMiddleware.blockStatus,wishlistController.postWishlist);
 router.post('/wishlist/remove/:id',userMiddleware.blockStatus,wishlistController.removeWishlist);
 
@@ -58,7 +58,7 @@ router.patch('/updateCartItemQuantity/:id',userMiddleware.blockStatus,cartContro
 
 //checkOut
 router.get('/checkOut',userMiddleware.blockStatus,orderController.getCheckOut);
-router.post('/addAddressCheckout',userMiddleware.blockStatus,addressController.addAddressCheckout)
+router.post('/addAddressCheckout',userMiddleware.blockStatus,addressController.addAddressCheckout);
 router.post('/placeOrder',userMiddleware.blockStatus, orderController.placeOrder);
 router.post('/razorpayOrder',userMiddleware.blockStatus,userMiddleware.blockStatus,orderController.razorpayOrder);
 router.post('/orderOnline',userMiddleware.blockStatus, orderController.afterPayment);
@@ -85,7 +85,7 @@ router.patch('/updateOrderStatus/:orderId',userMiddleware.blockStatus,orderContr
 router.patch('/returnOrder/:orderId',userMiddleware.blockStatus,orderController.returnOrder);
 
 router.get('/wallet',userMiddleware.blockStatus,walletController.getwalletPage);
-router.post('/walletOrder',userMiddleware.blockStatus,walletController.orderWithWalletAmount)
+router.post('/walletOrder',userMiddleware.blockStatus,walletController.orderWithWalletAmount);
 
 
 

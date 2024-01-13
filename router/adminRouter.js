@@ -1,12 +1,12 @@
-const express =require('express')
-const router =express.Router()
+const express =require('express');
+const router =express.Router();
 const  {loggedIn,loggedout ,configureMulter} = require('../middleware/adminMIddleware');
-const upload = configureMulter()
+const upload = configureMulter();
 
 //controllers
-const adminController = require('../controller/admin/adminController')
-const productController = require('../controller/admin/adminProductController')
-const categoryController = require('../controller/admin/adminCategoryController')
+const adminController = require('../controller/admin/adminController');
+const productController = require('../controller/admin/adminProductController');
+const categoryController = require('../controller/admin/adminCategoryController');
 const usersController = require('../controller/admin/adminUser');
 const dashboard = require('../controller/admin/dashboard');
 const coupon = require('../controller/admin/adminCoupon');
@@ -19,13 +19,13 @@ const coupon = require('../controller/admin/adminCoupon');
 
 //to get admin login page
 router.get('/',adminController.getlogin);
-router.get('/login' ,loggedout,adminController.getlogin)
+router.get('/login' ,loggedout,adminController.getlogin);
 //post admin login
 router.post('/postLogin', adminController.postlogin);
 // to post admin dashboard
 router.post('/postAdminDashboard' ,adminController.postlogin );
 // admin logout destroy session
-router.get('/logout', adminController.postLogout)
+router.get('/logout', adminController.postLogout);
 
 
 
