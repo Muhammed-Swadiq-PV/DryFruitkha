@@ -163,6 +163,20 @@ const getCart = async (req, res) => {
       const productId = req.params.id;
       const newQuantity =req.body.newQuantity;
       // console.log(newQuantity,"lsjkljhkhreihjoei newquantity in updatequantity");
+
+               // Fetch the product to get stock
+        const product = await products.findOne({ _id: productId });
+        
+        if (!product) {
+            return res.status(404).json({ success: false, error: 'Product not found' });
+        }
+
+        const stock = product.stock;
+
+        // Check if the new quantity exceeds the available stock
+        if (newQuantity > stock) {
+            return res.status(400).json({ success: false, error: 'Cannot exceed available stock' });
+        }
   
       const user = await userModel.findOneAndUpdate(
         { _id: req.session.user, 'cart.productId': productId },

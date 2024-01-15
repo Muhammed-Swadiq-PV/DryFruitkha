@@ -128,16 +128,23 @@ async function handleQuantityChange(input) {
 
     const data = await response.json();
 
-    // Update the UI with the new cart data
-    console.log(data.cart,"update cart ui yilot pass cheyyunna data");
-    updateCartUI(data.cart);
-    console.log("updated ui successfully");
-    // Fetch the updated cart data after updating quantity
-    const updatedCartData = await fetchUpdatedCartData(productId);
+    const errorMessageElement = document.getElementById(`quantity-error-${productId}`);
+        errorMessageElement.textContent = data.error || ''; // Clear the error message if it exists
+        errorMessageElement.style.color = data.error ? 'red' : 'black'; // Set color based on error presence
 
-    // Update subtotal and total in the views using the latest data
-    document.querySelector('#subtotal').textContent = `${updatedCartData.subtotal.toFixed(2)}`;
-    document.querySelector('#total').textContent = `${updatedCartData.total.toFixed(2)}`;
+        if (!data.error) {
+            // Update the UI with the new cart data
+            console.log(data.cart, "update cart ui yilot pass cheyyunna data");
+            updateCartUI(data.cart);
+            console.log("updated ui successfully");
+
+            // Fetch the updated cart data after updating quantity
+            const updatedCartData = await fetchUpdatedCartData(productId);
+
+            // Update subtotal and total in the views using the latest data
+            document.querySelector('#subtotal').textContent = `${updatedCartData.subtotal.toFixed(2)}`;
+            document.querySelector('#total').textContent = `${updatedCartData.total.toFixed(2)}`;
+        }
   } catch (error) {
     console.error('Error updating quantity:', error);
   }
